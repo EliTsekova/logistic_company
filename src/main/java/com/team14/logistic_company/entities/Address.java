@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.Instant;
 
 @Entity
+@Getter
 public class Address {
     @Getter
     @Id
@@ -35,9 +36,12 @@ public class Address {
     @Column(name = "PostalCode", nullable = false)
     private String postalCode;
 
+    @Getter
     @CreationTimestamp
     @Column(name = "created_on", nullable = false, updatable = false)
     private Instant createdOn;
+
+    @Getter
     @UpdateTimestamp
     @Column(name = "updated_on", nullable = false)
     private Instant updatedOn;

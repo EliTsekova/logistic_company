@@ -11,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.Instant;
 
 @Entity
+@Getter
 public class City {
     @Getter
     @Id
@@ -24,14 +25,17 @@ public class City {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @Getter
-    @OneToOne
+    @Setter
+    @ManyToOne
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
+    @Getter
     @CreationTimestamp
     @Column(name = "created_on", nullable = false, updatable = false)
     private Instant createdOn;
+
+    @Getter
     @UpdateTimestamp
     @Column(name = "updated_on", nullable = false)
     private Instant updatedOn;
