@@ -3,6 +3,7 @@ import com.team14.logistic_company.controllers.forms.CreateClientForm;
 import com.team14.logistic_company.controllers.forms.UpdateClientForm;
 import com.team14.logistic_company.dtos.ClientDto;
 import com.team14.logistic_company.dtos.UserDto;
+import com.team14.logistic_company.entities.User;
 import com.team14.logistic_company.services.ClientService;
 import com.team14.logistic_company.services.UserService;
 import jakarta.validation.Valid;
@@ -55,12 +56,13 @@ public class ClientController {
 
         // 1. Създай User
         UserDto userDto = form.toUserDto();
-        UserDto savedUser = userService.create(userDto);
+        User savedUser = userService.create(userDto);
 
         // 2. Създай Client и свържи го с User
         ClientDto clientDto = form.toClientDto();
         clientDto.setUserId(savedUser.getId());
         clientService.create(clientDto);
+
 
         redirectAttributes.addFlashAttribute("successMessage", "Client created successfully!");
         return "redirect:/clients";

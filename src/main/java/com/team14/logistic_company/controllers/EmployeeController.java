@@ -3,6 +3,7 @@ import com.team14.logistic_company.controllers.forms.CreateEmployeeForm;
 import com.team14.logistic_company.controllers.forms.UpdateEmployeeForm;
 import com.team14.logistic_company.dtos.EmployeeDto;
 import com.team14.logistic_company.dtos.UserDto;
+import com.team14.logistic_company.entities.User;
 import com.team14.logistic_company.entities.enums.PositionType;
 import com.team14.logistic_company.services.EmployeeService;
 import com.team14.logistic_company.services.OfficeService;
@@ -79,7 +80,7 @@ public class EmployeeController {
 
         // 1. Създай User
         UserDto userDto = form.toUserDto();
-        UserDto savedUser = userService.create(userDto);
+        User savedUser = userService.create(userDto);
 
         // 2. Създай Employee и свържи го с User
         EmployeeDto employeeDto = form.toEmployeeDto();
