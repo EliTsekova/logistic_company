@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html class="light" lang="bg">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Контакти и Офиси - LogisticsCo</title>
+
+  <!-- Външни ресурси -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind конфигурация -->
+  <script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "primary": "#135bec",
+                    "background-light": "#f6f6f8",
+                    "background-dark": "#101622",
+                },
+                fontFamily: {
+                    "display": ["Manrope", "sans-serif"]
+                },
+                borderRadius: {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+                },
+            },
+        },
+    }
+  </script>
+
+  <style>
+    body {
+        font-family: 'Manrope', sans-serif;
+    }
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#111318] dark:text-white transition-colors duration-200">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+  <div class="layout-container flex h-full grow flex-col">
+
+    <!-- Горна навигация -->
+    <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#f0f2f4] dark:border-gray-800 bg-white dark:bg-background-dark px-4 lg:px-10 py-3 sticky top-0 z-50">
+      <!-- Лого -->
+      <div class="flex items-center gap-4 text-primary">
+        <div class="size-8">
+          <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+          </svg>
+        </div>
+        <h2 class="text-[#111318] dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]">LogisticsCo</h2>
+      </div>
+
+      <!-- Навигация и бутон за вход -->
+      <div class="flex flex-1 justify-end gap-8">
+        <nav class="hidden md:flex items-center gap-9">
+          <a class="text-[#111318] dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors" href="#">Начало</a>
+          <a class="text-[#111318] dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors" href="#">Услуги</a>
+          <a class="text-[#111318] dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors" href="#">Проследяване</a>
+          <a class="text-primary text-sm font-bold" href="#" aria-current="page">Офиси</a>
+          <a class="text-[#111318] dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors" href="#">Контакти</a>
+        </nav>
+        <button class="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-blue-700 transition-all">
+          <span>Вход</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Основно съдържание -->
+    <main class="flex flex-col items-center">
+      <div class="layout-content-container flex flex-col max-w-[1200px] w-full flex-1 px-4 lg:px-10 py-8">
+
+        <!-- Заглавие на страницата -->
+        <div class="flex flex-wrap justify-between gap-3 mb-8">
+          <div class="flex min-w-72 flex-col gap-2">
+            <h1 class="text-[#111318] dark:text-white text-3xl lg:text-4xl font-black leading-tight tracking-[-0.033em]">Контакти и Офиси</h1>
+            <p class="text-[#616f89] dark:text-gray-400 text-lg font-normal">Намерете най-удобния за Вас офис или се свържете директно с нашия екип.</p>
+          </div>
+        </div>
+
+        <!-- Карта -->
+        <div class="w-full mb-10">
+          <div class="rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-800">
+            <div class="bg-cover bg-center flex min-h-[450px] flex-col justify-between p-4 lg:p-6" aria-label="Карта на България с местоположения на офисите на LogisticsCo" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCNds3wt81j7IyB1r8GR2N7V4BzG65wFTqR1yvPhIW2aLIqJLR1YwvOTxcodniMzPyq0VrPgcYeuf9rwjVtTAe5SZjdFGA0UpS_ekfEg1HAyI5m34m0A__G6mBpPVJ48FssJVV4VxKV-8VThvvnYeEUBEjDZSvH4zuS6ve3Mx-_rjcj0osQkg6KgxEX_T_DKtTApu7lN_wgXOaLxSBB3gF9UTa9T03kNlnlifANTNFnjTezorqx2rXCexNBxOG2L3vRUjapABEuSmrT');">
+              <!-- Търсене в картата -->
+              <div class="max-w-md w-full">
+                <label class="flex flex-col h-12">
+                  <div class="flex w-full flex-1 items-stretch rounded-lg h-full shadow-lg">
+                    <div class="text-[#616f89] flex border-none bg-white items-center justify-center pl-4 rounded-l-lg">
+                      <span class="material-symbols-outlined">search</span>
+                    </div>
+                    <input class="form-input flex w-full min-w-0 flex-1 border-none bg-white focus:ring-0 h-full placeholder:text-[#616f89] px-4 rounded-r-lg text-base font-normal" placeholder="Търсене на град или офис..." type="search" aria-label="Търсене на офиси в картата">
+                  </div>
+                </label>
+              </div>
+
+              <!-- Контроли на картата -->
+              <div class="flex flex-col items-end gap-3">
+                <div class="flex flex-col gap-0.5 shadow-md">
+                  <button class="flex size-10 items-center justify-center rounded-t-lg bg-white hover:bg-gray-50 text-gray-700" aria-label="Увеличи картата">
+                    <span class="material-symbols-outlined">add</span>
+                  </button>
+                  <button class="flex size-10 items-center justify-center rounded-b-lg bg-white hover:bg-gray-50 text-gray-700" aria-label="Намали картата">
+                    <span class="material-symbols-outlined">remove</span>
+                  </button>
+                </div>
+                <button class="flex size-10 items-center justify-center rounded-lg bg-white shadow-md hover:bg-gray-50 text-primary" aria-label="Моето местоположение">
+                  <span class="material-symbols-outlined">my_location</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Основна мрежа със съдържание -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
+
+          <!-- Лява колона: Списък с офиси -->
+          <div class="lg:col-span-2 flex flex-col gap-6">
+            <div class="flex items-center justify-between px-2">
+              <h3 class="text-[#111318] dark:text-white text-2xl font-bold">Нашите Офиси</h3>
+              <span class="text-sm text-gray-500 font-medium bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">24 Офиса намерени</span>
+            </div>
+
+            <!-- Филтър за търсене -->
+            <div class="px-2">
+              <label class="flex flex-col min-w-40 h-12 w-full">
+                <div class="flex w-full flex-1 items-stretch rounded-lg h-full border border-gray-200 dark:border-gray-700">
+                  <div class="text-[#616f89] flex bg-[#f0f2f4] dark:bg-gray-800 items-center justify-center pl-4 rounded-l-lg">
+                    <span class="material-symbols-outlined">filter_list</span>
+                  </div>
+                  <input class="form-input flex w-full min-w-0 flex-1 border-none bg-[#f0f2f4] dark:bg-gray-800 focus:ring-0 h-full placeholder:text-[#616f89] px-4 rounded-r-lg text-base" placeholder="Филтрирай по град..." type="search" aria-label="Филтриране на офиси по град">
+                </div>
+              </label>
+            </div>
+
+            <!-- Картички с офиси, групирани по градове -->
+            <div class="flex flex-col gap-8 mt-4">
+
+              <!-- Град: София -->
+              <section>
+                <h4 class="px-2 text-primary font-extrabold text-sm uppercase tracking-wider mb-4">София</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                  <!-- Офис 1: Централен София -->
+                  <article class="bg-white dark:bg-background-dark p-5 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start mb-3">
+                      <h5 class="font-bold text-lg">Централен Офис София</h5>
+                      <span class="text-xs bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 px-2 py-0.5 rounded font-bold uppercase tracking-tight">Отворен</span>
+                    </div>
+                    <div class="flex flex-col gap-3 text-sm text-[#616f89] dark:text-gray-400">
+                      <div class="flex items-start gap-2">
+                        <span class="material-symbols-outlined text-primary text-lg">location_on</span>
+                        <address class="not-italic">бул. „Цариградско шосе“ 115, ж.к. Младост 1, София</address>
+                      </div>
+                      <div class="flex items-start gap-2">
+                        <span class="material-symbols-outlined text-primary text-lg">schedule</span>
+                        <span>Пн-Пт: 09:00 - 18:00 | Сб: 09:00 - 13:00</span>
+                      </div>
+                      <div class="flex items-start gap-2">
+                        <span class="material-symbols-outlined text-primary text-lg">call</span>
+                        <a class="hover:text-primary underline" href="tel:+35928001000">+359 2 800 1000</a>
+                      </div>
+                    </div>
+                  </article>
+
+                  <!-- Офис 2: София - Люлин -->
+                  <article class="bg-white dark:bg-background-dark p-5 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start mb-3">
+                      <h5 class="font-bold text-lg">Офис София - Люлин</h5>
+                      <span class="text-xs bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 px-2 py-0.5 rounded font-bold uppercase tracking-tight">Отворен</span>
+                    </div>
+                    <div class="flex flex-col gap-3 text-sm text-[#616f89] dark:text-gray-400">
+                      <div class="flex items-start gap-2">
+                        <span class="material-symbols-outlined text-primary text-lg">location_on</span>
+                        <address class="not-italic">ж.к. Люлин 7, ул. „Проф. д-р Александър Станишев" 12</address>
+                      </div>
+                      <div class="flex items-start gap-2">
+                        <span class="material-symbols-outlined text-primary text-lg">schedule</span>
+                        <span>Пн-Пт: 09:00 - 18:00</span>
+                      </div>
+                      <div class="flex items-start gap-2">
+                        <span class="material-symbols-outlined text-primary text-lg">call</span>
+                        <a class="hover:text-primary underline" href="tel:+35928001001">+359 2 800 1001</a>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+              </section>
+
+              <!-- Град: Пловдив -->
+              <section>
+                <h4 class="px-2 text-primary font-extrabold text-sm uppercase tracking-wider mb-4">Пловдив</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <article class="bg-white dark:bg-background-dark p-5 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm">
+                    <div class="flex justify-between items-start mb-3">
+                      <h5 class="font-bold text-lg">Офис Пловдив Център</h5>
+                      <span class="text-xs bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 px-2 py-0.5 rounded font-bold uppercase tracking-tight">Отворен</span>
+                    </div>
+                    <div class="flex flex-col gap-3 text-sm text-[#616f89] dark:text-gray-400">
+                      <div class="flex items-start gap-2">
+                        <span class="material-symbols-outlined text-primary text-lg">location_on</span>
+                        <address class="not-italic">ул. „Капитан Райчо" 56, Пловдив</address>
+                      </div>
+                      <div class="flex items-start gap-2">
+                        <span class="material-symbols-outlined text-primary text-lg">schedule</span>
+                        <span>Пн-Пт: 08:30 - 18:30</span>
+                      </div>
+                      <div class="flex items-start gap-2">
+                        <span class="material-symbols-outlined text-primary text-lg">call</span>
+                        <a class="hover:text-primary underline" href="tel:+35932800100">+359 32 800 100</a>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <!-- Дясна колона: Форма за контакт -->
+          <div class="lg:col-span-1">
+            <div class="lg:sticky lg:top-24">
+              <div class="bg-white dark:bg-background-dark p-6 lg:p-8 rounded-xl border border-gray-100 dark:border-gray-800 shadow-xl">
+                <h3 class="text-[#111318] dark:text-white text-xl font-bold mb-2">Свържете се с нас</h3>
+                <p class="text-[#616f89] dark:text-gray-400 text-sm mb-6">Имате въпроси? Изпратете ни съобщение и нашият екип ще се свърже с Вас възможно най-скоро.</p>
+
+                <form class="flex flex-col gap-4">
+                  <div>
+                    <label for="name" class="text-sm font-bold text-[#111318] dark:text-gray-200 mb-1 block">Име</label>
+                    <input id="name" class="w-full rounded-lg border border-gray-200 dark:border-gray-700 dark:bg-gray-800 focus:border-primary focus:ring-primary text-sm px-4 py-3" placeholder="Вашето име" type="text" required>
+                  </div>
+                  <div>
+                    <label for="email" class="text-sm font-bold text-[#111318] dark:text-gray-200 mb-1 block">Имейл</label>
+                    <input id="email" class="w-full rounded-lg border border-gray-200 dark:border-gray-700 dark:bg-gray-800 focus:border-primary focus:ring-primary text-sm px-4 py-3" placeholder="email@example.com" type="email" required>
+                  </div>
+                  <div>
+                    <label for="subject" class="text-sm font-bold text-[#111318] dark:text-gray-200 mb-1 block">Тема</label>
+                    <select id="subject" class="w-full rounded-lg border border-gray-200 dark:border-gray-700 dark:bg-gray-800 focus:border-primary focus:ring-primary text-sm px-4 py-3" required>
+                      <option value="">Изберете тема</option>
+                      <option value="general">Общо запитване</option>
+                      <option value="delivery">Проблем с доставка</option>
+                      <option value="commercial">Търговско предложение</option>
+                      <option value="other">Друго</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="message" class="text-sm font-bold text-[#111318] dark:text-gray-200 mb-1 block">Съобщение</label>
+                    <textarea id="message" class="w-full rounded-lg border border-gray-200 dark:border-gray-700 dark:bg-gray-800 focus:border-primary focus:ring-primary text-sm px-4 py-3" placeholder="Напишете Вашето съобщение тук..." rows="4" required></textarea>
+                  </div>
+                  <button type="submit" class="w-full bg-primary hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-lg">send</span>
+                    Изпрати запитване
+                  </button>
+                </form>
+
+                <div class="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800">
+                  <p class="text-xs text-center text-[#616f89] dark:text-gray-500">
+                    Национален номер: <a class="font-bold text-primary" href="tel:070010100">0700 10 100</a><br>
+                    (на цената на един градски разговор)
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Футър -->
+    <footer class="mt-auto py-10 border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-background-dark">
+      <div class="max-w-[1200px] mx-auto px-4 lg:px-10 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-[#616f89] text-sm">© 2024 LogisticsCo. Всички права запазени.</p>
+        <div class="flex gap-6">
+          <a class="text-[#616f89] hover:text-primary text-xs transition-colors" href="#">Общи условия</a>
+          <a class="text-[#616f89] hover:text-primary text-xs transition-colors" href="#">Политика за поверителност</a>
+          <a class="text-[#616f89] hover:text-primary text-xs transition-colors" href="#">Бисквитки</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+</body>
+</html>

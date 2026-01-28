@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html class="light" lang="bg">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Табло за управление - Служител</title>
+
+    <!-- Външни ресурси -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind конфигурация -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#111318] dark:text-white font-display">
+<div class="flex min-h-screen">
+    <!-- Странична навигация -->
+    <aside class="w-64 bg-white dark:bg-gray-900 border-r border-[#dbdfe6] dark:border-gray-800 flex flex-col h-screen sticky top-0">
+        <div class="p-6 flex flex-col h-full">
+            <!-- Лого -->
+            <div class="flex items-center gap-3 mb-8">
+                <div class="bg-primary/10 rounded-lg p-2">
+                    <span class="material-symbols-outlined text-primary text-3xl">local_shipping</span>
+                </div>
+                <div class="flex flex-col">
+                    <h1 class="text-base font-bold leading-none">Логистика Плюс</h1>
+                    <p class="text-[#616f89] text-xs font-normal">Панел за служители</p>
+                </div>
+            </div>
+
+            <!-- Навигация -->
+            <nav class="flex flex-col gap-1 grow">
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary" href="#">
+                    <span class="material-symbols-outlined">package_2</span>
+                    <span class="text-sm font-semibold">Пратки</span>
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#616f89] hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+                    <span class="material-symbols-outlined">badge</span>
+                    <span class="text-sm font-medium">Служители</span>
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#616f89] hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+                    <span class="material-symbols-outlined">group</span>
+                    <span class="text-sm font-medium">Клиенти</span>
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#616f89] hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+                    <span class="material-symbols-outlined">storefront</span>
+                    <span class="text-sm font-medium">Офиси</span>
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#616f89] hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+                    <span class="material-symbols-outlined">bar_chart_4_bars</span>
+                    <span class="text-sm font-medium">Справки</span>
+                </a>
+            </nav>
+
+            <!-- Бутон за нова пратка -->
+            <div class="mt-auto pt-4 border-t border-[#dbdfe6] dark:border-gray-800">
+                <button class="w-full flex items-center justify-center gap-2 rounded-lg h-10 bg-primary text-white text-sm font-bold tracking-wide hover:bg-primary/90 transition-colors">
+                    <span class="material-symbols-outlined text-sm">add</span>
+                    Нова пратка
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Основно съдържание -->
+    <main class="flex-1 flex flex-col">
+        <!-- Горна лента -->
+        <header class="flex items-center justify-between bg-white dark:bg-gray-900 border-b border-[#f0f2f4] dark:border-gray-800 px-8 py-4 sticky top-0 z-10">
+            <div class="flex items-center gap-4">
+                <span class="material-symbols-outlined text-primary text-2xl">dashboard</span>
+                <h2 class="text-lg font-bold tracking-tight">Табло за управление</h2>
+            </div>
+
+            <div class="flex items-center gap-6">
+                <!-- Търсене -->
+                <div class="relative w-64">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#616f89] text-xl">search</span>
+                    <input class="w-full h-10 pl-10 pr-4 bg-[#f0f2f4] dark:bg-gray-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/50 focus:outline-none" placeholder="Бързо търсене..." type="text">
+                </div>
+
+                <!-- Бутони -->
+                <div class="flex gap-2">
+                    <button class="p-2 rounded-lg bg-[#f0f2f4] dark:bg-gray-800 text-[#111318] dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors relative">
+                        <span class="material-symbols-outlined">notifications</span>
+                        <span class="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-gray-800"></span>
+                    </button>
+                    <button class="p-2 rounded-lg bg-[#f0f2f4] dark:bg-gray-800 text-[#111318] dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                        <span class="material-symbols-outlined">settings</span>
+                    </button>
+                </div>
+
+                <!-- Профил -->
+                <div class="flex items-center gap-3 border-l border-gray-200 dark:border-gray-700 pl-6">
+                    <div class="text-right">
+                        <p class="text-sm font-bold leading-none">Иван Иванов</p>
+                        <p class="text-xs text-[#616f89]">Мениджър Логистика</p>
+                    </div>
+                    <div class="size-10 rounded-full bg-cover bg-center border-2 border-primary/20" aria-label="Профилна снимка на служител" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBSI5Rmj-kv53WSPfb4XYJRNBxKLx8aHdIj7lZ0yPwyXo9zpqginLHzg8WxJdDXOPEfgUgCdqlHaFPJ0rplYwaLSI-M4BppXKxpV9Ppxp7ALeB3t6HkomG6M0DiZ-hSRtR78qzrf7wwslxsLCTV2IAEDckyiMAA53JwMWUYIKrelOZQ5Qgfgk2b5rT8JkWEJOvEEkhB6HnW1y9Tke3DUddin0zNFSy5aj3J0jxNdkHVkWX5yLh5yESKxGFkyrvmkSLtODWPaMbglbAq');"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Съдържание на страницата -->
+        <div class="p-8 max-w-[1280px] mx-auto w-full">
+            <!-- Статистики -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Карта 1 -->
+                <div class="bg-white dark:bg-gray-900 rounded-xl p-6 border border-[#dbdfe6] dark:border-gray-800 shadow-sm">
+                    <div class="flex justify-between items-start mb-4">
+                        <p class="text-[#616f89] dark:text-gray-400 text-sm font-medium">Общо пратки</p>
+                        <div class="bg-primary/10 p-2 rounded-lg">
+                            <span class="material-symbols-outlined text-primary">inventory_2</span>
+                        </div>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-1">1,284</h3>
+                    <p class="text-[#07883b] text-sm font-semibold flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">trending_up</span>
+                        +12.5% спрямо миналия месец
+                    </p>
+                </div>
+
+                <!-- Карта 2 -->
+                <div class="bg-white dark:bg-gray-900 rounded-xl p-6 border border-[#dbdfe6] dark:border-gray-800 shadow-sm">
+                    <div class="flex justify-between items-start mb-4">
+                        <p class="text-[#616f89] dark:text-gray-400 text-sm font-medium">Чакащи доставки</p>
+                        <div class="bg-orange-100 p-2 rounded-lg text-orange-600">
+                            <span class="material-symbols-outlined">pending_actions</span>
+                        </div>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-1">42</h3>
+                    <p class="text-[#e73908] text-sm font-semibold flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">trending_down</span>
+                        -3.2% спрямо вчера
+                    </p>
+                </div>
+
+                <!-- Карта 3 -->
+                <div class="bg-white dark:bg-gray-900 rounded-xl p-6 border border-[#dbdfe6] dark:border-gray-800 shadow-sm">
+                    <div class="flex justify-between items-start mb-4">
+                        <p class="text-[#616f89] dark:text-gray-400 text-sm font-medium">Месечен приход</p>
+                        <div class="bg-green-100 p-2 rounded-lg text-green-600">
+                            <span class="material-symbols-outlined">payments</span>
+                        </div>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-1">15,420 лв.</h3>
+                    <p class="text-[#07883b] text-sm font-semibold flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">trending_up</span>
+                        +8.1% спрямо целта
+                    </p>
+                </div>
+            </div>
+
+            <!-- Таблица с пратки -->
+            <div class="bg-white dark:bg-gray-900 rounded-xl border border-[#dbdfe6] dark:border-gray-800 shadow-sm overflow-hidden">
+                <!-- Заглавие и филтри -->
+                <div class="p-6 border-b border-[#dbdfe6] dark:border-gray-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <h2 class="text-xl font-bold tracking-tight">Последни пратки</h2>
+                    <div class="flex items-center gap-3">
+                        <div class="relative min-w-[320px]">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#616f89]">search</span>
+                            <input class="w-full h-11 pl-10 pr-4 bg-[#f0f2f4] dark:bg-gray-800 border-none rounded-lg text-sm focus:outline-none" placeholder="Търсене по ID, подател или получател..." type="text">
+                        </div>
+                        <button class="flex items-center gap-2 px-4 h-11 border border-[#dbdfe6] dark:border-gray-800 rounded-lg text-sm font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                            <span class="material-symbols-outlined text-sm">filter_list</span>
+                            Филтри
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Таблица -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-[#f8fafc] dark:bg-gray-800/50 text-[#616f89] text-xs font-bold uppercase tracking-wider">
+                        <tr>
+                            <th class="px-6 py-4">ID на пратка</th>
+                            <th class="px-6 py-4">Подател</th>
+                            <th class="px-6 py-4">Получател</th>
+                            <th class="px-6 py-4">Тегло</th>
+                            <th class="px-6 py-4">Дестинация</th>
+                            <th class="px-6 py-4">Статус</th>
+                            <th class="px-6 py-4 text-right">Действие</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[#dbdfe6] dark:divide-gray-800">
+                        <!-- Ред 1 -->
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                            <td class="px-6 py-4 text-sm font-bold text-primary">#SH-48291</td>
+                            <td class="px-6 py-4 text-sm">Димитър Петров</td>
+                            <td class="px-6 py-4 text-sm">Мария Колева</td>
+                            <td class="px-6 py-4 text-sm">2.4 кг</td>
+                            <td class="px-6 py-4 text-sm">Офис София - Център</td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">В процес</span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <button class="text-[#616f89] hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                </button>
+                            </td>
+                        </tr>
+
+                        <!-- Ред 2 -->
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                            <td class="px-6 py-4 text-sm font-bold text-primary">#SH-48292</td>
+                            <td class="px-6 py-4 text-sm">Георги Иванов</td>
+                            <td class="px-6 py-4 text-sm">Елена Стоянова</td>
+                            <td class="px-6 py-4 text-sm">0.8 кг</td>
+                            <td class="px-6 py-4 text-sm">ул. Витоша 12, Пловдив</td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700">Доставена</span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <button class="text-[#616f89] hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                </button>
+                            </td>
+                        </tr>
+
+                        <!-- Ред 3 -->
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                            <td class="px-6 py-4 text-sm font-bold text-primary">#SH-48293</td>
+                            <td class="px-6 py-4 text-sm">"Техно" ООД</td>
+                            <td class="px-6 py-4 text-sm">Стефан Николов</td>
+                            <td class="px-6 py-4 text-sm">15.0 кг</td>
+                            <td class="px-6 py-4 text-sm">Офис Варна - Порт</td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-700">Изпратена</span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <button class="text-[#616f89] hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                </button>
+                            </td>
+                        </tr>
+
+                        <!-- Ред 4 -->
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                            <td class="px-6 py-4 text-sm font-bold text-primary">#SH-48294</td>
+                            <td class="px-6 py-4 text-sm">Анна Василева</td>
+                            <td class="px-6 py-4 text-sm">Борис Христов</td>
+                            <td class="px-6 py-4 text-sm">1.2 кг</td>
+                            <td class="px-6 py-4 text-sm">Офис Бургас - Изгрев</td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">В процес</span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <button class="text-[#616f89] hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                </button>
+                            </td>
+                        </tr>
+
+                        <!-- Ред 5 -->
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                            <td class="px-6 py-4 text-sm font-bold text-primary">#SH-48295</td>
+                            <td class="px-6 py-4 text-sm">Николай Кръстев</td>
+                            <td class="px-6 py-4 text-sm">Виктория Димова</td>
+                            <td class="px-6 py-4 text-sm">5.5 кг</td>
+                            <td class="px-6 py-4 text-sm">бул. България 45, Русе</td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700">Доставена</span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <button class="text-[#616f89] hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Подножие на таблицата -->
+                <div class="px-6 py-4 bg-[#f8fafc] dark:bg-gray-800/50 border-t border-[#dbdfe6] dark:border-gray-800 flex items-center justify-between">
+                    <p class="text-xs text-[#616f89]">Показани са 5 от общо 1,284 резултата</p>
+                    <div class="flex gap-2">
+                        <button class="px-3 py-1 text-xs font-bold border border-[#dbdfe6] dark:border-gray-700 rounded bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 transition-colors">
+                            Назад
+                        </button>
+                        <button class="px-3 py-1 text-xs font-bold border border-[#dbdfe6] dark:border-gray-700 rounded bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                            Напред
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
