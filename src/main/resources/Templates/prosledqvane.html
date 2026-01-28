@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html class="light" lang="bg">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Проследяване на пратка - Логистика Експрес</title>
+
+  <!-- Външни ресурси -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind конфигурация -->
+  <script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "primary": "#135bec",
+                    "background-light": "#f8fafc",
+                    "background-dark": "#101622",
+                    "success": "#10b981",
+                },
+                fontFamily: {
+                    "display": ["Manrope", "sans-serif"]
+                },
+                borderRadius: {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+                },
+            },
+        },
+    }
+  </script>
+
+  <style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+        background-image: radial-gradient(circle at 2px 2px, #e2e8f0 1px, transparent 0);
+        background-size: 40px 40px;
+    }
+    .dark body {
+        background-image: radial-gradient(circle at 2px 2px, #1e293b 1px, transparent 0);
+    }
+    .step-active {
+        border-color: #135bec;
+        background-color: #135bec;
+        color: white;
+    }
+    .step-completed {
+        border-color: #10b981;
+        background-color: #10b981;
+        color: white;
+    }
+    .step-pending {
+        border-color: #e5e7eb;
+        background-color: white;
+        color: #9ca3af;
+    }
+    .dark .step-pending {
+        border-color: #374151;
+        background-color: #1f2937;
+        color: #9ca3af;
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111318] dark:text-white min-h-screen">
+
+<!-- Хедър -->
+<header class="bg-white dark:bg-gray-900 border-b border-[#dbdfe6] dark:border-gray-800 sticky top-0 z-30">
+  <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+    <!-- Лого -->
+    <div class="flex items-center gap-3 text-primary">
+      <div class="size-8">
+        <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z"></path>
+        </svg>
+      </div>
+      <span class="text-[#111318] dark:text-white text-lg font-black tracking-tight">Логистика Експрес</span>
+    </div>
+
+    <!-- Потребителски елементи -->
+    <div class="flex items-center gap-4">
+      <button class="p-2 text-[#616f89] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" aria-label="Известия">
+        <span class="material-symbols-outlined">notifications</span>
+      </button>
+      <div class="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xs" aria-label="Акаунт на администратор">
+        АД
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Основно съдържание -->
+<main class="max-w-4xl mx-auto px-4 py-8">
+
+  <!-- Заглавие и статус на пратката -->
+  <div class="bg-white dark:bg-gray-900 rounded-xl border border-[#dbdfe6] dark:border-gray-800 p-6 mb-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <span class="text-xs font-bold uppercase tracking-wider text-[#616f89] dark:text-gray-400">Номер на товарителница</span>
+      <h1 class="text-3xl font-black text-primary" aria-label="Номер на пратка: LE123456789">LE123456789</h1>
+    </div>
+    <div class="flex items-center gap-3 bg-blue-50 dark:bg-blue-900/20 px-4 py-3 rounded-lg border border-blue-100 dark:border-blue-800">
+      <span class="material-symbols-outlined text-primary" aria-hidden="true">local_shipping</span>
+      <div>
+        <p class="text-xs text-primary font-bold uppercase">Текущ статус</p>
+        <p class="text-lg font-bold text-[#111318] dark:text-white">В процес на доставка</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Основна мрежа със съдържание -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <!-- Лява колона: История на движението -->
+    <section class="md:col-span-1 bg-white dark:bg-gray-900 rounded-xl border border-[#dbdfe6] dark:border-gray-800 p-6 shadow-sm">
+      <h2 class="text-lg font-bold mb-6 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary" aria-hidden="true">route</span>
+        История на движението
+      </h2>
+
+      <div class="relative">
+        <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-100 dark:bg-gray-800 ml-[1px]" aria-hidden="true"></div>
+
+        <div class="space-y-8 relative">
+          <!-- Стъпка 1 -->
+          <div class="flex gap-4">
+            <div class="size-9 rounded-full border-2 flex items-center justify-center z-10 step-completed" aria-label="Завършена стъпка: Приета в офис">
+              <span class="material-symbols-outlined text-sm">check</span>
+            </div>
+            <div>
+              <p class="font-bold text-sm text-[#111318] dark:text-white">Приета в офис</p>
+              <p class="text-xs text-[#616f89] dark:text-gray-400">14 Май, 09:24</p>
+              <p class="text-xs text-[#616f89] mt-1 italic">Офис София - Център</p>
+            </div>
+          </div>
+
+          <!-- Стъпка 2 -->
+          <div class="flex gap-4">
+            <div class="size-9 rounded-full border-2 flex items-center justify-center z-10 step-completed" aria-label="Завършена стъпка: Транспортиране">
+              <span class="material-symbols-outlined text-sm">check</span>
+            </div>
+            <div>
+              <p class="font-bold text-sm text-[#111318] dark:text-white">Транспортиране</p>
+              <p class="text-xs text-[#616f89] dark:text-gray-400">14 Май, 14:15</p>
+              <p class="text-xs text-[#616f89] mt-1 italic">В транзит към разпределителен център</p>
+            </div>
+          </div>
+
+          <!-- Стъпка 3 -->
+          <div class="flex gap-4">
+            <div class="size-9 rounded-full border-2 flex items-center justify-center z-10 step-active shadow-lg shadow-primary/20" aria-label="Текуща стъпка: Пристигнала в център">
+              <span class="material-symbols-outlined text-sm">charging_station</span>
+            </div>
+            <div>
+              <p class="font-bold text-sm text-primary">Пристигнала в център</p>
+              <p class="text-xs text-primary/80">15 Май, 08:30</p>
+              <p class="text-xs text-[#616f89] mt-1 italic">Логистичен център Пловдив</p>
+            </div>
+          </div>
+
+          <!-- Стъпка 4 -->
+          <div class="flex gap-4">
+            <div class="size-9 rounded-full border-2 flex items-center justify-center z-10 step-pending" aria-label="Предстояща стъпка: Очаква доставка">
+              <span class="material-symbols-outlined text-sm">inventory_2</span>
+            </div>
+            <div>
+              <p class="font-bold text-sm text-gray-400">Очаква доставка</p>
+              <p class="text-xs text-gray-400 mt-1">Предвиден час: днес до 18:00</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Дясна колона: Информация и плащания -->
+    <div class="md:col-span-2 space-y-6">
+
+      <!-- Информация за пратката -->
+      <section class="bg-white dark:bg-gray-900 rounded-xl border border-[#dbdfe6] dark:border-gray-800 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-[#dbdfe6] dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+          <h2 class="font-bold text-[#111318] dark:text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary" aria-hidden="true">info</span>
+            Информация за пратката
+          </h2>
+        </div>
+        <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
+          <div>
+            <p class="text-xs font-bold text-[#616f89] dark:text-gray-400 uppercase mb-1">Подател</p>
+            <p class="font-bold text-[#111318] dark:text-white">Иван Петров</p>
+            <p class="text-sm text-[#616f89]">гр. София</p>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-[#616f89] dark:text-gray-400 uppercase mb-1">Получател</p>
+            <p class="font-bold text-[#111318] dark:text-white">Мария Димитрова</p>
+            <address class="text-sm text-[#616f89] not-italic">гр. Пловдив, ул. Родопи 15</address>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-[#616f89] dark:text-gray-400 uppercase mb-1">Тегло</p>
+            <p class="font-bold text-[#111318] dark:text-white">2.450 кг</p>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-[#616f89] dark:text-gray-400 uppercase mb-1">Тип доставка</p>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-gray-100 dark:bg-gray-800 text-xs font-bold text-[#111318] dark:text-white">
+              <span class="material-symbols-outlined text-sm" aria-hidden="true">home</span>
+              До адрес
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Плащане -->
+      <section class="bg-white dark:bg-gray-900 rounded-xl border border-[#dbdfe6] dark:border-gray-800 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-[#dbdfe6] dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+          <h2 class="font-bold text-[#111318] dark:text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary" aria-hidden="true">payments</span>
+            Плащане
+          </h2>
+        </div>
+        <div class="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <div class="size-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-success" aria-hidden="true">
+              <span class="material-symbols-outlined text-3xl">check_circle</span>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-[#616f89] dark:text-gray-400 uppercase">Обща сума</p>
+              <p class="text-2xl font-black text-[#111318] dark:text-white">12.40 лв.</p>
+            </div>
+          </div>
+          <div class="flex flex-col items-end">
+            <p class="text-xs font-bold text-[#616f89] dark:text-gray-400 uppercase mb-1">Статус на плащане</p>
+            <span class="px-3 py-1 bg-success text-white text-xs font-bold rounded-full">Платена</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Бутони за действие -->
+      <div class="flex flex-col sm:flex-row justify-end gap-3">
+        <button class="px-4 py-2 border border-[#dbdfe6] dark:border-gray-700 rounded-lg text-[#616f89] dark:text-gray-400 font-bold hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+          <span class="material-symbols-outlined text-sm">print</span>
+          Печат на етикет
+        </button>
+        <button class="px-6 py-2 bg-primary text-white rounded-lg font-bold hover:bg-blue-700 active:scale-[0.98] transition-all shadow-lg shadow-primary/20 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+          Редактирай данни
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Футър -->
+  <footer class="mt-12 py-6 border-t border-[#dbdfe6] dark:border-gray-800 text-center">
+    <p class="text-xs text-[#616f89] dark:text-gray-500">© 2023 Логистика Експрес. Всички права запазени. Панел за управление.</p>
+  </footer>
+</main>
+</body>
+</html>
