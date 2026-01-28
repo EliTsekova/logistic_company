@@ -70,23 +70,19 @@ public class ShipmentService implements IShipmentService {
             throws UnauthorizedAccess, UserNotFound {
 
         requireEmployee(authentication);
+        if (shipment.getDeliveryType() == null) {
+            shipment.setDeliveryType(
+                    shipment.getRecipientAddress() == null ? DeliveryType.TO_OFFICE : DeliveryType.TO_ADDRESS
+            );
+        }
         validateShipment(shipment);
-
+        shipment.setPrice(calculatePrice(shipment));
         Shipment saved = shipmentRepository.save(shipment);
-
         ShipmentStatus initialStatus = new ShipmentStatus();
         initialStatus.setShipment(saved);
         initialStatus.setStatus(Status.SUBMITTED);
         initialStatus.setComment("Shipment registered");
         shipmentStatusRepository.save(initialStatus);
-        if (shipment.getDeliveryType() == null) {
-            shipment.setDeliveryType(shipment.getRecipientAddress() == null ? DeliveryType.TO_OFFICE : DeliveryType.TO_ADDRESS);
-        }
-
-        validateShipment(shipment);
-
-        shipment.setPrice(calculatePrice(shipment));
-
 
         return saved;
     }
@@ -98,11 +94,9 @@ public class ShipmentService implements IShipmentService {
         User user = getUserFromAuthentication(authentication);
         Integer userId = user.getId();
 
-        // по-чисто: взимаме изпратени + получени
         List<Shipment> sent = shipmentRepository.findAllBySender_User_Id(userId);
         List<Shipment> received = shipmentRepository.findAllByRecipient_User_Id(userId);
 
-        // комбинираме без дубликати
         return List.copyOf(
                 new java.util.LinkedHashSet<Shipment>() {{
                     addAll(sent);
@@ -156,26 +150,35 @@ public class ShipmentService implements IShipmentService {
 
         shipment.setEmployee(employeeRepository.findById(dto.getEmployeeId())
                 .orElseThrow(() -> new RuntimeException("Employee not found: " + dto.getEmployeeId())));
+
         shipment.setSender(clientRepository.findById(dto.getSenderId())
                 .orElseThrow(() -> new RuntimeException("Sender not found: " + dto.getSenderId())));
+
         shipment.setRecipient(clientRepository.findById(dto.getRecipientId())
                 .orElseThrow(() -> new RuntimeException("Recipient not found: " + dto.getRecipientId())));
 
         shipment.setSenderAddress(addressRepository.findById(dto.getSenderAddressId())
                 .orElseThrow(() -> new RuntimeException("Sender address not found: " + dto.getSenderAddressId())));
-        shipment.setRecipientAddress(addressRepository.findById(dto.getRecipientAddressId())
-                .orElseThrow(() -> new RuntimeException("Recipient address not found: " + dto.getRecipientAddressId())));
+
+        if (dto.getRecipientAddressId() != null) {
+            shipment.setRecipientAddress(addressRepository.findById(dto.getRecipientAddressId())
+                    .orElseThrow(() -> new RuntimeException("Recipient address not found: " + dto.getRecipientAddressId())));
+        } else {
+            shipment.setRecipientAddress(null);
+        }
+        shipment.setDeliveryType(dto.getDeliveryType());
 
         shipment.setOffice(officeRepository.findById(dto.getOfficeId())
                 .orElseThrow(() -> new RuntimeException("Office not found: " + dto.getOfficeId())));
 
         shipment.setWeight(dto.getWeight());
-        shipment.setPrice(dto.getPrice());
         shipment.setUniqueId(dto.getUniqueId());
+        shipment.setPrice(null);
 
         Shipment saved = registerShipment(shipment, authentication);
         return toDtoWithCurrentStatus(saved);
     }
+
 
     // --------- helpers ---------
 
@@ -215,7 +218,6 @@ public class ShipmentService implements IShipmentService {
         if (shipment.getOffice() == null) throw new IllegalArgumentException("Office must be provided.");
         if (shipment.getUniqueId() == null || shipment.getUniqueId().isBlank())
             throw new IllegalArgumentException("UniqueId must be provided.");
-        if (shipment.getPrice() == null) throw new IllegalArgumentException("Price must be provided.");
         if (shipment.getDeliveryType() == null) {
             throw new IllegalArgumentException("DeliveryType must be provided.");
         }
@@ -284,4 +286,62 @@ public class ShipmentService implements IShipmentService {
         requireEmployee(authentication);
         return shipmentRepository.sumRevenueBetween(from, to);
     }
+    public ShipmentDto findByIdForEdit(Integer id, Authentication authentication) {
+        requireEmployee(authentication);
+        Shipment shipment = shipmentRepository.findById(id)
+                .orElseThrow(() -> new ShipmentNotFound("Shipment not found with ID: " + id));
+        return toDtoWithCurrentStatus(shipment);
+    }
+
+    public ShipmentDto updateFromDto(Integer id, ShipmentDto dto, Authentication authentication) {
+        requireEmployee(authentication);
+
+        Shipment shipment = shipmentRepository.findById(id)
+                .orElseThrow(() -> new ShipmentNotFound("Shipment not found with ID: " + id));
+
+        shipment.setEmployee(employeeRepository.findById(dto.getEmployeeId())
+                .orElseThrow(() -> new RuntimeException("Employee not found: " + dto.getEmployeeId())));
+
+        shipment.setSender(clientRepository.findById(dto.getSenderId())
+                .orElseThrow(() -> new RuntimeException("Sender not found: " + dto.getSenderId())));
+
+        shipment.setRecipient(clientRepository.findById(dto.getRecipientId())
+                .orElseThrow(() -> new RuntimeException("Recipient not found: " + dto.getRecipientId())));
+
+        shipment.setSenderAddress(addressRepository.findById(dto.getSenderAddressId())
+                .orElseThrow(() -> new RuntimeException("Sender address not found: " + dto.getSenderAddressId())));
+
+        if (dto.getRecipientAddressId() != null) {
+            shipment.setRecipientAddress(addressRepository.findById(dto.getRecipientAddressId())
+                    .orElseThrow(() -> new RuntimeException("Recipient address not found: " + dto.getRecipientAddressId())));
+        } else {
+            shipment.setRecipientAddress(null);
+        }
+
+        shipment.setDeliveryType(dto.getDeliveryType());
+
+        shipment.setOffice(officeRepository.findById(dto.getOfficeId())
+                .orElseThrow(() -> new RuntimeException("Office not found: " + dto.getOfficeId())));
+
+        shipment.setWeight(dto.getWeight());
+
+        // валидирай и преизчисли цената
+        validateShipment(shipment);
+        shipment.setPrice(calculatePrice(shipment));
+
+        Shipment saved = shipmentRepository.save(shipment);
+        return toDtoWithCurrentStatus(saved);
+    }
+    public void deleteShipment(Integer id, Authentication authentication) {
+        requireEmployee(authentication);
+
+        if (!shipmentRepository.existsById(id)) {
+            throw new ShipmentNotFound("Shipment not found with ID: " + id);
+        }
+
+        shipmentStatusRepository.deleteByShipment_Id(id);
+        shipmentRepository.deleteById(id);
+    }
+
+
 }

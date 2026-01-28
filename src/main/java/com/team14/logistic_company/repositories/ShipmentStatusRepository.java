@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface ShipmentStatusRepository extends JpaRepository<ShipmentStatus, Integer> {
     List<ShipmentStatus> findByShipment_IdOrderByCreatedOnDesc(Integer shipmentId);
+    void deleteByShipment_Id(Integer shipmentId);
 }

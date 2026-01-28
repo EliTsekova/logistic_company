@@ -40,4 +40,5 @@ public interface ShipmentRepository extends JpaRepository<Shipment, Integer> {
     """)
     BigDecimal sumRevenueBetween(@Param("from") Instant from, @Param("to") Instant to);
 
+
 }

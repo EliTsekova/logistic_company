@@ -30,7 +30,7 @@ public class Shipment {
     private Client recipient;
 
     @ManyToOne
-    @JoinColumn(name = "RecipientAddress", nullable = false)
+    @JoinColumn(name = "RecipientAddress", nullable = true) //може да е null при TO_OFFICE
     private Address recipientAddress;
 
     @Enumerated(EnumType.STRING)

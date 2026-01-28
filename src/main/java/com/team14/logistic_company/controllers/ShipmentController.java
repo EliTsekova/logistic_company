@@ -1,5 +1,6 @@
 package com.team14.logistic_company.controllers;
 
+import com.team14.logistic_company.dtos.ShipmentDto;
 import com.team14.logistic_company.entities.Shipment;
 import com.team14.logistic_company.entities.enums.Status;
 import com.team14.logistic_company.services.ShipmentService;
@@ -99,21 +100,55 @@ public class ShipmentController {
     // 4) служител регистрира пратка (минимално – с Entity binding)
     @GetMapping("/new")
     public String createForm(Model model) {
-        model.addAttribute("shipment", new Shipment());
+        model.addAttribute("shipment", new ShipmentDto());
         return "shipments/form";
     }
 
     @PostMapping
-    public String create(@Valid @ModelAttribute("shipment") Shipment shipment,
+    public String create(@Valid @ModelAttribute("shipment") ShipmentDto shipmentDto,
                          BindingResult result,
                          Authentication authentication,
                          RedirectAttributes ra) {
 
         if (result.hasErrors()) return "shipments/form";
 
-        shipmentService.registerShipment(shipment, authentication);
+        shipmentService.createFromDto(shipmentDto, authentication);
         ra.addFlashAttribute("successMessage", "Shipment registered!");
         return "redirect:/shipments";
     }
+    // 1) форма за редакция
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable Integer id, Model model, Authentication authentication) {
+        model.addAttribute("shipment", shipmentService.findByIdForEdit(id, authentication));
+        return "shipments/form";
+    }
+
+    // 2) запис на редакция
+    @PostMapping("/{id}")
+    public String update(@PathVariable Integer id,
+                         @Valid @ModelAttribute("shipment") ShipmentDto shipmentDto,
+                         BindingResult result,
+                         Authentication authentication,
+                         RedirectAttributes ra) {
+
+        if (result.hasErrors()) return "shipments/form";
+
+        shipmentService.updateFromDto(id, shipmentDto, authentication);
+        ra.addFlashAttribute("successMessage", "Shipment updated!");
+        return "redirect:/shipments";
+    }
+
+    // 3) delete
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable Integer id,
+                         Authentication authentication,
+                         RedirectAttributes ra) {
+
+        shipmentService.deleteShipment(id, authentication);
+        ra.addFlashAttribute("successMessage", "Shipment deleted!");
+        return "redirect:/shipments";
+    }
+
+
 }
 

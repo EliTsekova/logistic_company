@@ -4,6 +4,7 @@ import com.team14.logistic_company.services.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -43,15 +44,37 @@ public class SecurityConfig {
 
         http
                 .csrf(csrf -> csrf.disable())
+                .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
+
+                        // публични
                         .requestMatchers(
                                 "/", "/home", "/login", "/register",
                                 "/css/**", "/js/**", "/images/**", "/assets/**"
                         ).permitAll()
 
-                        // примери за защита
-                        .requestMatchers("/shipments/all").hasAnyAuthority("EMPLOYEE", "ADMIN")
+                        // Logistic company
+                        .requestMatchers(HttpMethod.GET, "/company").authenticated()
+                        .requestMatchers("/company/edit", "/company/reset").hasAnyAuthority("EMPLOYEE", "ADMIN")
 
+                        // Shipments - общи (и клиент, и служител могат да виждат)
+                        .requestMatchers(HttpMethod.GET, "/shipments/**").authenticated()
+
+                        // Shipments - само служител (create/edit/delete/status)
+                        .requestMatchers(HttpMethod.GET,  "/shipments/new").hasAnyAuthority("EMPLOYEE", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/shipments").hasAnyAuthority("EMPLOYEE", "ADMIN")
+
+                        .requestMatchers(HttpMethod.GET,  "/shipments/*/edit").hasAnyAuthority("EMPLOYEE", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/shipments/*").hasAnyAuthority("EMPLOYEE", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/shipments/*/delete").hasAnyAuthority("EMPLOYEE", "ADMIN")
+
+                        // реалният ти endpoint за статус е /shipments/{id}/status
+                        .requestMatchers(HttpMethod.POST, "/shipments/*/status").hasAnyAuthority("EMPLOYEE", "ADMIN")
+
+                        // ако имаш endpoint само за служители като "/shipments/all" (ако още го ползваш)
+                        .requestMatchers(HttpMethod.GET, "/shipments/all").hasAnyAuthority("EMPLOYEE", "ADMIN")
+
+                        // всичко останало - логнат потребител
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -66,16 +89,6 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .permitAll()
-                ).authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/home", "/login", "/register", "/css/**", "/js/**", "/images/**", "/assets/**").permitAll()
-
-                        // само служител: create + update status + history по всички
-                        .requestMatchers("/shipments/new", "/shipments", "/shipments/update-status/**").hasAnyAuthority("EMPLOYEE", "ADMIN")
-
-                        // client може да вижда листа /shipments (в контролера ти така или иначе вижда само неговите)
-                        .requestMatchers("/shipments/**").authenticated()
-
-                        .anyRequest().authenticated()
                 );
 
         return http.build();
