@@ -1,12 +1,14 @@
 package com.team14.logistic_company.configurations;
 
 import org.springframework.context.annotation.Bean;
-//import org.thymeleaf.extras.springsecurity6.dialect.SpringSecurityDialect;
+import org.springframework.context.annotation.Configuration;
+import org.thymeleaf.extras.springsecurity6.dialect.SpringSecurityDialect;
 
-/// can be used in the project
+@Configuration
 public class ThymeleafConfig {
- /*   @Bean
+
+    @Bean
     public SpringSecurityDialect springSecurityDialect() {
         return new SpringSecurityDialect();
-    }*/
+    }
 }

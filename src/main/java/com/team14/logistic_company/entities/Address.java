@@ -45,4 +45,6 @@ public class Address {
     @UpdateTimestamp
     @Column(name = "updated_on", nullable = false)
     private Instant updatedOn;
+
+
 }

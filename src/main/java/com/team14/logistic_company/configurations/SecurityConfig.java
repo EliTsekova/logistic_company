@@ -1,70 +1,83 @@
 package com.team14.logistic_company.configurations;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import com.team14.logistic_company.services.CustomUserDetailsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-/// can be used in the project
+
 @Configuration
-
-// Tells Springboot that the class will need the WebSecurity framework and
-// mechanisms. Indicates that
-// such mechanisms are required by the application.
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
-  /*  @Autowired
-    CustomUserDetailsService customUserDetailsService;
 
-    // Works based on the Blowfish cipher
-    // Generates salt, appends it and then hashes it
-    // TODO: Check if password encryption settings can be managed by us - hashing,
-    // encr, decr keys
+    private final CustomUserDetailsService customUserDetailsService;
+
     @Bean
-    public static PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(customUserDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
     }
 
     @Bean
-    @SuppressWarnings("deprecation")
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/register", "/home", "/demo").permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/assets/**")).permitAll()
-                        .requestMatchers("/static/**").permitAll()
-                        .requestMatchers("/shipments/all").hasAuthority("EMPLOYEE")
-                        .anyRequest().authenticated())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/", "/home", "/login", "/register",
+                                "/css/**", "/js/**", "/images/**", "/assets/**"
+                        ).permitAll()
+
+                        // примери за защита
+                        .requestMatchers("/shipments/all").hasAnyAuthority("EMPLOYEE", "ADMIN")
+
+                        .anyRequest().authenticated()
+                )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/home", true)
-                        .permitAll())
+                        .permitAll()
+                )
                 .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                        .logoutSuccessUrl("/login?logout")
-                        .permitAll());
+                        .permitAll()
+                ).authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/home", "/login", "/register", "/css/**", "/js/**", "/images/**", "/assets/**").permitAll()
+
+                        // само служител: create + update status + history по всички
+                        .requestMatchers("/shipments/new", "/shipments", "/shipments/update-status/**").hasAnyAuthority("EMPLOYEE", "ADMIN")
+
+                        // client може да вижда листа /shipments (в контролера ти така или иначе вижда само неговите)
+                        .requestMatchers("/shipments/**").authenticated()
+
+                        .anyRequest().authenticated()
+                );
 
         return http.build();
     }
-
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
-    }*/
 }

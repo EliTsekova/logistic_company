@@ -1,34 +1,35 @@
 package com.team14.logistic_company.dtos;
 
-import com.team14.logistic_company.entities.Address;
-import com.team14.logistic_company.entities.Client;
-import com.team14.logistic_company.entities.Employee;
-import com.team14.logistic_company.entities.Office;
-import lombok.Data;
-
-
-import java.math.BigDecimal;
-import java.time.Instant;
 import lombok.Getter;
 import lombok.Setter;
 
-@Data
+import java.math.BigDecimal;
+import java.time.Instant;
+
+@Getter
+@Setter
 public class ShipmentDto {
-    @Getter
+
     private Integer id;
 
-    private Employee employee;
-    private Client recipient;
-    private Address recipientAddress;
-    private Client sender;
-    private Address senderAddress;
-    private Office office;
+    private Integer employeeId;
+    private Integer senderId;
+    private Integer recipientId;
+
+    private Integer senderAddressId;
+    private Integer recipientAddressId;
+
+    private Integer officeId;
+
     private double weight;
     private BigDecimal price;
+
+    private String uniqueId;
+
+    // удобство за показване (не се пази в Shipment)
+    private String currentStatus;
+
     private Instant createdOn;
     private Instant updatedOn;
-    @Getter
-    private String uniqueID;
-    @Setter
-    private String status;
 }
+
