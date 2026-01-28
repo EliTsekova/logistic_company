@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html class="light" lang="bg"><head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "primary": "#1d4ed8",
+                    "secondary": "#3b82f6",
+                    "background-light": "#f8fafc",
+                    "background-dark": "#0f172a",
+                },
+                fontFamily: {
+                    "display": ["Manrope", "sans-serif"]
+                },
+                borderRadius: {
+                    "DEFAULT": "0.375rem",
+                    "lg": "0.5rem",
+                    "xl": "1rem",
+                    "full": "9999px"
+                },
+            },
+        },
+    }
+  </script>
+  <style type="text/tailwindcss">
+    body {
+        font-family: "Manrope", sans-serif;
+    }
+    details > summary::-webkit-details-marker {
+        display: none;
+    }
+    details[open] summary .expand-icon {
+        transform: rotate(180deg);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen text-slate-900 dark:text-slate-100">
+<header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-10">
+  <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-primary text-3xl font-bold">local_shipping</span>
+      <span class="text-xl font-extrabold tracking-tight">LogisticsPro</span>
+    </div>
+    <nav class="hidden md:flex gap-6 text-sm font-semibold">
+      <a class="hover:text-primary transition-colors" href="#">Начало</a>
+      <a class="hover:text-primary transition-colors" href="#">Услуги</a>
+      <a class="text-primary" href="#">FAQ</a>
+    </nav>
+  </div>
+</header>
+<main class="max-w-4xl mx-auto px-4 py-12">
+  <div class="text-center mb-12">
+    <h1 class="text-3xl md:text-4xl font-extrabold mb-4 tracking-tight">Често задавани въпроси (FAQ)</h1>
+    <p class="text-slate-500 dark:text-slate-400 text-lg max-w-2xl mx-auto">Намерете бързи отговори на най-честите въпроси относно нашите куриерски услуги.</p>
+  </div>
+  <div class="relative max-w-2xl mx-auto mb-16">
+    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+    <input class="w-full h-14 pl-12 pr-4 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent shadow-sm text-lg transition-all" placeholder="Как можем да Ви помогнем?" type="text"/>
+  </div>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+    <div class="lg:col-span-8 space-y-10">
+      <section>
+        <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">package_2</span>
+          Изпращане на пратки
+        </h2>
+        <div class="space-y-3">
+          <details class="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden transition-all">
+            <summary class="flex items-center justify-between p-4 cursor-pointer list-none hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="font-semibold pr-4">Как да подготвя пратката си за изпращане?</span>
+              <span class="material-symbols-outlined text-slate-400 expand-icon transition-transform">expand_more</span>
+            </summary>
+            <div class="p-4 pt-0 text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-100 dark:border-slate-800 mt-2">
+              Пратката трябва да бъде надеждно опакована в картонена кутия или подходящ плик. Уверете се, че съдържанието е неподвижно и използвайте предпазни материали при чупливи предмети.
+            </div>
+          </details>
+          <details class="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden transition-all">
+            <summary class="flex items-center justify-between p-4 cursor-pointer list-none hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="font-semibold pr-4">Мога ли да заявя куриер до адрес?</span>
+              <span class="material-symbols-outlined text-slate-400 expand-icon transition-transform">expand_more</span>
+            </summary>
+            <div class="p-4 pt-0 text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-100 dark:border-slate-800 mt-2">
+              Да, можете да заявите посещение на адрес чрез нашия уебсайт, мобилното приложение или по телефона.
+            </div>
+          </details>
+        </div>
+      </section>
+      <section>
+        <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">location_on</span>
+          Проследяване
+        </h2>
+        <div class="space-y-3">
+          <details class="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden transition-all">
+            <summary class="flex items-center justify-between p-4 cursor-pointer list-none hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="font-semibold pr-4">Как да проследя пратката си?</span>
+              <span class="material-symbols-outlined text-slate-400 expand-icon transition-transform">expand_more</span>
+            </summary>
+            <div class="p-4 pt-0 text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-100 dark:border-slate-800 mt-2">
+              Въведете номера на вашата товарителница в полето "Проследяване" на началната ни страница. Ще получите информация за текущото местоположение в реално време.
+            </div>
+          </details>
+          <details class="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden transition-all">
+            <summary class="flex items-center justify-between p-4 cursor-pointer list-none hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="font-semibold pr-4">Какво означава статус "В процес на доставка"?</span>
+              <span class="material-symbols-outlined text-slate-400 expand-icon transition-transform">expand_more</span>
+            </summary>
+            <div class="p-4 pt-0 text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-100 dark:border-slate-800 mt-2">
+              Този статус означава, че куриерът вече е натоварил пратката в автомобила си и тя ще бъде доставена в рамките на текущия работен ден.
+            </div>
+          </details>
+        </div>
+      </section>
+      <section>
+        <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">payments</span>
+          Цени и Плащания
+        </h2>
+        <div class="space-y-3">
+          <details class="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden transition-all">
+            <summary class="flex items-center justify-between p-4 cursor-pointer list-none hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="font-semibold pr-4">Мога ли да платя с карта при куриер?</span>
+              <span class="material-symbols-outlined text-slate-400 expand-icon transition-transform">expand_more</span>
+            </summary>
+            <div class="p-4 pt-0 text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-100 dark:border-slate-800 mt-2">
+              Да, всички наши куриери разполагат с мобилни POS терминали за плащане с дебитни и кредитни карти.
+            </div>
+          </details>
+        </div>
+      </section>
+      <section>
+        <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">report</span>
+          Проблеми с доставката
+        </h2>
+        <div class="space-y-3">
+          <details class="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden transition-all">
+            <summary class="flex items-center justify-between p-4 cursor-pointer list-none hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="font-semibold pr-4">Какво да направя, ако пратката ми е повредена?</span>
+              <span class="material-symbols-outlined text-slate-400 expand-icon transition-transform">expand_more</span>
+            </summary>
+            <div class="p-4 pt-0 text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-100 dark:border-slate-800 mt-2">
+              При получаване на повредена пратка е необходимо да съставите протокол за увреждане в присъствието на куриера. Свържете се с нашия отдел "Рекламации" веднага.
+            </div>
+          </details>
+        </div>
+      </section>
+    </div>
+    <div class="lg:col-span-4">
+      <div class="sticky top-24 p-6 bg-primary/5 dark:bg-primary/10 rounded-2xl border border-primary/10">
+        <span class="material-symbols-outlined text-primary text-4xl mb-4">support_agent</span>
+        <h3 class="text-xl font-bold mb-2">Все още имате въпроси?</h3>
+        <p class="text-slate-600 dark:text-slate-400 mb-6 text-sm leading-relaxed">
+          Ако не сте намерили отговор на вашия въпрос, нашият екип е тук, за да ви съдейства.
+        </p>
+        <a class="block w-full bg-primary hover:bg-blue-700 text-white text-center font-bold py-3 px-6 rounded-lg transition-all shadow-md" href="#">
+          Свържете се с нас
+        </a>
+        <div class="mt-8 space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center text-primary">
+              <span class="material-symbols-outlined text-sm">call</span>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500">Национален телефон</p>
+              <p class="font-bold">0700 12 345</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center text-primary">
+              <span class="material-symbols-outlined text-sm">mail</span>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500">Email</p>
+              <p class="font-bold">support@logisticspro.bg</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<footer class="mt-20 py-12 border-t border-slate-200 dark:border-slate-800 text-center text-slate-500 text-sm">
+  <p>© 2024 LogisticsPro. Всички права запазени.</p>
+</footer>
+
+</body></html>

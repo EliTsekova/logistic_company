@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html class="light" lang="bg">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Потвърждаване на доставка - LogisticsPro</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "primary": "#13ec25",
+                    "primary-dark": "#0fcb1f",
+                    "secondary": "#618965",
+                    "background-light": "#f6f8f6",
+                    "background-dark": "#102212",
+                    "surface-dark": "#1a2e1c",
+                    "success": "#10b981",
+                    "warning": "#f59e0b",
+                    "danger": "#ef4444",
+                },
+                fontFamily: {
+                    "display": ["Manrope", "sans-serif"]
+                },
+                borderRadius: {
+                    "DEFAULT": "0.5rem",
+                    "lg": "0.75rem",
+                    "xl": "1rem",
+                    "2xl": "1.5rem",
+                    "full": "9999px"
+                },
+                boxShadow: {
+                    'modal': '0 20px 60px rgba(0, 0, 0, 0.3)',
+                    'button': '0 4px 20px rgba(19, 236, 37, 0.3)',
+                }
+            },
+        },
+    }
+  </script>
+  <style>
+    body {
+        font-family: "Manrope", sans-serif;
+        overflow: hidden;
+    }
+
+    .modal-overlay {
+        background-color: rgba(16, 34, 18, 0.8);
+        backdrop-filter: blur(8px);
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23618965'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        background-position: right 1rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 3rem;
+    }
+
+    .dark select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2313ec25'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    }
+
+    /* Анимации */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .animate-slideIn {
+        animation: slideIn 0.4s ease-out forwards;
+    }
+
+    .animate-pulse-slow {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    /* Signature canvas */
+    .signature-canvas {
+        touch-action: none;
+        cursor: crosshair;
+    }
+
+    .signature-placeholder {
+        background-image: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 14px,
+            rgba(97, 137, 101, 0.1) 14px,
+            rgba(97, 137, 101, 0.1) 15px
+        );
+    }
+
+    .dark .signature-placeholder {
+        background-image: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 14px,
+            rgba(19, 236, 37, 0.1) 14px,
+            rgba(19, 236, 37, 0.1) 15px
+        );
+    }
+
+    /* Кастъм скролбар */
+    .modal-content::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .modal-content::-webkit-scrollbar-track {
+        background: #f0f4f0;
+        border-radius: 4px;
+    }
+
+    .dark .modal-content::-webkit-scrollbar-track {
+        background: #1a2e1c;
+    }
+
+    .modal-content::-webkit-scrollbar-thumb {
+        background: #13ec25;
+        border-radius: 4px;
+    }
+
+    .modal-content::-webkit-scrollbar-thumb:hover {
+        background: #0fcb1f;
+    }
+
+    /* Ховер ефекти */
+    .form-input {
+        transition: all 0.2s ease;
+    }
+
+    .form-input:focus {
+        box-shadow: 0 0 0 3px rgba(19, 236, 37, 0.1);
+    }
+
+    .btn-primary {
+        transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 30px rgba(19, 236, 37, 0.4);
+    }
+
+    .btn-primary:active {
+        transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center p-4">
+<!-- Modal Overlay -->
+<div class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4">
+  <!-- Modal Container -->
+  <div class="bg-white dark:bg-surface-dark w-full max-w-2xl rounded-2xl shadow-modal overflow-hidden flex flex-col max-h-[90vh] animate-slideIn">
+    <!-- Header -->
+    <div class="border-b border-[#dbe6dc] dark:border-white/10 p-6 sm:p-8">
+      <div class="flex justify-between items-start gap-4">
+        <div class="flex-1">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="p-2 bg-primary/10 rounded-lg">
+              <span class="material-symbols-outlined text-primary text-xl">local_shipping</span>
+            </div>
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-bold">
+                <span class="material-symbols-outlined text-base">verified</span>
+                Последна стъпка
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h2 class="text-[#111812] dark:text-white text-2xl sm:text-3xl font-bold leading-tight mb-2">
+              Потвърждаване на доставка
+            </h2>
+            <div class="flex flex-wrap items-center gap-4">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary dark:text-primary/60 text-sm">tag</span>
+                <p class="text-secondary dark:text-primary/70 text-sm font-semibold">
+                  Пратка: <span class="text-[#111812] dark:text-white font-black">#LE-88231</span>
+                </p>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary dark:text-primary/60 text-sm">schedule</span>
+                <p class="text-secondary dark:text-primary/70 text-sm font-semibold">
+                  Създадена: <span class="text-[#111812] dark:text-white">28.01.2024</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button id="closeModal" class="text-secondary dark:text-white/50 hover:text-[#111812] dark:hover:text-white transition-colors p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-lg">
+          <span class="material-symbols-outlined text-2xl">close</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Content (Scrollable) -->
+    <div class="flex-1 overflow-y-auto modal-content p-6 sm:p-8 space-y-8">
+      <!-- Информация за пратката -->
+      <div class="bg-[#fbfcfb] dark:bg-black/10 rounded-xl p-4 sm:p-6">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div>
+            <p class="text-secondary dark:text-primary/60 text-xs font-bold uppercase mb-1">ТЕГЛО</p>
+            <p class="text-[#111812] dark:text-white font-bold">2.5 кг</p>
+          </div>
+          <div>
+            <p class="text-secondary dark:text-primary/60 text-xs font-bold uppercase mb-1">РАЗМЕРИ</p>
+            <p class="text-[#111812] dark:text-white font-bold">30×20×15см</p>
+          </div>
+          <div>
+            <p class="text-secondary dark:text-primary/60 text-xs font-bold uppercase mb-1">СТОЙНОСТ</p>
+            <p class="text-[#111812] dark:text-white font-bold">89.99 лв.</p>
+          </div>
+          <div>
+            <p class="text-secondary dark:text-primary/60 text-xs font-bold uppercase mb-1">СТАТУС</p>
+            <div class="inline-flex items-center gap-1 px-2 py-1 bg-warning/10 text-warning rounded-full text-xs font-bold">
+              <span class="material-symbols-outlined text-xs">hourglass_top</span>
+              Очаква потвърждение
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recipient Dropdown -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-primary/10 rounded-lg">
+            <span class="material-symbols-outlined text-primary">person</span>
+          </div>
+          <div>
+            <h3 class="text-[#111812] dark:text-white text-lg font-bold">Получател</h3>
+            <p class="text-secondary dark:text-primary/60 text-sm">Изберете кой получава пратката</p>
+          </div>
+        </div>
+
+        <label class="block">
+          <span class="text-[#111812] dark:text-white text-base font-bold mb-2 block">Тип получател</span>
+          <select id="recipientType" class="form-input w-full rounded-lg text-[#111812] dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 border border-[#dbe6dc] dark:border-white/10 bg-white dark:bg-[#0d1a0e] h-14 px-4 text-base font-normal transition-all hover:border-primary/30 cursor-pointer">
+            <option disabled selected value="">Изберете тип получател</option>
+            <option value="personal">Лично получаване</option>
+            <option value="family">Член на семейството</option>
+            <option value="authorized">Пълномощник/Представител</option>
+            <option value="neighbor">Съсед</option>
+            <option value="office">Служебно лице</option>
+            <option value="other">Друго</option>
+          </select>
+        </label>
+
+        <!-- Допълнителни полета за различни типове получатели -->
+        <div id="additionalFields" class="space-y-4 hidden">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-[#111812] dark:text-white text-sm font-bold mb-2">Име на получателя</label>
+              <input type="text" class="form-input w-full rounded-lg h-12 px-4" placeholder="Въведете име">
+            </div>
+            <div>
+              <label class="block text-[#111812] dark:text-white text-sm font-bold mb-2">Връзка с получателя</label>
+              <input type="text" class="form-input w-full rounded-lg h-12 px-4" placeholder="Напр. съпруг, колега">
+            </div>
+          </div>
+          <div>
+            <label class="block text-[#111812] dark:text-white text-sm font-bold mb-2">Документ за самоличност</label>
+            <input type="text" class="form-input w-full rounded-lg h-12 px-4" placeholder="ЕГН/ЛНЧ/Паспорт №">
+          </div>
+        </div>
+      </div>
+
+      <!-- Signature Section -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-primary/10 rounded-lg">
+            <span class="material-symbols-outlined text-primary">draw</span>
+          </div>
+          <div>
+            <h3 class="text-[#111812] dark:text-white text-lg font-bold">Подпис на получателя</h3>
+            <p class="text-secondary dark:text-primary/60 text-sm">Подпишете се директно в полето по-долу</p>
+          </div>
+        </div>
+
+        <div class="border-2 border-dashed border-[#dbe6dc] dark:border-white/10 rounded-xl bg-[#fbfcfb] dark:bg-black/10 p-4 sm:p-6">
+          <div class="signature-container relative">
+            <!-- Canvas за подпис -->
+            <canvas id="signatureCanvas"
+                    width="800"
+                    height="200"
+                    class="signature-canvas w-full h-48 bg-white dark:bg-[#0d1a0e] rounded-lg border border-[#dbe6dc] dark:border-white/10 signature-placeholder">
+            </canvas>
+
+            <!-- Placeholder текст -->
+            <div id="signaturePlaceholder" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              <span class="material-symbols-outlined text-secondary dark:text-primary/40 text-4xl mb-3 animate-pulse-slow">draw</span>
+              <p class="text-[#111812] dark:text-white text-lg font-bold mb-2">Тук ще се появи Вашият подпис</p>
+              <p class="text-secondary dark:text-primary/60 text-sm text-center max-w-md">
+                Използвайте мишката или докоснете екрана, за да се подпишете<br>
+                <span class="text-xs opacity-70">(задържете за по-плътна линия)</span>
+              </p>
+            </div>
+
+            <!-- Подпис след рисуване -->
+            <div id="signaturePreview" class="hidden absolute bottom-4 left-4 bg-white/95 dark:bg-black/80 px-3 py-2 rounded-lg">
+              <p class="text-xs text-[#111812] dark:text-white">
+                <span class="material-symbols-outlined text-primary text-xs align-middle mr-1">check_circle</span>
+                Подписът е запазен
+              </p>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-3 mt-4">
+            <button id="clearSignature" class="flex items-center gap-2 px-4 py-2.5 bg-[#f0f4f0] dark:bg-white/10 text-[#111812] dark:text-white rounded-lg font-bold hover:bg-gray-200 dark:hover:bg-white/20 transition-colors">
+              <span class="material-symbols-outlined text-lg">delete</span>
+              Изчисти подписа
+            </button>
+            <button id="undoSignature" class="flex items-center gap-2 px-4 py-2.5 bg-[#f0f4f0] dark:bg-white/10 text-[#111812] dark:text-white rounded-lg font-bold hover:bg-gray-200 dark:hover:bg-white/20 transition-colors">
+              <span class="material-symbols-outlined text-lg">undo</span>
+              Отмени последно
+            </button>
+            <button id="saveSignature" class="flex items-center gap-2 px-4 py-2.5 bg-primary/10 text-primary rounded-lg font-bold hover:bg-primary/20 transition-colors">
+              <span class="material-symbols-outlined text-lg">download</span>
+              Запази подписа
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes Section -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-primary/10 rounded-lg">
+            <span class="material-symbols-outlined text-primary">notes</span>
+          </div>
+          <div>
+            <h3 class="text-[#111812] dark:text-white text-lg font-bold">Допълнителна информация</h3>
+            <p class="text-secondary dark:text-primary/60 text-sm">Незадължителни бележки относно доставката</p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <label class="block">
+            <span class="text-[#111812] dark:text-white text-base font-bold mb-2 block">Забележки за доставката</span>
+            <textarea id="deliveryNotes"
+                      class="form-input w-full rounded-lg text-[#111812] dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 border border-[#dbe6dc] dark:border-white/10 bg-white dark:bg-[#0d1a0e] min-h-32 placeholder:text-secondary/60 dark:placeholder:text-white/30 p-4 text-base font-normal leading-normal transition-all resize-none"
+                      placeholder="Примерни теми:
+• Номер на документ за самоличност
+• Описание на мястото за оставяне
+• Указания за контакт с получателя
+• Допълнителни инструкции...">
+                            </textarea>
+          </label>
+
+          <div class="text-sm text-secondary dark:text-primary/60">
+            <p class="font-bold mb-1">Препоръки:</p>
+            <ul class="list-disc list-inside space-y-1 ml-2">
+              <li>Укажете точен час за връщане, ако е необходимо</li>
+              <li>Отбележете ако пратката е крехка</li>
+              <li>Добавете телефон за експресна връзка</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Верификация -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-primary/10 rounded-lg">
+            <span class="material-symbols-outlined text-primary">verified_user</span>
+          </div>
+          <div>
+            <h3 class="text-[#111812] dark:text-white text-lg font-bold">Верификация</h3>
+            <p class="text-secondary dark:text-primary/60 text-sm">Потвърдете информацията преди финализиране</p>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <label class="flex items-center gap-3 p-4 bg-[#fbfcfb] dark:bg-black/10 rounded-lg border border-[#dbe6dc] dark:border-white/10 cursor-pointer hover:border-primary/30 transition-colors">
+            <input type="checkbox" id="verifyInfo" class="w-5 h-5 text-primary rounded focus:ring-primary/50 border-[#dbe6dc] dark:border-white/20">
+            <span class="text-[#111812] dark:text-white font-medium">
+                                Потвърждавам, че информацията е вярна и пълна
+                            </span>
+          </label>
+
+          <label class="flex items-center gap-3 p-4 bg-[#fbfcfb] dark:bg-black/10 rounded-lg border border-[#dbe6dc] dark:border-white/10 cursor-pointer hover:border-primary/30 transition-colors">
+            <input type="checkbox" id="agreeTerms" class="w-5 h-5 text-primary rounded focus:ring-primary/50 border-[#dbe6dc] dark:border-white/20">
+            <span class="text-[#111812] dark:text-white font-medium">
+                                Съгласен/а съм с общите условия и политиката за поверителност
+                            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Footer -->
+    <div class="p-6 sm:p-8 bg-[#fbfcfb] dark:bg-black/10 border-t border-[#dbe6dc] dark:border-white/10 flex flex-col sm:flex-row gap-4">
+      <button id="cancelBtn" class="flex-1 flex items-center justify-center gap-2 h-14 px-6 bg-[#e8ebe8] dark:bg-white/5 text-[#111812] dark:text-white rounded-xl font-bold hover:bg-gray-300 dark:hover:bg-white/10 transition-colors">
+        <span class="material-symbols-outlined text-lg">close</span>
+        Отказ
+      </button>
+      <button id="confirmBtn" class="flex-[2] flex items-center justify-center gap-3 h-14 px-6 bg-primary text-black rounded-xl font-extrabold shadow-button hover:brightness-110 transition-all btn-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none">
+        <span class="material-symbols-outlined text-xl">task_alt</span>
+        <span class="text-lg uppercase tracking-wide">Потвърди доставката</span>
+        <span class="material-symbols-outlined text-xl ml-auto">arrow_forward</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div id="successModal" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4 hidden">
+  <div class="bg-white dark:bg-surface-dark w-full max-w-md rounded-2xl shadow-modal overflow-hidden animate-slideIn">
+    <div class="p-8 text-center">
+      <div class="w-20 h-20 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-6">
+        <span class="material-symbols-outlined text-success text-4xl">check_circle</span>
+      </div>
+      <h3 class="text-2xl font-bold text-[#111812] dark:text-white mb-3">Доставката е потвърдена!</h3>
+      <p class="text-secondary dark:text-primary/60 mb-6">
+        Пратка #LE-88231 е успешно регистрирана като получена.<br>
+        Статусът е актуализиран в системата.
+      </p>
+      <button id="closeSuccessModal" class="w-full h-14 bg-primary text-black rounded-xl font-extrabold shadow-button hover:brightness-110 transition-all">
+        Затвори
+      </button>
+    </div>
+  </div>
+</div>
