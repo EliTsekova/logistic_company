@@ -1,12 +1,7 @@
 <!DOCTYPE html>
 <html class="light" lang="bg">
 <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>Ценоразпис на услугите - LogisticsPro</title>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <script id="tailwind-config">
     tailwind.config = {
         darkMode: "class",
@@ -14,498 +9,75 @@
             extend: {
                 colors: {
                     "primary": "#135bec",
-                    "primary-dark": "#0e4bc5",
-                    "secondary": "#f59e0b",
                     "background-light": "#f6f6f8",
                     "background-dark": "#101622",
-                    "success": "#10b981",
-                    "warning": "#f59e0b",
-                    "danger": "#ef4444",
                 },
                 fontFamily: {
                     "display": ["Manrope", "sans-serif"]
                 },
                 borderRadius: {
-                    "DEFAULT": "0.5rem",
-                    "lg": "0.75rem",
-                    "xl": "1rem",
-                    "2xl": "1.5rem",
                     "full": "9999px"
                 },
-                boxShadow: {
-                    'card': '0 4px 20px rgba(0, 0, 0, 0.06)',
-                    'card-hover': '0 8px 30px rgba(0, 0, 0, 0.12)',
-                    'floating': '0 10px 40px rgba(19, 91, 236, 0.15)',
-                }
             },
         },
     }
   </script>
-  <style type="text/tailwindcss">
     body {
         font-family: "Manrope", sans-serif;
     }
     .hero-gradient {
-        background: linear-gradient(135deg, rgba(19, 91, 236, 0.08) 0%, rgba(255, 255, 255, 1) 100%);
     }
     .dark .hero-gradient {
-        background: linear-gradient(135deg, rgba(19, 91, 236, 0.15) 0%, rgba(16, 22, 34, 1) 100%);
-    }
-    .price-card {
-        transition: all 0.3s ease;
-    }
-    .price-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-    }
-    .dark .price-card:hover {
-        box-shadow: 0 12px 40px rgba(19, 91, 236, 0.2);
-    }
-    .pricing-table tr {
-        transition: background-color 0.2s ease;
-    }
-    .pricing-table tr:hover {
-        background-color: rgba(19, 91, 236, 0.05) !important;
-    }
-    .dark .pricing-table tr:hover {
-        background-color: rgba(19, 91, 236, 0.1) !important;
-    }
-
-    /* Анимации */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .animate-fadeInUp {
-        animation: fadeInUp 0.6s ease-out forwards;
-    }
-
-    .animate-delay-1 {
-        animation-delay: 0.1s;
-    }
-
-    .animate-delay-2 {
-        animation-delay: 0.2s;
-    }
-
-    /* Кастъм скролбар */
-    ::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 4px;
-    }
-
-    .dark ::-webkit-scrollbar-track {
-        background: #1e293b;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: #135bec;
-        border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: #0e4bc5;
-    }
-
-    /* Стилове за превключвател на тема */
-    .theme-toggle {
-        position: relative;
-        width: 50px;
-        height: 26px;
-    }
-
-    .theme-toggle input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .theme-slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #cbd5e1;
-        transition: .4s;
-        border-radius: 34px;
-    }
-
-    .theme-slider:before {
-        position: absolute;
-        content: "";
-        height: 18px;
-        width: 18px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
-    }
-
-    input:checked + .theme-slider {
-        background-color: #135bec;
-    }
-
-    input:checked + .theme-slider:before {
-        transform: translateX(24px);
-    }
-
-    .dark .theme-slider {
-        background-color: #475569;
     }
   </style>
 </head>
 <body class="bg-white dark:bg-background-dark min-h-screen">
 <div class="layout-container flex flex-col">
-  <!-- Header -->
-  <header class="flex items-center justify-between border-b border-solid border-[#dbdfe6] dark:border-slate-700 bg-white/80 backdrop-blur-md dark:bg-background-dark/80 px-4 sm:px-6 lg:px-10 py-4 sticky top-0 z-50 shadow-sm">
-    <div class="flex items-center gap-6 lg:gap-10">
       <div class="flex items-center gap-3 text-[#111318] dark:text-white">
         <div class="text-primary">
-          <span class="material-symbols-outlined text-3xl sm:text-4xl block">local_shipping</span>
         </div>
-        <h2 class="text-xl sm:text-2xl font-bold leading-tight tracking-tight">LogisticsPro</h2>
       </div>
 
-      <!-- Desktop Navigation -->
-      <nav class="hidden md:flex items-center gap-6 lg:gap-8">
-        <a class="text-[#111318] dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors duration-200 flex items-center gap-2" href="#">
-          <span class="material-symbols-outlined text-lg">miscellaneous_services</span>
-          Услуги
-        </a>
-        <a class="text-[#111318] dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors duration-200 flex items-center gap-2" href="#">
-          <span class="material-symbols-outlined text-lg">business_center</span>
-          Офиси
-        </a>
-        <a class="text-primary dark:text-primary text-sm font-semibold flex items-center gap-2 px-3 py-2 bg-primary/10 rounded-lg" href="#">
-          <span class="material-symbols-outlined text-lg">attach_money</span>
-          Цени
-        </a>
       </nav>
     </div>
 
-    <div class="flex items-center gap-3">
-      <!-- Тема toggle -->
-      <label class="theme-toggle mr-2">
-        <input type="checkbox" id="themeToggle">
-        <span class="theme-slider"></span>
-      </label>
-
-      <!-- Вход бутон -->
-      <button class="hidden sm:flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-lg bg-primary text-white font-bold hover:bg-primary-dark transition-all duration-200 shadow-md hover:shadow-lg">
         <span class="material-symbols-outlined text-xl">login</span>
-        <span class="hidden lg:inline">Вход за клиенти</span>
-        <span class="lg:hidden">Вход</span>
       </button>
-
-      <!-- Mobile menu button -->
-      <button id="mobileMenuButton" class="md:hidden text-slate-600 dark:text-slate-300 p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
-        <span class="material-symbols-outlined text-2xl">menu</span>
       </button>
-    </div>
-
-    <!-- Mobile Menu -->
-    <div id="mobileMenu" class="absolute top-full left-0 right-0 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-lg hidden md:hidden">
-      <div class="px-6 py-4 space-y-3">
-        <a class="flex items-center gap-3 text-slate-700 dark:text-slate-300 font-semibold hover:text-primary transition-colors py-2" href="#">
-          <span class="material-symbols-outlined">miscellaneous_services</span>
-          Услуги
-        </a>
-        <a class="flex items-center gap-3 text-slate-700 dark:text-slate-300 font-semibold hover:text-primary transition-colors py-2" href="#">
-          <span class="material-symbols-outlined">business_center</span>
-          Офиси
-        </a>
-        <a class="flex items-center gap-3 text-primary font-semibold py-2" href="#">
-          <span class="material-symbols-outlined">attach_money</span>
-          Цени
-        </a>
-        <a class="flex items-center gap-3 text-slate-700 dark:text-slate-300 font-semibold hover:text-primary transition-colors py-2" href="#">
-          <span class="material-symbols-outlined">info</span>
-          За нас
-        </a>
-        <button class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-dark transition-colors mt-4">
-          <span class="material-symbols-outlined">login</span>
-          Вход за клиенти
-        </button>
-      </div>
     </div>
   </header>
 
-  <!-- Main Content -->
   <main>
-    <!-- Hero Section -->
-    <section class="hero-gradient py-10 lg:py-20 border-b border-slate-100 dark:border-slate-800">
-      <div class="max-w-[1200px] mx-auto px-4 sm:px-6 text-center animate-fadeInUp">
-        <div class="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-bold mb-6">
-          <span class="material-symbols-outlined">sell</span>
-          Прозрачни цени
-        </div>
-        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-[#111318] dark:text-white mb-6">Ценоразпис на услугите</h1>
-        <p class="text-base sm:text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto mb-8">
-          Ясни и прозрачни цени за доставка в цялата страна. Изберете най-подходящия вариант за вашите нужди.
         </p>
-        <div class="flex flex-wrap gap-3 justify-center">
-          <button class="px-6 py-3 bg-primary text-white rounded-lg font-bold hover:bg-primary-dark transition-all duration-200 shadow-lg hover:shadow-xl">
-            Калкулатор за цени
-          </button>
-          <button class="px-6 py-3 border-2 border-primary text-primary rounded-lg font-bold hover:bg-primary hover:text-white transition-all duration-200">
-            Изтегли PDF
           </button>
         </div>
       </div>
-    </section>
-
-    <!-- Pricing Tables -->
-    <section class="py-12 lg:py-16 bg-white dark:bg-background-dark">
-      <div class="max-w-[1200px] mx-auto px-4 sm:px-6">
-        <div class="grid lg:grid-cols-2 gap-6 lg:gap-8">
-          <!-- Доставка до офис -->
-          <div class="price-card bg-white dark:bg-slate-900 rounded-2xl shadow-card border border-slate-200 dark:border-slate-800 overflow-hidden animate-fadeInUp">
-            <div class="bg-gradient-to-r from-primary to-blue-600 p-6 text-white">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                  <span class="material-symbols-outlined text-2xl">storefront</span>
-                  <div>
-                    <h3 class="text-xl font-bold">Доставка до офис</h3>
-                    <p class="text-white/80 text-sm mt-1">Най-икономичният вариант</p>
                   </div>
                 </div>
-                <span class="text-lg font-black">⭐</span>
               </div>
             </div>
-            <div class="p-1">
-              <table class="w-full pricing-table">
-                <thead>
-                <tr class="text-left border-b border-slate-200 dark:border-slate-800">
-                  <th class="px-6 py-4 text-sm font-bold text-slate-700 dark:text-slate-300">Теглови граници</th>
-                  <th class="px-6 py-4 text-sm font-bold text-slate-700 dark:text-slate-300 text-right">Цена (с ДДС)</th>
-                </tr>
-                </thead>
-                <tbody class="text-slate-600 dark:text-slate-400">
-                <tr>
-                  <td class="px-6 py-4 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary text-sm">package</span>
-                    0 - 1 кг
-                  </td>
-                  <td class="px-6 py-4 text-right">
-                    <span class="font-bold text-lg text-slate-900 dark:text-white">4.90 лв.</span>
-                    <p class="text-xs text-slate-500 mt-1">Безплатна за 10+ пратки</p>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="px-6 py-4 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary text-sm">package</span>
-                    1 - 5 кг
-                  </td>
-                  <td class="px-6 py-4 text-right font-bold text-lg text-slate-900 dark:text-white">6.50 лв.</td>
-                </tr>
-                <tr>
-                  <td class="px-6 py-4 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary text-sm">package</span>
-                    5 - 10 кг
-                  </td>
-                  <td class="px-6 py-4 text-right font-bold text-lg text-slate-900 dark:text-white">9.20 лв.</td>
-                </tr>
-                <tr>
-                  <td class="px-6 py-4 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary text-sm">package</span>
-                    10 - 20 кг
-                  </td>
-                  <td class="px6 py-4 text-right font-bold text-lg text-slate-900 dark:text-white">14.80 лв.</td>
-                </tr>
-                <tr>
-                  <td class="px-6 py-4 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary text-sm">package</span>
-                    20 - 50 кг
-                  </td>
-                  <td class="px-6 py-4 text-right font-bold text-lg text-slate-900 dark:text-white">28.50 лв.</td>
-                </tr>
-                </tbody>
-              </table>
             </div>
-            <div class="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
-              <div class="flex items-center justify-between text-sm">
-                <div class="flex items-center gap-2 text-green-600 dark:text-green-400">
-                  <span class="material-symbols-outlined text-base">savings</span>
-                  <span class="font-bold">Най-икономично</span>
                 </div>
-                <button class="px-4 py-2 bg-primary text-white rounded-lg font-bold text-sm hover:bg-primary-dark transition-colors">
-                  Избери
-                </button>
               </div>
             </div>
           </div>
 
-          <!-- Доставка до адрес -->
-          <div class="price-card bg-white dark:bg-slate-900 rounded-2xl shadow-card border border-slate-200 dark:border-slate-800 overflow-hidden animate-fadeInUp animate-delay-1">
-            <div class="bg-gradient-to-r from-slate-800 to-slate-900 p-6 text-white">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                  <span class="material-symbols-outlined text-2xl">home_pin</span>
-                  <div>
-                    <h3 class="text-xl font-bold">Доставка до адрес</h3>
-                    <p class="text-white/80 text-sm mt-1">Удобство до вратата</p>
                   </div>
                 </div>
-                <span class="text-lg font-black">🚚</span>
               </div>
             </div>
-            <div class="p-1">
-              <table class="w-full pricing-table">
-                <thead>
-                <tr class="text-left border-b border-slate-200 dark:border-slate-800">
-                  <th class="px-6 py-4 text-sm font-bold text-slate-700 dark:text-slate-300">Теглови граници</th>
-                  <th class="px-6 py-4 text-sm font-bold text-slate-700 dark:text-slate-300 text-right">Цена (с ДДС)</th>
-                </tr>
-                </thead>
-                <tbody class="text-slate-600 dark:text-slate-400">
-                <tr>
-                  <td class="px-6 py-4 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary text-sm">package</span>
-                    0 - 1 кг
-                  </td>
-                  <td class="px-6 py-4 text-right font-bold text-lg text-slate-900 dark:text-white">7.50 лв.</td>
-                </tr>
-                <tr>
-                  <td class="px-6 py-4 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary text-sm">package</span>
-                    1 - 5 кг
-                  </td>
-                  <td class="px-6 py-4 text-right font-bold text-lg text-slate-900 dark:text-white">9.80 лв.</td>
-                </tr>
-                <tr>
-                  <td class="px-6 py-4 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary text-sm">package</span>
-                    5 - 10 кг
-                  </td>
-                  <td class="px-6 py-4 text-right font-bold text-lg text-slate-900 dark:text-white">13.50 лв.</td>
-                </tr>
-                <tr>
-                  <td class="px-6 py-4 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary text-sm">package</span>
-                    10 - 20 кг
-                  </td>
-                  <td class="px-6 py-4 text-right font-bold text-lg text-slate-900 dark:text-white">19.90 лв.</td>
-                </tr>
-                <tr>
-                  <td class="px-6 py-4 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary text-sm">package</span>
-                    20 - 50 кг
-                  </td>
-                  <td class="px-6 py-4 text-right">
-                    <span class="font-bold text-lg text-slate-900 dark:text-white">36.00 лв.</span>
-                    <p class="text-xs text-slate-500 mt-1">+3.00 лв. за етаж</p>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
             </div>
-            <div class="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
-              <div class="flex items-center justify-between text-sm">
-                <div class="flex items-center gap-2 text-secondary">
-                  <span class="material-symbols-outlined text-base">stars</span>
-                  <span class="font-bold">Най-удобно</span>
                 </div>
-                <button class="px-4 py-2 bg-primary text-white rounded-lg font-bold text-sm hover:bg-primary-dark transition-colors">
-                  Избери
                 </button>
-              </div>
-            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Допълнителни услуги -->
-    <section class="py-12 lg:py-16 bg-background-light dark:bg-slate-900/50">
-      <div class="max-w-[1200px] mx-auto px-4 sm:px-6">
-        <div class="text-center mb-10 lg:mb-12 animate-fadeInUp">
-          <h2 class="text-2xl sm:text-3xl font-black text-[#111318] dark:text-white mb-4">Допълнителни услуги</h2>
-          <p class="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto mb-6">
-            Персонализирайте вашата доставка с нашите допълнителни услуги
-          </p>
-          <div class="h-1.5 w-16 bg-primary mx-auto rounded-full"></div>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-6">
-          <div class="price-card bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col items-center text-center animate-fadeInUp">
-            <div class="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full flex items-center justify-center text-primary mb-6">
-              <span class="material-symbols-outlined text-3xl">bolt</span>
+          </div>
             </div>
-            <h4 class="text-lg font-bold text-[#111318] dark:text-white mb-2">Експресна доставка</h4>
-            <p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Доставка в рамките на работния ден</p>
-            <div class="mt-auto">
-              <span class="text-2xl font-black text-primary">+5.00 лв.</span>
-              <p class="text-xs text-slate-500 mt-2">за стандартна пратка</p>
             </div>
           </div>
-
-          <div class="price-card bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col items-center text-center animate-fadeInUp animate-delay-1">
-            <div class="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full flex items-center justify-center text-primary mb-6">
-              <span class="material-symbols-outlined text-3xl">payments</span>
-            </div>
-            <h4 class="text-lg font-bold text-[#111318] dark:text-white mb-2">Наложен платеж</h4>
-            <p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Такса върху сумата на наложения платеж</p>
-            <div class="mt-auto">
-              <span class="text-2xl font-black text-primary">1%</span>
-              <p class="text-xs text-slate-500 mt-2">от стойността, мин. 1 лв.</p>
-            </div>
-          </div>
-
-          <div class="price-card bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col items-center text-center animate-fadeInUp animate-delay-2">
-            <div class="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full flex items-center justify-center text-primary mb-6">
-              <span class="material-symbols-outlined text-3xl">verified</span>
-            </div>
-            <h4 class="text-lg font-bold text-[#111318] dark:text-white mb-2">Обявена стойност</h4>
-            <p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Застраховка на пратката над стандартната</p>
-            <div class="mt-auto">
-              <span class="text-2xl font-black text-primary">0.5%</span>
-              <p class="text-xs text-slate-500 mt-2">от декларираната стойност</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Калкулатор секция -->
-    <section class="py-12 lg:py-20 bg-white dark:bg-background-dark">
-      <div class="max-w-[1000px] mx-auto px-4 sm:px-6">
-        <div class="bg-gradient-to-r from-primary to-blue-600 rounded-3xl p-8 md:p-12 text-center text-white relative overflow-hidden shadow-floating">
-          <div class="absolute top-0 right-0 p-8 opacity-10">
-            <span class="material-symbols-outlined text-[120px] sm:text-[160px]">calculate</span>
-          </div>
-          <div class="absolute bottom-0 left-0 p-8 opacity-10">
-            <span class="material-symbols-outlined text-[120px] sm:text-[160px]">local_shipping</span>
-          </div>
-
-          <div class="relative z-10">
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-black mb-6">Имате нужда от по-точно изчисление?</h2>
-            <p class="text-lg text-white/80 mb-10 max-w-2xl mx-auto">
-              Използвайте нашия подробен онлайн калкулатор за пресмятане на цени за специфични дестинации и тегла.
-            </p>
-
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-              <a class="inline-flex items-center justify-center gap-3 bg-white text-primary px-8 py-4 rounded-xl font-bold text-lg hover:bg-slate-50 transition-all duration-200 shadow-lg hover:shadow-xl active:scale-[0.98]" href="#">
-                <span class="material-symbols-outlined">functions</span>
-                Детайлен калкулатор
-              </a>
-              <a class="inline-flex items-center justify-center gap-3 bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/10 transition-all duration-200" href="#">
-                <span class="material-symbols-outlined">download</span>
-                Ценоразпис (PDF)
-              </a>
             </div>
           </div>
         </div>
@@ -513,115 +85,33 @@
     </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="bg-white dark:bg-background-dark border-t border-slate-200 dark:border-slate-800 pt-12 lg:pt-16 pb-8">
-    <div class="max-w-[1200px] mx-auto px-4 sm:px-6">
       <div class="grid md:grid-cols-4 gap-8 lg:gap-12 mb-12 lg:mb-16">
         <div class="col-span-1 md:col-span-1">
           <div class="flex items-center gap-3 text-primary mb-6">
             <span class="material-symbols-outlined text-3xl">local_shipping</span>
             <span class="text-xl font-bold text-[#111318] dark:text-white">LogisticsPro</span>
           </div>
-          <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-4">
             Вашият доверен партньор в логистиката. Предоставяме модерни решения за доставка на пратки за бизнеса и крайните потребители.
           </p>
-          <div class="flex gap-4 mt-6">
-            <a href="#" class="text-slate-400 hover:text-primary transition-colors">
-              <span class="material-symbols-outlined">facebook</span>
-            </a>
-            <a href="#" class="text-slate-400 hover:text-primary transition-colors">
-              <span class="material-symbols-outlined">public</span>
-            </a>
-            <a href="#" class="text-slate-400 hover:text-primary transition-colors">
-              <span class="material-symbols-outlined">linkedin</span>
-            </a>
-          </div>
         </div>
 
         <div>
-          <h4 class="font-bold mb-6 text-slate-800 dark:text-white flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary">business</span>
-            Компания
-          </h4>
           <ul class="space-y-4 text-sm text-slate-500 dark:text-slate-400">
-            <li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#">
-              <span class="material-symbols-outlined text-sm">chevron_right</span>
-              За нас
-            </a></li>
-            <li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#">
-              <span class="material-symbols-outlined text-sm">chevron_right</span>
-              Кариери
-            </a></li>
-            <li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#">
-              <span class="material-symbols-outlined text-sm">chevron_right</span>
-              Новини
-            </a></li>
-            <li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#">
-              <span class="material-symbols-outlined text-sm">chevron_right</span>
-              Партньори
-            </a></li>
           </ul>
         </div>
 
         <div>
-          <h4 class="font-bold mb-6 text-slate-800 dark:text-white flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary">miscellaneous_services</span>
-            Услуги
-          </h4>
           <ul class="space-y-4 text-sm text-slate-500 dark:text-slate-400">
-            <li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#">
-              <span class="material-symbols-outlined text-sm">chevron_right</span>
-              За частни лица
-            </a></li>
-            <li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#">
-              <span class="material-symbols-outlined text-sm">chevron_right</span>
-              За бизнес клиенти
-            </a></li>
-            <li><a class="text-primary font-bold flex items-center gap-2" href="#">
-              <span class="material-symbols-outlined text-sm">chevron_right</span>
-              Ценоразпис
-            </a></li>
-            <li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#">
-              <span class="material-symbols-outlined text-sm">chevron_right</span>
-              Забранени стоки
-            </a></li>
           </ul>
         </div>
 
-        <div>
-          <h4 class="font-bold mb-6 text-slate-800 dark:text-white flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary">contact_support</span>
-            Контакти
-          </h4>
-          <ul class="space-y-4 text-sm text-slate-500 dark:text-slate-400">
-            <li class="flex items-center gap-3">
-              <span class="material-symbols-outlined text-primary text-sm">phone</span>
               <div>
-                <p class="font-bold">0700 12 345</p>
-                <p class="text-xs text-slate-500">Понеделник - Петък, 8:00-18:00</p>
               </div>
-            </li>
-            <li class="flex items-center gap-3">
-              <span class="material-symbols-outlined text-primary text-sm">mail</span>
-              <div>
-                <p class="font-bold">support@logisticspro.bg</p>
-                <p class="text-xs text-slate-500">Отговор в рамките на 24ч</p>
               </div>
-            </li>
-            <li class="flex items-center gap-3">
-              <span class="material-symbols-outlined text-primary text-sm">location_on</span>
-              <div>
-                <p class="font-bold">София</p>
-                <p class="text-xs text-slate-500">бул. Цариградско шосе 12</p>
               </div>
-            </li>
-          </ul>
         </div>
       </div>
 
-      <div class="flex flex-col md:flex-row justify-between items-center border-t border-slate-100 dark:border-slate-800 pt-8 text-sm text-slate-500 dark:text-slate-400">
-        <p class="mb-4 md:mb-0">© 2024 LogisticsPro. Всички права запазени.</p>
-        <div class="flex flex-wrap gap-4 md:gap-6 justify-center">
           <a class="hover:text-primary transition-colors" href="#">Политика за поверителност</a>
           <a class="hover:text-primary transition-colors" href="#">Общи условия</a>
           <a class="hover:text-primary transition-colors" href="#">Бисквитки</a>

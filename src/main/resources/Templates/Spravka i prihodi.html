@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html class="light" lang="bg">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Справки и Приходи - LogisticsPro</title>
+
+  <!-- Външни ресурси -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind конфигурация -->
+  <script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "primary": "#135bec",
+                    "background-light": "#f6f6f8",
+                    "background-dark": "#101622",
+                },
+                fontFamily: {
+                    "display": ["Manrope", "sans-serif"]
+                },
+                borderRadius: {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+                },
+            },
+        },
+    }
+  </script>
+
+  <style>
+    body {
+        font-family: "Manrope", sans-serif;
+    }
+
+    .chart-gradient {
+        background: linear-gradient(180deg, rgba(19, 91, 236, 0.1) 0%, rgba(19, 91, 236, 0) 100%);
+    }
+
+    .dark .chart-gradient {
+        background: linear-gradient(180deg, rgba(19, 91, 236, 0.15) 0%, rgba(19, 91, 236, 0) 100%);
+    }
+
+    .form-select-custom {
+        appearance: none;
+        background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iY3VycmVudENvbG9yIj48cGF0aCBkPSJNNyAxMGw1IDUgNS01SDd6Ii8+PC9zdmc+');
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen">
+<div class="layout-container flex h-full grow flex-col">
+
+  <!-- Горна навигация -->
+  <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#dbdfe6] dark:border-slate-700 bg-white dark:bg-background-dark px-4 lg:px-10 py-3 sticky top-0 z-50">
+    <!-- Лого и навигация -->
+    <div class="flex items-center gap-6 lg:gap-8">
+      <div class="flex items-center gap-4 text-[#111318] dark:text-white">
+        <div class="size-8 text-primary">
+          <span class="material-symbols-outlined text-4xl">local_shipping</span>
+        </div>
+        <h2 class="text-xl font-bold leading-tight tracking-tight">LogisticsPro</h2>
+      </div>
+
+      <!-- Главна навигация -->
+      <nav class="hidden md:flex items-center gap-8 lg:gap-9" aria-label="Главно меню">
+        <a class="text-[#111318] dark:text-slate-300 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Пратки</a>
+        <a class="text-[#111318] dark:text-slate-300 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Клиенти</a>
+        <a class="text-[#111318] dark:text-slate-300 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Офиси</a>
+        <a class="text-primary dark:text-white text-sm font-bold border-b-2 border-primary leading-normal" href="#" aria-current="page">Справки</a>
+      </nav>
+    </div>
+
+    <!-- Потребителски елементи -->
+    <div class="flex flex-1 justify-end gap-4 items-center">
+      <div class="flex gap-2">
+        <button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-slate-800 text-[#111318] dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" aria-label="Известия">
+          <span class="material-symbols-outlined">notifications</span>
+        </button>
+        <button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-slate-800 text-[#111318] dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" aria-label="Профил">
+          <span class="material-symbols-outlined">account_circle</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Основно съдържание -->
+  <main class="flex-1 flex flex-col items-center">
+    <div class="w-full max-w-[1400px] px-4 lg:px-6 py-6 lg:py-8">
+
+      <!-- Заглавие и филтри -->
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
+        <div>
+          <h1 class="text-[#111318] dark:text-white text-2xl lg:text-3xl font-black leading-tight tracking-tight">Справки и Приходи</h1>
+          <p class="text-[#616f89] dark:text-slate-400 text-base font-normal mt-1">Анализ на финансовите показатели и обем на доставките</p>
+        </div>
+
+        <!-- Филтри -->
+        <div class="flex flex-wrap items-center gap-3 bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div class="flex flex-col gap-1">
+            <label class="text-[10px] uppercase font-bold text-slate-400 px-1">Период</label>
+            <div class="flex items-center gap-2">
+              <input class="text-xs border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-lg px-2 py-1.5 focus:ring-primary focus:border-primary" type="date" value="2023-11-01" aria-label="Начална дата на периода">
+              <span class="text-slate-400">-</span>
+              <input class="text-xs border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-lg px-2 py-1.5 focus:ring-primary focus:border-primary" type="date" value="2023-11-30" aria-label="Крайна дата на периода">
+            </div>
+          </div>
+
+          <div class="hidden lg:block h-10 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
+
+          <div class="flex flex-col gap-1">
+            <label for="office-filter" class="text-[10px] uppercase font-bold text-slate-400 px-1">Офис</label>
+            <select id="office-filter" class="form-select-custom text-xs border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-lg px-2 py-1.5 min-w-[150px] focus:ring-primary focus:border-primary">
+              <option value="all">Всички офиси</option>
+              <option value="sofia-center">София - Център</option>
+              <option value="plovdiv-east">Пловдив - Изток</option>
+              <option value="varna-seaside">Варна - Приморски</option>
+            </select>
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <label for="employee-filter" class="text-[10px] uppercase font-bold text-slate-400 px-1">Служител</label>
+            <select id="employee-filter" class="form-select-custom text-xs border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-lg px-2 py-1.5 min-w-[150px] focus:ring-primary focus:border-primary">
+              <option value="all">Всички служители</option>
+              <option value="1">Димитър Георгиев</option>
+              <option value="2">Елена Павлова</option>
+              <option value="3">Николай Стоянов</option>
+            </select>
+          </div>
+
+          <button class="bg-primary text-white p-2 rounded-lg hover:bg-primary/90 transition-colors self-end" aria-label="Приложи филтри">
+            <span class="material-symbols-outlined text-xl">filter_list</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Статистически карти -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 mb-8">
+        <!-- Карта 1: Общ приход -->
+        <div class="bg-white dark:bg-slate-900 p-4 lg:p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div class="flex justify-between items-start mb-4">
+            <div class="p-2 bg-blue-50 dark:bg-blue-900/20 text-primary rounded-lg" aria-hidden="true">
+              <span class="material-symbols-outlined text-2xl">payments</span>
+            </div>
+            <span class="text-green-600 text-xs font-bold bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded">+12.5%</span>
+          </div>
+          <h3 class="text-slate-500 dark:text-slate-400 text-sm font-medium">Общ Приход</h3>
+          <div class="text-2xl font-black text-[#111318] dark:text-white mt-1">42,850.20 лв.</div>
+        </div>
+
+        <!-- Карта 2: Общо пратки -->
+        <div class="bg-white dark:bg-slate-900 p-4 lg:p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div class="flex justify-between items-start mb-4">
+            <div class="p-2 bg-purple-50 dark:bg-purple-900/20 text-purple-600 rounded-lg" aria-hidden="true">
+              <span class="material-symbols-outlined text-2xl">package_2</span>
+            </div>
+            <span class="text-green-600 text-xs font-bold bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded">+5.2%</span>
+          </div>
+          <h3 class="text-slate-500 dark:text-slate-400 text-sm font-medium">Общо Пратки</h3>
+          <div class="text-2xl font-black text-[#111318] dark:text-white mt-1">1,482</div>
+        </div>
+
+        <!-- Карта 3: Средна печалба -->
+        <div class="bg-white dark:bg-slate-900 p-4 lg:p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div class="flex justify-between items-start mb-4">
+            <div class="p-2 bg-orange-50 dark:bg-orange-900/20 text-orange-600 rounded-lg" aria-hidden="true">
+              <span class="material-symbols-outlined text-2xl">trending_up</span>
+            </div>
+            <span class="text-red-600 text-xs font-bold bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded">-2.1%</span>
+          </div>
+          <h3 class="text-slate-500 dark:text-slate-400 text-sm font-medium">Средна печалба на пратка</h3>
+          <div class="text-2xl font-black text-[#111318] dark:text-white mt-1">28.91 лв.</div>
+        </div>
+      </div>
+
+      <!-- Графика с тенденции -->
+      <div class="bg-white dark:bg-slate-900 p-4 lg:p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm mb-8">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between mb-6 lg:mb-8 gap-4">
+          <h2 class="text-lg font-bold text-[#111318] dark:text-white">Тенденция на приходите</h2>
+          <div class="flex gap-2" role="tablist" aria-label="Периоди на тенденциите">
+            <button class="px-3 py-1 text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" aria-selected="false" role="tab">Дневно</button>
+            <button class="px-3 py-1 text-xs font-bold bg-primary text-white rounded-lg" aria-selected="true" role="tab">Седмично</button>
+          </div>
+        </div>
+
+        <!-- Графика -->
+        <div class="relative h-[300px] w-full" aria-label="Графика на тенденцията на приходите за последните 10 седмици">
+          <div class="absolute bottom-0 left-0 w-full h-[250px] flex items-end gap-1 px-2">
+            <!-- Колони на графиката -->
+            <div class="flex-1 bg-primary/20 hover:bg-primary/40 transition-colors rounded-t-sm relative group h-[40%]" aria-label="Седмица 1: 5,200 лв.">
+              <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">5,200 лв.</div>
+            </div>
+            <div class="flex-1 bg-primary/20 hover:bg-primary/40 transition-colors rounded-t-sm relative group h-[65%]" aria-label="Седмица 2: 8,100 лв."></div>
+            <div class="flex-1 bg-primary/20 hover:bg-primary/40 transition-colors rounded-t-sm relative group h-[55%]" aria-label="Седмица 3: 6,900 лв."></div>
+            <div class="flex-1 bg-primary/20 hover:bg-primary/40 transition-colors rounded-t-sm relative group h-[85%]" aria-label="Седмица 4: 10,600 лв."></div>
+            <div class="flex-1 bg-primary/20 hover:bg-primary/40 transition-colors rounded-t-sm relative group h-[95%]" aria-label="Седмица 5: 11,900 лв."></div>
+            <div class="flex-1 bg-primary/20 hover:bg-primary/40 transition-colors rounded-t-sm relative group h-[70%]" aria-label="Седмица 6: 8,700 лв."></div>
+            <div class="flex-1 bg-primary/20 hover:bg-primary/40 transition-colors rounded-t-sm relative group h-[80%]" aria-label="Седмица 7: 10,000 лв."></div>
+            <div class="flex-1 bg-primary/20 hover:bg-primary/40 transition-colors rounded-t-sm relative group h-[60%]" aria-label="Седмица 8: 7,500 лв."></div>
+            <div class="flex-1 bg-primary/20 hover:bg-primary/40 transition-colors rounded-t-sm relative group h-[45%]" aria-label="Седмица 9: 5,600 лв."></div>
+            <div class="flex-1 bg-primary/20 hover:bg-primary/40 transition-colors rounded-t-sm relative group h-[75%]" aria-label="Седмица 10: 9,400 лв."></div>
+          </div>
+
+          <!-- Y-ос -->
+          <div class="absolute left-0 top-0 h-full border-l border-slate-100 dark:border-slate-800 flex flex-col justify-between text-[10px] text-slate-400">
+            <span>10k</span><span>7.5k</span><span>5k</span><span>2.5k</span><span>0</span>
+          </div>
+
+          <!-- X-ос -->
+          <div class="absolute bottom-0 left-0 w-full border-t border-slate-100 dark:border-slate-800 pt-2 flex justify-between text-[10px] text-slate-400">
+            <span>01 Ноем</span><span>07 Ноем</span><span>14 Ноем</span><span>21 Ноем</span><span>28 Ноем</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Таблица с разбивка на приходите -->
+      <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div class="p-4 lg:p-6 border-b border-slate-100 dark:border-slate-800 flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
+          <h2 class="text-lg font-bold text-[#111318] dark:text-white">Разбивка на приходите по тип доставка</h2>
+          <button class="text-primary text-sm font-bold flex items-center gap-1 hover:underline self-start lg:self-center" aria-label="Експорт на данните">
+            <span class="material-symbols-outlined text-sm">download</span>
+            Експорт
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left" aria-label="Разбивка на приходите по тип доставка">
+            <thead>
+            <tr class="bg-slate-50 dark:bg-slate-800/50 text-[#616f89] dark:text-slate-400 text-xs font-bold uppercase tracking-wider">
+              <th class="px-4 lg:px-6 py-4">Тип Пратки</th>
+              <th class="px-4 lg:px-6 py-4">Брой доставки</th>
+              <th class="px-4 lg:px-6 py-4">Приход (лв.)</th>
+              <th class="px-4 lg:px-6 py-4">Дял (%)</th>
+              <th class="px-4 lg:px-6 py-4 text-right">Тренд</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+            <!-- Ред 1: Пратки до офис -->
+            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+              <td class="px-4 lg:px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <div class="size-8 rounded bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary" aria-hidden="true">
+                    <span class="material-symbols-outlined text-lg">apartment</span>
+                  </div>
+                  <span class="font-bold text-[#111318] dark:text-white">Пратки до Офис</span>
+                </div>
+              </td>
+              <td class="px-4 lg:px-6 py-4 text-sm text-slate-600 dark:text-slate-300 font-medium">945</td>
+              <td class="px-4 lg:px-6 py-4 text-sm text-slate-600 dark:text-slate-300 font-bold">22,140.50 лв.</td>
+              <td class="px-4 lg:px-6 py-4">
+                <div class="flex items-center gap-2">
+                  <div class="w-16 h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden" aria-hidden="true">
+                    <div class="bg-primary h-full" style="width: 52%"></div>
+                  </div>
+                  <span class="text-xs font-bold">51.7%</span>
+                </div>
+              </td>
+              <td class="px-4 lg:px-6 py-4 text-right">
+                <span class="text-green-500 material-symbols-outlined align-middle" aria-label="Възходящ тренд">trending_up</span>
+              </td>
+            </tr>
+
+            <!-- Ред 2: Пратки до адрес -->
+            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+              <td class="px-4 lg:px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <div class="size-8 rounded bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600" aria-hidden="true">
+                    <span class="material-symbols-outlined text-lg">home_pin</span>
+                  </div>
+                  <span class="font-bold text-[#111318] dark:text-white">Пратки до Адрес</span>
+                </div>
+              </td>
+              <td class="px-4 lg:px-6 py-4 text-sm text-slate-600 dark:text-slate-300 font-medium">537</td>
+              <td class="px-4 lg:px-6 py-4 text-sm text-slate-600 dark:text-slate-300 font-bold">20,709.70 лв.</td>
+              <td class="px-4 lg:px-6 py-4">
+                <div class="flex items-center gap-2">
+                  <div class="w-16 h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden" aria-hidden="true">
+                    <div class="bg-orange-500 h-full" style="width: 48%"></div>
+                  </div>
+                  <span class="text-xs font-bold">48.3%</span>
+                </div>
+              </td>
+              <td class="px-4 lg:px-6 py-4 text-right">
+                <span class="text-red-500 material-symbols-outlined align-middle" aria-label="Низходящ тренд">trending_down</span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Футър -->
+  <footer class="bg-white dark:bg-background-dark border-t border-slate-200 dark:border-slate-800 py-6 mt-8 lg:mt-10">
+    <div class="max-w-[1400px] mx-auto px-4 lg:px-6 flex flex-col lg:flex-row justify-between items-center gap-4 text-sm text-[#616f89]">
+      <p>© 2024 LogisticsPro Enterprise System. Всички права запазени.</p>
+      <div class="flex gap-4">
+        <a class="hover:text-primary transition-colors" href="#">Помощ</a>
+        <a class="hover:text-primary transition-colors" href="#">Общи условия</a>
+      </div>
+    </div>
+  </footer>
+</div>
+</body>
+</html>
