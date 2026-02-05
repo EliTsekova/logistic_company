@@ -25,31 +25,28 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+	runtimeOnly 'com.mysql:mysql-connector-j'
 
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'mysql:mysql-connector-java:8.0.33'
 	implementation 'org.modelmapper:modelmapper:3.1.1'
-	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.2.RELEASE'
-	testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
-	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'com.h2database:h2'
 	testImplementation 'org.mockito:mockito-core:4.11.0'
 	testImplementation 'org.mockito:mockito-junit-jupiter:4.11.0'
-	testImplementation 'org.springframework.boot:spring-boot-starter-json'
-	testImplementation 'com.h2database:h2'
 }
+
 
 tasks.named('test') {
 	useJUnitPlatform()

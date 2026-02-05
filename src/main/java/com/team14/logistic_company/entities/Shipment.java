@@ -1,6 +1,8 @@
 package com.team14.logistic_company.entities;
 
+import com.team14.logistic_company.entities.enums.DeliveryType;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.Setter;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,9 +13,10 @@ import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.Instant;
 
+@Getter
+@Setter
 @Entity
 public class Shipment {
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -27,8 +30,12 @@ public class Shipment {
     private Client recipient;
 
     @ManyToOne
-    @JoinColumn(name = "RecipientAddress", nullable = false)
+    @JoinColumn(name = "RecipientAddress", nullable = true) //може да е null при TO_OFFICE
     private Address recipientAddress;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "DeliveryType", nullable = false)
+    private DeliveryType deliveryType;
 
     @ManyToOne
     @JoinColumn(name = "SenderId", nullable = false)
@@ -54,6 +61,8 @@ public class Shipment {
     @Size(min = 10, max = 20, message = "Unique id has to be between 5 and 30 characters!")
     @Column(name = "uniqueId", nullable = false, unique = true)
     private String uniqueId;
+
+
 
     @CreationTimestamp
     @Column(name = "created_on", nullable = false, updatable = false)

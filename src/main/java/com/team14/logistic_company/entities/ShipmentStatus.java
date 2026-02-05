@@ -9,6 +9,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 
+@Getter
+@Setter
 @Entity
 public class ShipmentStatus {
 
@@ -16,19 +18,14 @@ public class ShipmentStatus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Setter
     @ManyToOne
     @JoinColumn(name = "ShipmentId", nullable = false)
     private Shipment shipment;
 
-    @Setter
-    @Getter
     @Enumerated(EnumType.STRING)
     @Column(name = "Status", nullable = false)
     private Status status;
 
-    @Setter
-    @Getter
     @Column(name = "comment")
     private String comment;
 

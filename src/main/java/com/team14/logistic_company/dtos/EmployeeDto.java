@@ -2,10 +2,14 @@ package com.team14.logistic_company.dtos;
 import com.team14.logistic_company.entities.enums.PositionType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 
 @Data
+@Setter
+@Getter
 public class EmployeeDto {
     private Integer id;
 

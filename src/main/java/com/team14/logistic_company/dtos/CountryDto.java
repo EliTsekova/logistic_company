@@ -3,8 +3,12 @@ package com.team14.logistic_company.dtos;
 import lombok.Data;
 import java.time.Instant;
 import jakarta.validation.constraints.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
+@Setter
+@Getter
 public class CountryDto {
     private Integer id;
 

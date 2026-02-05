@@ -64,4 +64,6 @@ public class User {
     @UpdateTimestamp
     @Column(name = "updated_on", nullable = false)
     private Instant updatedOn;
+
+
 }

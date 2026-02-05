@@ -1,167 +1,112 @@
 package com.team14.logistic_company.services;
 
-import com.team14.logistic_company.entities.Shipment;
-import com.team14.logistic_company.entities.ShipmentStatus;
-import com.team14.logistic_company.repositories.ShipmentRepository;
+import com.team14.logistic_company.dtos.ShipmentDto;
+import com.team14.logistic_company.entities.*;
+import com.team14.logistic_company.entities.enums.DeliveryType;
+import com.team14.logistic_company.entities.enums.Role;
+import com.team14.logistic_company.entities.enums.Status;
+import com.team14.logistic_company.repositories.*;
 import com.team14.logistic_company.services.exceptions.ShipmentNotFound;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.team14.logistic_company.services.exceptions.UnauthorizedAccess;
+import com.team14.logistic_company.services.exceptions.UserNotFound;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.math.BigDecimal;
 
+
+import java.time.Instant;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-/// TODO: it hat to have implements IShipmentService
-/// TODO: finish and fix the class
-public class ShipmentService  {
 
-    /*@Autowired
-    private ShipmentRepository shipmentRepository;
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class ShipmentService implements IShipmentService {
 
-    @Autowired
-    private ShipmentStatusRepository shipmentStatusRepository;
+    private final ShipmentRepository shipmentRepository;
+    private final ShipmentStatusRepository shipmentStatusRepository;
+    private final UserRepository userRepository;
+    private final EmployeeRepository employeeRepository;
+    private final ClientRepository clientRepository;
+    private final AddressRepository addressRepository;
+    private final OfficeRepository officeRepository;
 
-    @Autowired
-    private UserRepository userRepository;*/
 
-    private static final double BASE_PRICE_TO_OFFICE = 5.0;
-    private static final double BASE_PRICE_TO_ADDRESS = 10.0;
-    private static final double PRICE_PER_KILO = 2.0;
+    ///TODO: change when the ui is ready
+    private static final BigDecimal BASE_PRICE_TO_OFFICE = BigDecimal.valueOf(5.0);
+    private static final BigDecimal BASE_PRICE_TO_ADDRESS = BigDecimal.valueOf(10.0);
+    private static final BigDecimal PRICE_PER_KILO = BigDecimal.valueOf(2.0);
 
-    /**
-     * Retrieves all shipments accessible to employees.
-     *
-     * @param authentication The authentication object containing user details.
-     * @return List of all shipments.
-     * @throws UnauthorizedAccess If the user is not an employee.
-     *
-    public List<Shipment> getAllShipmentsForEmployee(Authentication authentication) {
-        if (isEmployee(authentication)) {
-            return shipmentRepository.findAll();
-        }
-        throw new UnauthorizedAccess("Access denied. Only employees can view all shipments.");
-    }*/
 
-    /**
-     * Retrieves all shipments registered by a specific employee.
-     *
-     * @param employeeId The ID of the employee.
-     * @return List of shipments registered by the employee.
-     *
+
+    @Override
+    public List<Shipment> getAllShipmentsForEmployee(Authentication authentication) throws UnauthorizedAccess {
+        requireEmployee(authentication);
+        return shipmentRepository.findAllByOrderByCreatedOnDesc();
+    }
+
+    @Override
     public List<Shipment> getShipmentsByEmployeeId(Integer employeeId) {
         return shipmentRepository.findAllByEmployeeId(employeeId);
-    }*/
+    }
 
-    /**
-     * Retrieves all shipments that have not been delivered.
-     *
-     * @return List of undelivered shipments.
-
+    @Override
     public List<Shipment> getUndeliveredShipments() {
         return shipmentRepository.findUndeliveredShipments(Status.DELIVERED);
-    }*/
+    }
 
-    /**
-     * Registers a new shipment in the system.
-     *
-     * @param shipment       The shipment entity to register.
-     * @param authentication The authentication object containing user details.
-     * @return The registered shipment.
-     * @throws UnauthorizedAccess If the user is not an employee.
+    private BigDecimal calculatePrice(Shipment shipment) {
+        BigDecimal base = shipment.getDeliveryType() == DeliveryType.TO_OFFICE
+                ? BASE_PRICE_TO_OFFICE
+                : BASE_PRICE_TO_ADDRESS;
 
-    public Shipment registerShipment(Shipment shipment, Authentication authentication) {
-        if (!isEmployee(authentication)) {
-            throw new UnauthorizedAccess("Only employees can register shipments.");
+        BigDecimal weightPart = PRICE_PER_KILO.multiply(BigDecimal.valueOf(shipment.getWeight()));
+        return base.add(weightPart);
+    }
+
+    @Override
+    public Shipment registerShipment(Shipment shipment, Authentication authentication)
+            throws UnauthorizedAccess, UserNotFound {
+
+        requireEmployee(authentication);
+        if (shipment.getDeliveryType() == null) {
+            shipment.setDeliveryType(
+                    shipment.getRecipientAddress() == null ? DeliveryType.TO_OFFICE : DeliveryType.TO_ADDRESS
+            );
         }
         validateShipment(shipment);
-        return shipmentRepository.save(shipment);
-    }*/
+        shipment.setPrice(calculatePrice(shipment));
+        Shipment saved = shipmentRepository.save(shipment);
+        ShipmentStatus initialStatus = new ShipmentStatus();
+        initialStatus.setShipment(saved);
+        initialStatus.setStatus(Status.SUBMITTED);
+        initialStatus.setComment("Shipment registered");
+        shipmentStatusRepository.save(initialStatus);
 
-    /**
-     * Retrieves shipments sent or received by a client.
-     *
-     * @param authentication The authentication object containing user details.
-     * @return List of shipments related to the client.
-     * @throws UnauthorizedAccess If the user is not a client.
+        return saved;
+    }
 
-    public List<Shipment> getShipmentsForClient(Authentication authentication) {
-        if (isClient(authentication)) {
-            Integer userId = getUserIdFromAuthentication(authentication);
-            return shipmentRepository.findAll().stream()
-                    .filter(s -> s.getSender().getUser().getId().equals(userId)
-                            || s.getRecipient().getUser().getId().equals(userId))
-                    .toList();
-        }
-        throw new UnauthorizedAccess("Access denied. Only clients can view their shipments.");
-    }*/
+    @Override
+    public List<Shipment> getShipmentsForClient(Authentication authentication) throws UnauthorizedAccess {
+        requireClient(authentication);
 
-    /**
-     * Validates the shipment details.
-     *
-     * @param shipment The shipment entity to validate.
-     * @throws IllegalArgumentException If the shipment details are invalid.
+        User user = getUserFromAuthentication(authentication);
+        Integer userId = user.getId();
 
-    private void validateShipment(Shipment shipment) {
-        if (shipment.getWeight() <= 0) {
-            throw new IllegalArgumentException("Weight must be a positive value.");
-        }
-        if (shipment.getSenderAddress() == null || shipment.getRecipientAddress() == null) {
-            throw new IllegalArgumentException("Sender and recipient addresses must be provided.");
-        }
-    }*/
+        List<Shipment> sent = shipmentRepository.findAllBySender_User_Id(userId);
+        List<Shipment> received = shipmentRepository.findAllByRecipient_User_Id(userId);
 
-    /**
-     * Checks if the user is an employee.
-     *
-     * @param authentication The authentication object containing user details.
-     * @return True if the user is an employee, false otherwise.
+        return List.copyOf(
+                new java.util.LinkedHashSet<Shipment>() {{
+                    addAll(sent);
+                    addAll(received);
+                }}
+        );
+    }
 
-    private boolean isEmployee(Authentication authentication) {
-        return authentication.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals(Role.EMPLOYEE.name()));
-    }*/
-
-    /**
-     * Checks if the user is a client.
-     *
-     * @param authentication The authentication object containing user details.
-     * @return True if the user is a client, false otherwise.
-
-    private boolean isClient(Authentication authentication) {
-        return authentication.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals(Role.CLIENT.name()));
-    }*/
-
-    /**
-     * Extracts the user ID from the authentication object.
-     *
-     * @param authentication The authentication object containing user details.
-     * @return The user ID.
-
-    private Integer getUserIdFromAuthentication(Authentication authentication) {
-        User user = userRepository.findByUsername(authentication.getName());
-        return user.getId();
-    }*/
-
-    /**
-     * Calculates the price of the shipment.
-     *
-     * @param shipment The shipment entity.
-     * @return The calculated price.
-
-    private double calculatePrice(Shipment shipment) {
-        double basePrice = shipment.getRecipientAddress() == null ? BASE_PRICE_TO_OFFICE : BASE_PRICE_TO_ADDRESS;
-        return basePrice + (shipment.getWeight() * PRICE_PER_KILO);
-    }*/
-
-    /**
-     * Updates the status of a shipment.
-     *
-     * @param shipmentId The ID of the shipment.
-     * @param newStatus  The new status to set.
-     * @return The updated shipment.
-     * @throws ShipmentNotFound If the shipment is not found.
-
-    public Shipment updateShipmentStatus(Integer shipmentId, Status newStatus) {
-
+    @Override
+    public Shipment updateShipmentStatus(Integer shipmentId, Status newStatus) throws ShipmentNotFound {
         Shipment shipment = shipmentRepository.findById(shipmentId)
                 .orElseThrow(() -> new ShipmentNotFound("Shipment not found with ID: " + shipmentId));
 
@@ -171,97 +116,232 @@ public class ShipmentService  {
         shipmentStatusRepository.save(shipmentStatus);
 
         return shipment;
-    }*/
+    }
 
-    /**
-     * Retrieves the history of a shipment's statuses.
-     *
-     * @param shipmentId The ID of the shipment.
-     * @return List of shipment statuses.
-     * @throws ShipmentNotFound If the shipment is not found.
+    @Override
+    public List<ShipmentStatus> getShipmentHistory(String uniqueID) throws ShipmentNotFound {
+        Shipment shipment = shipmentRepository.findByUniqueId(uniqueID)
+                .orElseThrow(() -> new ShipmentNotFound("Shipment not found with unique ID: " + uniqueID));
 
-    public List<ShipmentStatus> getShipmentHistory(String uniqueId) {
-        Shipment shipment = shipmentRepository.findByUniqueId(uniqueId);
-        return shipmentStatusRepository.findByShipmentId(shipment.getId());
-    }*/
+        return shipmentStatusRepository.findByShipment_IdOrderByCreatedOnDesc(shipment.getId());
+    }
 
-    /**
-     * Retrieves shipment statistics.
-     *
-     * @return A map containing total shipments, delivered shipments, total weight,
-     *         and total revenue.
 
-    public Map<String, Object> getShipmentStatistics() {
-        long totalShipments = shipmentRepository.count();
-        long deliveredShipments = shipmentStatusRepository.findAll().stream()
-                .filter(shipmentStatus -> shipmentStatus.getStatus() == Status.DELIVERED)
-                .count();
-        double totalWeight = shipmentRepository.findAll().stream()
-                .mapToDouble(Shipment::getWeight)
-                .sum();
+    public List<ShipmentDto> findAllForView(Authentication authentication) {
+        List<Shipment> shipments;
+        if (isEmployee(authentication)) {
+            shipments = shipmentRepository.findAllByOrderByCreatedOnDesc();
+        } else {
+            shipments = getShipmentsForClient(authentication);
+        }
+        return shipments.stream().map(this::toDtoWithCurrentStatus).toList();
+    }
 
-        BigDecimal totalRevenue = shipmentRepository.findAll().stream()
-                .map(Shipment::getPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        Map<String, Object> stats = new HashMap<>();
-        stats.put("totalShipments", totalShipments);
-        stats.put("deliveredShipments", deliveredShipments);
-        stats.put("totalWeight", totalWeight);
-        stats.put("totalRevenue", totalRevenue);
+    public ShipmentDto findByIdForView(Integer id) {
+        Shipment shipment = shipmentRepository.findById(id)
+                .orElseThrow(() -> new ShipmentNotFound("Shipment not found with ID: " + id));
+        return toDtoWithCurrentStatus(shipment);
+    }
 
-        return stats;
-    }*/
+    public ShipmentDto createFromDto(ShipmentDto dto, Authentication authentication) {
+        requireEmployee(authentication);
 
-    /**
-     * Retrieves shipments filtered by country and city.
-     *
-     * @param countryName The name of the country.
-     * @param cityName    The name of the city.
-     * @return List of shipments filtered by the specified location.
+        Shipment shipment = new Shipment();
 
-    public List<Shipment> getShipmentsByCountryAndCity(String countryName, String cityName) {
-        return shipmentRepository.findAll().stream()
-                .filter(shipment -> shipment.getSenderAddress().getCity().getName().equals(cityName) &&
-                        shipment.getSenderAddress().getCity().getCountry().getName().equals(countryName))
+        shipment.setEmployee(employeeRepository.findById(dto.getEmployeeId())
+                .orElseThrow(() -> new RuntimeException("Employee not found: " + dto.getEmployeeId())));
+
+        shipment.setSender(clientRepository.findById(dto.getSenderId())
+                .orElseThrow(() -> new RuntimeException("Sender not found: " + dto.getSenderId())));
+
+        shipment.setRecipient(clientRepository.findById(dto.getRecipientId())
+                .orElseThrow(() -> new RuntimeException("Recipient not found: " + dto.getRecipientId())));
+
+        shipment.setSenderAddress(addressRepository.findById(dto.getSenderAddressId())
+                .orElseThrow(() -> new RuntimeException("Sender address not found: " + dto.getSenderAddressId())));
+
+        if (dto.getRecipientAddressId() != null) {
+            shipment.setRecipientAddress(addressRepository.findById(dto.getRecipientAddressId())
+                    .orElseThrow(() -> new RuntimeException("Recipient address not found: " + dto.getRecipientAddressId())));
+        } else {
+            shipment.setRecipientAddress(null);
+        }
+        shipment.setDeliveryType(dto.getDeliveryType());
+
+        shipment.setOffice(officeRepository.findById(dto.getOfficeId())
+                .orElseThrow(() -> new RuntimeException("Office not found: " + dto.getOfficeId())));
+
+        shipment.setWeight(dto.getWeight());
+        shipment.setUniqueId(dto.getUniqueId());
+        shipment.setPrice(null);
+
+        Shipment saved = registerShipment(shipment, authentication);
+        return toDtoWithCurrentStatus(saved);
+    }
+
+
+    // --------- helpers ---------
+
+    private ShipmentDto toDtoWithCurrentStatus(Shipment s) {
+        ShipmentDto dto = new ShipmentDto();
+        dto.setId(s.getId());
+        dto.setEmployeeId(s.getEmployee() != null ? s.getEmployee().getId() : null);
+        dto.setSenderId(s.getSender() != null ? s.getSender().getId() : null);
+        dto.setRecipientId(s.getRecipient() != null ? s.getRecipient().getId() : null);
+        dto.setSenderAddressId(s.getSenderAddress() != null ? s.getSenderAddress().getId() : null);
+        dto.setRecipientAddressId(s.getRecipientAddress() != null ? s.getRecipientAddress().getId() : null);
+        dto.setOfficeId(s.getOffice() != null ? s.getOffice().getId() : null);
+        dto.setWeight(s.getWeight());
+        dto.setPrice(s.getPrice());
+        dto.setUniqueId(s.getUniqueId());
+        dto.setCreatedOn(s.getCreatedOn());
+        dto.setUpdatedOn(s.getUpdatedOn());
+
+        // “текущ статус” = последния запис по createdOn
+        ShipmentStatus last = shipmentStatusRepository.findByShipment_IdOrderByCreatedOnDesc(s.getId())
+                .stream()
+                .findFirst()
+                .orElse(null);
+
+        dto.setCurrentStatus(last != null ? last.getStatus().name() : null);
+        return dto;
+    }
+
+    private void validateShipment(Shipment shipment) {
+        if (shipment == null) throw new IllegalArgumentException("Shipment cannot be null.");
+        if (shipment.getWeight() <= 0) throw new IllegalArgumentException("Weight must be a positive value.");
+        if (shipment.getSender() == null || shipment.getRecipient() == null)
+            throw new IllegalArgumentException("Sender and recipient must be provided.");
+        if (shipment.getSenderAddress() == null) {
+            throw new IllegalArgumentException("Sender address must be provided.");
+        }
+        if (shipment.getOffice() == null) throw new IllegalArgumentException("Office must be provided.");
+        if (shipment.getUniqueId() == null || shipment.getUniqueId().isBlank())
+            throw new IllegalArgumentException("UniqueId must be provided.");
+        if (shipment.getDeliveryType() == null) {
+            throw new IllegalArgumentException("DeliveryType must be provided.");
+        }
+        if (shipment.getDeliveryType() == DeliveryType.TO_ADDRESS && shipment.getRecipientAddress() == null) {
+            throw new IllegalArgumentException("Recipient address is required for TO_ADDRESS delivery.");
+        }
+    }
+
+    private boolean isEmployee(Authentication authentication) {
+        return authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals(Role.EMPLOYEE.name()) || a.getAuthority().equals(Role.ADMIN.name()));
+    }
+
+    private void requireEmployee(Authentication authentication) {
+        if (!isEmployee(authentication)) {
+            throw new UnauthorizedAccess("Access denied. Only employees can perform this action.");
+        }
+    }
+
+    private void requireClient(Authentication authentication) {
+        boolean ok = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals(Role.CLIENT.name()));
+        if (!ok) throw new UnauthorizedAccess("Access denied. Only clients can perform this action.");
+    }
+
+    private User getUserFromAuthentication(Authentication authentication) throws UserNotFound {
+        return userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new UserNotFound("User not found with username: " + authentication.getName()));
+    }
+
+    public List<Shipment> getSentByClient(Authentication authentication) {
+        requireClient(authentication);
+        Integer userId = getUserFromAuthentication(authentication).getId();
+        return shipmentRepository.findAllBySender_User_Id(userId);
+    }
+
+    public List<Shipment> getReceivedByClient(Authentication authentication) {
+        requireClient(authentication);
+        Integer userId = getUserFromAuthentication(authentication).getId();
+
+        return shipmentRepository.findAllByRecipient_User_Id(userId).stream()
+                .filter(s -> getLastStatusOrNull(s.getId()) == Status.DELIVERED)
                 .toList();
     }
-*//*
-    // Get all Shipments
-    public List<Shipment> getAllShipments() {
-        return shipmentRepository.findAll();
+
+    public List<Shipment> getExpectedByClient(Authentication authentication) {
+        requireClient(authentication);
+        Integer userId = getUserFromAuthentication(authentication).getId();
+
+        return shipmentRepository.findAllByRecipient_User_Id(userId).stream()
+                .filter(s -> {
+                    Status last = getLastStatusOrNull(s.getId());
+                    return last == null || last != Status.DELIVERED;
+                })
+                .toList();
     }
 
-    // Get a Shipment by ID
-    public Optional<Shipment> getShipmentById(Integer id) {
-        return shipmentRepository.findById(id);
+    private Status getLastStatusOrNull(Integer shipmentId) {
+        return shipmentStatusRepository.findByShipment_IdOrderByCreatedOnDesc(shipmentId)
+                .stream()
+                .findFirst()
+                .map(ShipmentStatus::getStatus)
+                .orElse(null);
+    }
+    public BigDecimal getRevenueBetween(Instant from, Instant to, Authentication authentication) {
+        requireEmployee(authentication);
+        return shipmentRepository.sumRevenueBetween(from, to);
+    }
+    public ShipmentDto findByIdForEdit(Integer id, Authentication authentication) {
+        requireEmployee(authentication);
+        Shipment shipment = shipmentRepository.findById(id)
+                .orElseThrow(() -> new ShipmentNotFound("Shipment not found with ID: " + id));
+        return toDtoWithCurrentStatus(shipment);
     }
 
-    // Update Shipment and its Status
-    public Shipment updateShipment(Integer id, Shipment updatedShipment, ShipmentStatus updatedStatus) {
-        if (shipmentRepository.existsById(id)) {
-            updatedShipment.setId(id);
-            Shipment updatedShipmentEntity = shipmentRepository.save(updatedShipment);
+    public ShipmentDto updateFromDto(Integer id, ShipmentDto dto, Authentication authentication) {
+        requireEmployee(authentication);
 
-            // Update shipment status
-            updatedStatus.setShipment(updatedShipmentEntity);
-            shipmentStatusRepository.save(updatedStatus);
+        Shipment shipment = shipmentRepository.findById(id)
+                .orElseThrow(() -> new ShipmentNotFound("Shipment not found with ID: " + id));
 
-            return updatedShipmentEntity;
+        shipment.setEmployee(employeeRepository.findById(dto.getEmployeeId())
+                .orElseThrow(() -> new RuntimeException("Employee not found: " + dto.getEmployeeId())));
+
+        shipment.setSender(clientRepository.findById(dto.getSenderId())
+                .orElseThrow(() -> new RuntimeException("Sender not found: " + dto.getSenderId())));
+
+        shipment.setRecipient(clientRepository.findById(dto.getRecipientId())
+                .orElseThrow(() -> new RuntimeException("Recipient not found: " + dto.getRecipientId())));
+
+        shipment.setSenderAddress(addressRepository.findById(dto.getSenderAddressId())
+                .orElseThrow(() -> new RuntimeException("Sender address not found: " + dto.getSenderAddressId())));
+
+        if (dto.getRecipientAddressId() != null) {
+            shipment.setRecipientAddress(addressRepository.findById(dto.getRecipientAddressId())
+                    .orElseThrow(() -> new RuntimeException("Recipient address not found: " + dto.getRecipientAddressId())));
+        } else {
+            shipment.setRecipientAddress(null);
         }
-        return null;
-    }
-*/
-    /**
-     * Deletes a shipment from the system by its ID.
-     *
-     * @param shipmentId The ID of the shipment to delete.
-     * @throws ShipmentNotFound If the shipment with the specified ID does not
-     *                          exist.
 
-    public void deleteShipment(Integer shipmentId) {
-        Shipment shipment = shipmentRepository.findById(shipmentId)
-                .orElseThrow(() -> new ShipmentNotFound("Shipment not found with ID: " + shipmentId));
-        shipmentRepository.delete(shipment);
+        shipment.setDeliveryType(dto.getDeliveryType());
+
+        shipment.setOffice(officeRepository.findById(dto.getOfficeId())
+                .orElseThrow(() -> new RuntimeException("Office not found: " + dto.getOfficeId())));
+
+        shipment.setWeight(dto.getWeight());
+
+        // валидирай и преизчисли цената
+        validateShipment(shipment);
+        shipment.setPrice(calculatePrice(shipment));
+
+        Shipment saved = shipmentRepository.save(shipment);
+        return toDtoWithCurrentStatus(saved);
     }
-*/
+    public void deleteShipment(Integer id, Authentication authentication) {
+        requireEmployee(authentication);
+
+        if (!shipmentRepository.existsById(id)) {
+            throw new ShipmentNotFound("Shipment not found with ID: " + id);
+        }
+
+        shipmentStatusRepository.deleteByShipment_Id(id);
+        shipmentRepository.deleteById(id);
+    }
+
+
 }
