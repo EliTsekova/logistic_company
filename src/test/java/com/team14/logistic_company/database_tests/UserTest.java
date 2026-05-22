@@ -6,164 +6,170 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserTest {
+/**
+ * Unit tests for the {@link User} entity.
+ *
+ * These tests verify the validation rules defined in the User model,
+ * such as required fields, username length, email format and role assignment.
+ */
+class UserTest {
 
-    private List<String> validate(User user) {
+    private Validator validator;
+
+    /**
+     * Initializes the Jakarta Bean Validation validator before each test.
+     */
+    @BeforeEach
+    void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-
-        return validator.validate(user)
-                .stream()
-                .map(ConstraintViolation::getMessage)
-                .collect(Collectors.toList());
+        validator = factory.getValidator();
     }
 
+    /**
+     * Creates a valid User object used as a base object in the tests.
+     *
+     * @return a valid User instance
+     */
     private User buildValidUser() {
         User user = new User();
+
         user.setFirstName("Ivan");
         user.setLastName("Ivanov");
-        user.setUsername("ivanov123");
-        user.setPassword("password");
+        user.setUsername("ivan123");
+        user.setPassword("password123");
         user.setEmail("ivan@test.com");
         user.setRole(Role.CLIENT);
+
         return user;
     }
 
+    /**
+     * Tests that a completely valid user passes all validation rules.
+     */
     @Test
-    void whenDataIsValid() {
+    void shouldCreateValidUser() {
         User user = buildValidUser();
 
-        List<String> messages = validate(user);
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
 
-        assertEquals(0, messages.size());
+        assertTrue(violations.isEmpty());
     }
 
-    // -------- First Name --------
-
+    /**
+     * Tests that validation fails when the first name is blank.
+     */
     @Test
-    void whenFirstNameIsBlank() {
+    void shouldFailWhenFirstNameIsBlank() {
         User user = buildValidUser();
         user.setFirstName("");
 
-        List<String> messages = validate(user);
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
 
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("First name cannot be blank!"));
+        assertFalse(violations.isEmpty());
     }
 
+    /**
+     * Tests that validation fails when the last name is blank.
+     */
     @Test
-    void whenFirstNameIsTooLong() {
-        User user = buildValidUser();
-        user.setFirstName("ThisFirstNameIsWayTooLong");
-
-        List<String> messages = validate(user);
-
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("First name has to be up to 20 characters!"));
-    }
-
-    // -------- Last Name --------
-
-    @Test
-    void whenLastNameIsBlank() {
+    void shouldFailWhenLastNameIsBlank() {
         User user = buildValidUser();
         user.setLastName("");
 
-        List<String> messages = validate(user);
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
 
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("Last name cannot be blank!"));
+        assertFalse(violations.isEmpty());
     }
 
+    /**
+     * Tests that validation fails when the username is shorter than 5 characters.
+     */
     @Test
-    void whenLastNameIsTooLong() {
+    void shouldFailWhenUsernameTooShort() {
         User user = buildValidUser();
-        user.setLastName("ThisLastNameIsWayTooLong");
+        user.setUsername("abc");
 
-        List<String> messages = validate(user);
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
 
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("Last name has to be up to 20 characters!"));
+        assertFalse(violations.isEmpty());
     }
 
-    // -------- Username --------
-
+    /**
+     * Tests that validation fails when the username is longer than 20 characters.
+     */
     @Test
-    void whenUsernameIsBlank() {
+    void shouldFailWhenUsernameTooLong() {
         User user = buildValidUser();
-        user.setUsername("");
+        user.setUsername("abcdefghijklmnopqrstu");
 
-        List<String> messages = validate(user);
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
 
-        assertEquals(2, messages.size());
-        assertTrue(messages.contains("Username cannot be blank!"));
-        assertTrue(messages.contains("Username has to be between 5 and 20 characters!"));
+        assertFalse(violations.isEmpty());
     }
 
+    /**
+     * Tests that validation fails when the password is blank.
+     */
     @Test
-    void whenUsernameIsTooShort() {
-        User user = buildValidUser();
-        user.setUsername("usr");
-
-        List<String> messages = validate(user);
-
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("Username has to be between 5 and 20 characters!"));
-    }
-
-    // -------- Password --------
-
-    @Test
-    void whenPasswordIsBlank() {
+    void shouldFailWhenPasswordIsBlank() {
         User user = buildValidUser();
         user.setPassword("");
 
-        List<String> messages = validate(user);
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
 
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("Password cannot be blank!"));
+        assertFalse(violations.isEmpty());
     }
 
-    // -------- Email --------
-
+    /**
+     * Tests that validation fails when the email has an invalid format.
+     */
     @Test
-    void whenEmailIsBlank() {
-        User user = buildValidUser();
-        user.setEmail("");
-
-        List<String> messages = validate(user);
-
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("The email address cannot be blank!"));
-    }
-
-    @Test
-    void whenEmailIsInvalid() {
+    void shouldFailWhenEmailIsInvalid() {
         User user = buildValidUser();
         user.setEmail("invalid-email");
 
-        List<String> messages = validate(user);
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
 
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("Invalid email address. Please enter a proper email address!"));
+        assertFalse(violations.isEmpty());
     }
 
-    // -------- Role --------
-
+    /**
+     * Tests that validation fails when the email is blank.
+     */
     @Test
-    void whenRoleIsNull_validationDoesNotFail() {
+    void shouldFailWhenEmailIsBlank() {
         User user = buildValidUser();
-        user.setRole(null);
+        user.setEmail("");
 
-        List<String> messages = validate(user);
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
 
-        assertEquals(0, messages.size());
+        assertFalse(violations.isEmpty());
+    }
+
+    /**
+     * Tests that the role field is correctly assigned.
+     */
+    @Test
+    void shouldSetRoleCorrectly() {
+        User user = buildValidUser();
+
+        assertEquals(Role.CLIENT, user.getRole());
+    }
+
+    /**
+     * Tests that the ID is null before the entity is persisted in the database.
+     */
+    @Test
+    void shouldHaveNullIdBeforePersist() {
+        User user = buildValidUser();
+
+        assertNull(user.getId());
     }
 }

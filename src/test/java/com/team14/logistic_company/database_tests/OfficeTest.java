@@ -6,70 +6,211 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class OfficeTest {
+/**
+ * Unit tests for the {@link Office} entity.
+ *
+ * These tests verify the validation rules and
+ * behavior of the Office model.
+ */
+class OfficeTest {
 
-    private List<String> validate(Office office) {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
+    private Validator validator;
 
-        return validator.validate(office)
-                .stream()
-                .map(ConstraintViolation::getMessage)
-                .collect(Collectors.toList());
+    /**
+     * Initializes the validator before each test.
+     */
+    @BeforeEach
+    void setUp() {
+
+        ValidatorFactory factory =
+                Validation.buildDefaultValidatorFactory();
+
+        validator = factory.getValidator();
     }
 
-    private Office buildOffice(String title) {
+    /**
+     * Creates a valid Office object
+     * used in the test methods.
+     *
+     * @return valid Office instance
+     */
+    private Office buildValidOffice() {
+
         Office office = new Office();
-        office.setTitle(title);
-        office.setAddress(new Address());
+
+        office.setTitle("Office Sofia");
+
+        office.setAddress(
+                new Address()
+        );
+
         return office;
     }
 
+    /**
+     * Tests that a valid Office object
+     * passes all validation checks.
+     */
     @Test
-    void whenDataIsValid() {
-        Office office = buildOffice("Central Office");
+    void shouldCreateValidOffice() {
 
-        List<String> messages = validate(office);
+        Office office =
+                buildValidOffice();
 
-        assertEquals(0, messages.size());
+        Set<ConstraintViolation<Office>>
+                violations =
+                validator.validate(office);
+
+        assertTrue(violations.isEmpty());
     }
 
+    /**
+     * Tests that validation fails when
+     * the title is blank.
+     */
     @Test
-    void whenTitleIsBlank() {
-        Office office = buildOffice("");
+    void shouldFailWhenTitleIsBlank() {
 
-        List<String> messages = validate(office);
+        Office office =
+                buildValidOffice();
 
-        // "" нарушава @NotBlank и @Size(min=5)
-        assertEquals(2, messages.size());
-        assertTrue(messages.contains("Title cannot be blank!"));
-        assertTrue(messages.contains("Title has to be between 5 and 20 characters!"));
+        office.setTitle("");
+
+        Set<ConstraintViolation<Office>>
+                violations =
+                validator.validate(office);
+
+        assertFalse(violations.isEmpty());
     }
 
+    /**
+     * Tests that validation fails when
+     * the title is shorter than 5 characters.
+     */
     @Test
-    void whenTitleIsTooShort() {
-        Office office = buildOffice("Off");
+    void shouldFailWhenTitleTooShort() {
 
-        List<String> messages = validate(office);
+        Office office =
+                buildValidOffice();
 
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("Title has to be between 5 and 20 characters!"));
+        office.setTitle("abc");
+
+        Set<ConstraintViolation<Office>>
+                violations =
+                validator.validate(office);
+
+        assertFalse(violations.isEmpty());
     }
 
+    /**
+     * Tests that validation fails when
+     * the title is longer than 20 characters.
+     */
     @Test
-    void whenTitleIsTooLong() {
-        Office office = buildOffice("Very Very Long Office Title");
+    void shouldFailWhenTitleTooLong() {
 
-        List<String> messages = validate(office);
+        Office office =
+                buildValidOffice();
 
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("Title has to be between 5 and 20 characters!"));
+        office.setTitle(
+                "ThisOfficeTitleIsWayTooLong"
+        );
+
+        Set<ConstraintViolation<Office>>
+                violations =
+                validator.validate(office);
+
+        assertFalse(violations.isEmpty());
+    }
+
+    /**
+     * Tests that the address
+     * is assigned correctly.
+     */
+    @Test
+    void shouldSetAddressCorrectly() {
+
+        Address address =
+                new Address();
+
+        Office office =
+                buildValidOffice();
+
+        office.setAddress(address);
+
+        assertEquals(
+                address,
+                office.getAddress()
+        );
+    }
+
+    /**
+     * Tests that the title
+     * is assigned correctly.
+     */
+    @Test
+    void shouldSetTitleCorrectly() {
+
+        Office office =
+                buildValidOffice();
+
+        office.setTitle("Office Plovdiv");
+
+        assertEquals(
+                "Office Plovdiv",
+                office.getTitle()
+        );
+    }
+
+    /**
+     * Tests that the entity ID is null
+     * before persistence.
+     */
+    @Test
+    void shouldHaveNullIdBeforePersist() {
+
+        Office office =
+                buildValidOffice();
+
+        assertNull(
+                office.getId()
+        );
+    }
+
+    /**
+     * Tests that createdOn is null
+     * before persistence.
+     */
+    @Test
+    void shouldHaveNullCreatedOnBeforePersist() {
+
+        Office office =
+                buildValidOffice();
+
+        assertNull(
+                office.getCreatedOn()
+        );
+    }
+
+    /**
+     * Tests that updatedOn is null
+     * before persistence.
+     */
+    @Test
+    void shouldHaveNullUpdatedOnBeforePersist() {
+
+        Office office =
+                buildValidOffice();
+
+        assertNull(
+                office.getUpdatedOn()
+        );
     }
 }

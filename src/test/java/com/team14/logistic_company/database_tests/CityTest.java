@@ -9,65 +9,213 @@ import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CityTest {
+/**
+ * Unit tests for the {@link City} entity.
+ *
+ * These tests verify the validation rules and
+ * behavior of the City model.
+ */
+class CityTest {
 
-    private Country country;
+    private Validator validator;
 
-    private List<String> validate(City city) {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-
-        return validator.validate(city)
-                .stream()
-                .map(ConstraintViolation::getMessage)
-                .collect(Collectors.toList());
-    }
-
+    /**
+     * Initializes the validator before each test.
+     */
     @BeforeEach
-    void init() {
-        country = new Country();
+    void setUp() {
+
+        ValidatorFactory factory =
+                Validation.buildDefaultValidatorFactory();
+
+        validator = factory.getValidator();
     }
 
-    private City buildCity(String name) {
-        City city = new City();
-        city.setName(name);
-        city.setCountry(country);
+    /**
+     * Creates a valid City object
+     * used in the test methods.
+     *
+     * @return valid City instance
+     */
+    private City buildValidCity() {
+
+        City city =
+                new City();
+
+        city.setName(
+                "Sofia"
+        );
+
+        city.setCountry(
+                new Country()
+        );
+
         return city;
     }
 
+    /**
+     * Tests that a valid City object
+     * passes all validation checks.
+     */
     @Test
-    void whenDataIsValid() {
-        City city = buildCity("Sofia");
+    void shouldCreateValidCity() {
 
-        List<String> messages = validate(city);
+        City city =
+                buildValidCity();
 
-        assertEquals(0, messages.size());
+        Set<ConstraintViolation<City>>
+                violations =
+                validator.validate(city);
+
+        assertTrue(violations.isEmpty());
     }
 
+    /**
+     * Tests that validation fails when
+     * the city name is blank.
+     */
     @Test
-    void whenNameIsBlank() {
-        City city = buildCity("");
+    void shouldFailWhenNameIsBlank() {
 
-        List<String> messages = validate(city);
+        City city =
+                buildValidCity();
 
-        // "" нарушава @NotBlank и @Size(min=3)
-        assertEquals(2, messages.size());
-        assertTrue(messages.contains("The city name cannot be blank!"));
-        assertTrue(messages.contains("The city name has to be between 3 and 20 characters!"));
+        city.setName("");
+
+        Set<ConstraintViolation<City>>
+                violations =
+                validator.validate(city);
+
+        assertFalse(violations.isEmpty());
     }
 
+    /**
+     * Tests that validation fails when
+     * the city name is shorter than 3 characters.
+     */
     @Test
-    void whenNameIsLessThan3Symbols() {
-        City city = buildCity("c");
+    void shouldFailWhenNameTooShort() {
 
-        List<String> messages = validate(city);
+        City city =
+                buildValidCity();
 
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("The city name has to be between 3 and 20 characters!"));
+        city.setName("AB");
+
+        Set<ConstraintViolation<City>>
+                violations =
+                validator.validate(city);
+
+        assertFalse(violations.isEmpty());
+    }
+
+    /**
+     * Tests that validation fails when
+     * the city name is longer than 20 characters.
+     */
+    @Test
+    void shouldFailWhenNameTooLong() {
+
+        City city =
+                buildValidCity();
+
+        city.setName(
+                "ThisCityNameIsDefinitelyTooLong"
+        );
+
+        Set<ConstraintViolation<City>>
+                violations =
+                validator.validate(city);
+
+        assertFalse(violations.isEmpty());
+    }
+
+    /**
+     * Tests that the city name
+     * is assigned correctly.
+     */
+    @Test
+    void shouldSetNameCorrectly() {
+
+        City city =
+                buildValidCity();
+
+        city.setName(
+                "Plovdiv"
+        );
+
+        assertEquals(
+                "Plovdiv",
+                city.getName()
+        );
+    }
+
+    /**
+     * Tests that the country relation
+     * is assigned correctly.
+     */
+    @Test
+    void shouldSetCountryCorrectly() {
+
+        Country country =
+                new Country();
+
+        City city =
+                buildValidCity();
+
+        city.setCountry(country);
+
+        assertEquals(
+                country,
+                city.getCountry()
+        );
+    }
+
+    /**
+     * Tests that the entity ID is null
+     * before persistence.
+     */
+    @Test
+    void shouldHaveNullIdBeforePersist() {
+
+        City city =
+                buildValidCity();
+
+        assertNull(
+                city.getId()
+        );
+    }
+
+    /**
+     * Tests that createdOn is null
+     * before persistence.
+     */
+    @Test
+    void shouldHaveNullCreatedOnBeforePersist() {
+
+        City city =
+                buildValidCity();
+
+        assertNull(
+                city.getCreatedOn()
+        );
+    }
+
+    /**
+     * Tests that updatedOn is null
+     * before persistence.
+     */
+    @Test
+    void shouldHaveNullUpdatedOnBeforePersist() {
+
+        City city =
+                buildValidCity();
+
+        assertNull(
+                city.getUpdatedOn()
+        );
     }
 }

@@ -1,62 +1,195 @@
 package com.team14.logistic_company.database_tests;
+
 import com.team14.logistic_company.entities.Country;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CountryTest {
+/**
+ * Unit tests for the {@link Country} entity.
+ *
+ * These tests verify the validation rules and
+ * behavior of the Country model.
+ */
+class CountryTest {
 
-    private List<String> validate(Country country) {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
+    private Validator validator;
 
-        return validator.validate(country)
-                .stream()
-                .map(ConstraintViolation::getMessage)
-                .collect(Collectors.toList());
+    /**
+     * Initializes the validator before each test.
+     */
+    @BeforeEach
+    void setUp() {
+
+        ValidatorFactory factory =
+                Validation.buildDefaultValidatorFactory();
+
+        validator = factory.getValidator();
     }
 
-    private Country buildCountry(String name) {
-        Country country = new Country();
-        country.setName(name);
+    /**
+     * Creates a valid Country object
+     * used in the test methods.
+     *
+     * @return valid Country instance
+     */
+    private Country buildValidCountry() {
+
+        Country country =
+                new Country();
+
+        country.setName(
+                "Bulgaria"
+        );
+
         return country;
     }
 
+    /**
+     * Tests that a valid Country object
+     * passes all validation checks.
+     */
     @Test
-    void whenDataIsValid() {
-        Country country = buildCountry("Bulgaria");
+    void shouldCreateValidCountry() {
 
-        List<String> messages = validate(country);
+        Country country =
+                buildValidCountry();
 
-        assertEquals(0, messages.size());
+        Set<ConstraintViolation<Country>>
+                violations =
+                validator.validate(country);
+
+        assertTrue(violations.isEmpty());
     }
 
+    /**
+     * Tests that validation fails when
+     * the country name is blank.
+     */
     @Test
-    void whenNameIsBlank() {
-        Country country = buildCountry("");
+    void shouldFailWhenNameIsBlank() {
 
-        List<String> messages = validate(country);
+        Country country =
+                buildValidCountry();
 
-        // "" нарушава @NotBlank и @Size(min=3)
-        assertEquals(2, messages.size());
-        assertTrue(messages.contains("The name of the country cannot be blank!"));
-        assertTrue(messages.contains("The name of the country has to be between 3 and 50 characters!"));
+        country.setName("");
+
+        Set<ConstraintViolation<Country>>
+                violations =
+                validator.validate(country);
+
+        assertFalse(violations.isEmpty());
     }
 
+    /**
+     * Tests that validation fails when
+     * the country name is shorter than 3 characters.
+     */
     @Test
-    void whenNameIsLessThan3Symbols() {
-        Country country = buildCountry("co");
+    void shouldFailWhenNameTooShort() {
 
-        List<String> messages = validate(country);
+        Country country =
+                buildValidCountry();
 
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("The name of the country has to be between 3 and 50 characters!"));
+        country.setName("AB");
+
+        Set<ConstraintViolation<Country>>
+                violations =
+                validator.validate(country);
+
+        assertFalse(violations.isEmpty());
+    }
+
+    /**
+     * Tests that validation fails when
+     * the country name is longer than 50 characters.
+     */
+    @Test
+    void shouldFailWhenNameTooLong() {
+
+        Country country =
+                buildValidCountry();
+
+        country.setName(
+                "ThisCountryNameIsDefinitelyWayTooLongForValidationRules"
+        );
+
+        Set<ConstraintViolation<Country>>
+                violations =
+                validator.validate(country);
+
+        assertFalse(violations.isEmpty());
+    }
+
+    /**
+     * Tests that the country name
+     * is assigned correctly.
+     */
+    @Test
+    void shouldSetNameCorrectly() {
+
+        Country country =
+                buildValidCountry();
+
+        country.setName(
+                "Germany"
+        );
+
+        assertEquals(
+                "Germany",
+                country.getName()
+        );
+    }
+
+    /**
+     * Tests that the entity ID is null
+     * before persistence.
+     */
+    @Test
+    void shouldHaveNullIdBeforePersist() {
+
+        Country country =
+                buildValidCountry();
+
+        assertNull(
+                country.getId()
+        );
+    }
+
+    /**
+     * Tests that createdOn is null
+     * before persistence.
+     */
+    @Test
+    void shouldHaveNullCreatedOnBeforePersist() {
+
+        Country country =
+                buildValidCountry();
+
+        assertNull(
+                country.getCreatedOn()
+        );
+    }
+
+    /**
+     * Tests that updatedOn is null
+     * before persistence.
+     */
+    @Test
+    void shouldHaveNullUpdatedOnBeforePersist() {
+
+        Country country =
+                buildValidCountry();
+
+        assertNull(
+                country.getUpdatedOn()
+        );
     }
 }

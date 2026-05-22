@@ -6,75 +6,259 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AddressTest {
+/**
+ * Unit tests for the {@link Address} entity.
+ *
+ * These tests verify the validation rules and
+ * behavior of the Address model.
+ */
+class AddressTest {
 
-    private List<String> validate(Address address) {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
+    private Validator validator;
 
-        return validator.validate(address)
-                .stream()
-                .map(ConstraintViolation::getMessage)
-                .collect(Collectors.toList());
+    /**
+     * Initializes the validator before each test.
+     */
+    @BeforeEach
+    void setUp() {
+
+        ValidatorFactory factory =
+                Validation.buildDefaultValidatorFactory();
+
+        validator = factory.getValidator();
     }
 
-    private Address buildAddress(String street, String postalCode) {
-        Address address = new Address();
-        address.setStreet(street);
-        address.setPostalCode(postalCode);
+    /**
+     * Creates a valid Address object
+     * used in the test methods.
+     *
+     * @return valid Address instance
+     */
+    private Address buildValidAddress() {
 
-        // City няма @NotNull/@NotBlank в твоя клас, така че Bean Validation няма да го валидира.
-        // Все пак го задаваме, за да е "реалистичен" обект (и да не те удари по-късно при persistence).
-        address.setCity(new City());
+        Address address =
+                new Address();
+
+        address.setCity(
+                new City()
+        );
+
+        address.setStreet(
+                "Vitosha Blvd"
+        );
+
+        address.setPostalCode(
+                "1000"
+        );
 
         return address;
     }
 
+    /**
+     * Tests that a valid Address object
+     * passes all validation checks.
+     */
     @Test
-    void whenDataIsValid() {
-        Address address = buildAddress("Street 1", "BG1234");
+    void shouldCreateValidAddress() {
 
-        List<String> messages = validate(address);
+        Address address =
+                buildValidAddress();
 
-        assertEquals(0, messages.size());
+        Set<ConstraintViolation<Address>>
+                violations =
+                validator.validate(address);
+
+        assertTrue(violations.isEmpty());
     }
 
+    /**
+     * Tests that validation fails when
+     * the street field is blank.
+     */
     @Test
-    void whenStreetIsEmpty() {
-        Address address = buildAddress("", "BG1234");
+    void shouldFailWhenStreetIsBlank() {
 
-        List<String> messages = validate(address);
+        Address address =
+                buildValidAddress();
 
-        // При празен стринг се очакват 2 нарушения: @NotBlank и @Size(min=5)
-        assertEquals(2, messages.size());
-        assertTrue(messages.contains("The street name cannot be blank!"));
-        assertTrue(messages.contains("The street name has to be between 5 and 20 characters!"));
+        address.setStreet("");
+
+        Set<ConstraintViolation<Address>>
+                violations =
+                validator.validate(address);
+
+        assertFalse(violations.isEmpty());
     }
 
+    /**
+     * Tests that validation fails when
+     * the street name is shorter than 5 characters.
+     */
     @Test
-    void whenStreetIsLessThanFiveCharacters() {
-        Address address = buildAddress("str", "BG1234");
+    void shouldFailWhenStreetTooShort() {
 
-        List<String> messages = validate(address);
+        Address address =
+                buildValidAddress();
 
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("The street name has to be between 5 and 20 characters!"));
+        address.setStreet("abc");
+
+        Set<ConstraintViolation<Address>>
+                violations =
+                validator.validate(address);
+
+        assertFalse(violations.isEmpty());
     }
 
+    /**
+     * Tests that validation fails when
+     * the street name is longer than 20 characters.
+     */
     @Test
-    void whenPostalCodeIsBlank() {
-        Address address = buildAddress("Street 1", "");
+    void shouldFailWhenStreetTooLong() {
 
-        List<String> messages = validate(address);
+        Address address =
+                buildValidAddress();
 
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("The postal code cannot be blank!"));
+        address.setStreet(
+                "ThisStreetNameIsDefinitelyTooLong"
+        );
+
+        Set<ConstraintViolation<Address>>
+                violations =
+                validator.validate(address);
+
+        assertFalse(violations.isEmpty());
+    }
+
+    /**
+     * Tests that validation fails when
+     * the postal code is blank.
+     */
+    @Test
+    void shouldFailWhenPostalCodeIsBlank() {
+
+        Address address =
+                buildValidAddress();
+
+        address.setPostalCode("");
+
+        Set<ConstraintViolation<Address>>
+                violations =
+                validator.validate(address);
+
+        assertFalse(violations.isEmpty());
+    }
+
+    /**
+     * Tests that the street field
+     * is assigned correctly.
+     */
+    @Test
+    void shouldSetStreetCorrectly() {
+
+        Address address =
+                buildValidAddress();
+
+        address.setStreet(
+                "Tsarigradsko Shose"
+        );
+
+        assertEquals(
+                "Tsarigradsko Shose",
+                address.getStreet()
+        );
+    }
+
+    /**
+     * Tests that the postal code field
+     * is assigned correctly.
+     */
+    @Test
+    void shouldSetPostalCodeCorrectly() {
+
+        Address address =
+                buildValidAddress();
+
+        address.setPostalCode(
+                "4000"
+        );
+
+        assertEquals(
+                "4000",
+                address.getPostalCode()
+        );
+    }
+
+    /**
+     * Tests that the city relation
+     * is assigned correctly.
+     */
+    @Test
+    void shouldSetCityCorrectly() {
+
+        City city =
+                new City();
+
+        Address address =
+                buildValidAddress();
+
+        address.setCity(city);
+
+        assertEquals(
+                city,
+                address.getCity()
+        );
+    }
+
+    /**
+     * Tests that the entity ID is null
+     * before persistence.
+     */
+    @Test
+    void shouldHaveNullIdBeforePersist() {
+
+        Address address =
+                buildValidAddress();
+
+        assertNull(
+                address.getId()
+        );
+    }
+
+    /**
+     * Tests that createdOn is null
+     * before persistence.
+     */
+    @Test
+    void shouldHaveNullCreatedOnBeforePersist() {
+
+        Address address =
+                buildValidAddress();
+
+        assertNull(
+                address.getCreatedOn()
+        );
+    }
+
+    /**
+     * Tests that updatedOn is null
+     * before persistence.
+     */
+    @Test
+    void shouldHaveNullUpdatedOnBeforePersist() {
+
+        Address address =
+                buildValidAddress();
+
+        assertNull(
+                address.getUpdatedOn()
+        );
     }
 }

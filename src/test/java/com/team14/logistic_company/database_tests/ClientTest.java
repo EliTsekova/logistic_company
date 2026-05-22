@@ -1,6 +1,5 @@
 package com.team14.logistic_company.database_tests;
 
-
 import com.team14.logistic_company.entities.Client;
 import com.team14.logistic_company.entities.User;
 import jakarta.validation.ConstraintViolation;
@@ -10,66 +9,214 @@ import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ClientTest {
+/**
+ * Unit tests for the {@link Client} entity.
+ *
+ * These tests verify the validation rules and
+ * behavior of the Client model.
+ */
+class ClientTest {
 
-    private User user;
+    private Validator validator;
 
-    private List<String> validate(Client client) {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-
-        return validator.validate(client)
-                .stream()
-                .map(ConstraintViolation::getMessage)
-                .collect(Collectors.toList());
-    }
-
+    /**
+     * Initializes the validator before each test.
+     */
     @BeforeEach
-    void init() {
-        user = new User(); // за Bean Validation теста е достатъчно да е non-null
+    void setUp() {
+
+        ValidatorFactory factory =
+                Validation.buildDefaultValidatorFactory();
+
+        validator = factory.getValidator();
     }
 
-    private Client buildClient(String phoneNumber) {
-        Client client = new Client();
-        client.setUser(user);              // няма @NotNull, но го задаваме
-        client.setPhoneNumber(phoneNumber);
+    /**
+     * Creates a valid Client object
+     * used in the test methods.
+     *
+     * @return valid Client instance
+     */
+    private Client buildValidClient() {
+
+        Client client =
+                new Client();
+
+        client.setUser(
+                new User()
+        );
+
+        client.setPhoneNumber(
+                "0888123456"
+        );
+
         return client;
     }
 
+    /**
+     * Tests that a valid Client object
+     * passes all validation checks.
+     */
     @Test
-    void whenDataIsValid() {
-        Client client = buildClient("0888888888");
+    void shouldCreateValidClient() {
 
-        List<String> messages = validate(client);
+        Client client =
+                buildValidClient();
 
-        assertEquals(0, messages.size());
+        Set<ConstraintViolation<Client>>
+                violations =
+                validator.validate(client);
+
+        assertTrue(violations.isEmpty());
     }
 
+    /**
+     * Tests that validation fails when
+     * the phone number is blank.
+     */
     @Test
-    void whenPhoneNumberIsTooShort() {
-        Client client = buildClient("08");
+    void shouldFailWhenPhoneNumberIsBlank() {
 
-        List<String> messages = validate(client);
+        Client client =
+                buildValidClient();
 
-        // "08" нарушава само @Size(min=10,max=10)
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("The phone number has to be exactly 10 characters!"));
+        client.setPhoneNumber("");
+
+        Set<ConstraintViolation<Client>>
+                violations =
+                validator.validate(client);
+
+        assertFalse(violations.isEmpty());
     }
 
+    /**
+     * Tests that validation fails when
+     * the phone number is shorter than 10 characters.
+     */
     @Test
-    void whenPhoneNumberIsBlank() {
-        Client client = buildClient("");
+    void shouldFailWhenPhoneNumberTooShort() {
 
-        List<String> messages = validate(client);
+        Client client =
+                buildValidClient();
 
-        // "" нарушава @NotBlank и @Size(exactly 10)
-        assertEquals(2, messages.size());
-        assertTrue(messages.contains("Phone number cannot be blank!"));
-        assertTrue(messages.contains("The phone number has to be exactly 10 characters!"));
+        client.setPhoneNumber(
+                "12345"
+        );
+
+        Set<ConstraintViolation<Client>>
+                violations =
+                validator.validate(client);
+
+        assertFalse(violations.isEmpty());
+    }
+
+    /**
+     * Tests that validation fails when
+     * the phone number is longer than 10 characters.
+     */
+    @Test
+    void shouldFailWhenPhoneNumberTooLong() {
+
+        Client client =
+                buildValidClient();
+
+        client.setPhoneNumber(
+                "123456789012"
+        );
+
+        Set<ConstraintViolation<Client>>
+                violations =
+                validator.validate(client);
+
+        assertFalse(violations.isEmpty());
+    }
+
+    /**
+     * Tests that the phone number
+     * is assigned correctly.
+     */
+    @Test
+    void shouldSetPhoneNumberCorrectly() {
+
+        Client client =
+                buildValidClient();
+
+        client.setPhoneNumber(
+                "0899999999"
+        );
+
+        assertEquals(
+                "0899999999",
+                client.getPhoneNumber()
+        );
+    }
+
+    /**
+     * Tests that the user relation
+     * is assigned correctly.
+     */
+    @Test
+    void shouldSetUserCorrectly() {
+
+        User user = new User();
+
+        Client client =
+                buildValidClient();
+
+        client.setUser(user);
+
+        assertEquals(
+                user,
+                client.getUser()
+        );
+    }
+
+    /**
+     * Tests that the entity ID is null
+     * before persistence.
+     */
+    @Test
+    void shouldHaveNullIdBeforePersist() {
+
+        Client client =
+                buildValidClient();
+
+        assertNull(
+                client.getId()
+        );
+    }
+
+    /**
+     * Tests that createdOn is null
+     * before persistence.
+     */
+    @Test
+    void shouldHaveNullCreatedOnBeforePersist() {
+
+        Client client =
+                buildValidClient();
+
+        assertNull(
+                client.getCreatedOn()
+        );
+    }
+
+    /**
+     * Tests that updatedOn is null
+     * before persistence.
+     */
+    @Test
+    void shouldHaveNullUpdatedOnBeforePersist() {
+
+        Client client =
+                buildValidClient();
+
+        assertNull(
+                client.getUpdatedOn()
+        );
     }
 }

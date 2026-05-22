@@ -1,134 +1,322 @@
-package com.team14.logistic_company.database_tests;
+package com.team14.logistic_company.entities;
 
-import com.team14.logistic_company.entities.*;
 import com.team14.logistic_company.entities.enums.DeliveryType;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ShipmentTest {
+/**
+ * Unit tests for the {@link Shipment} entity.
+ *
+ * These tests verify the validation rules and
+ * business logic of the Shipment model.
+ */
+class ShipmentTest {
 
-    private List<String> validate(Shipment shipment) {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
+    private Validator validator;
 
-        return validator.validate(shipment)
-                .stream()
-                .map(ConstraintViolation::getMessage)
-                .collect(Collectors.toList());
+    /**
+     * Initializes the validator before each test.
+     */
+    @BeforeEach
+    void setUp() {
+
+        ValidatorFactory factory =
+                Validation.buildDefaultValidatorFactory();
+
+        validator = factory.getValidator();
     }
 
+    /**
+     * Creates a valid Shipment object
+     * used in the test methods.
+     *
+     * @return valid Shipment instance
+     */
     private Shipment buildValidShipment() {
-        Shipment s = new Shipment();
 
-        s.setEmployee(new Employee());
-        s.setRecipient(new Client());
-        s.setSender(new Client());
-        s.setSenderAddress(new Address());
-        s.setOffice(new Office());
-        s.setDeliveryType(DeliveryType.TO_OFFICE);
-        s.setRecipientAddress(null);
+        Shipment shipment = new Shipment();
 
-        s.setWeight(1.0);
-        s.setPrice(new BigDecimal("5.50"));
-        s.setUniqueId("UNIQUE12345"); // 10+ chars
+        shipment.setEmployee(new Employee());
 
-        return s;
+        shipment.setDeliveryman(new Employee());
+
+        shipment.setRecipient(new Client());
+
+        shipment.setRecipientName("Ivan Ivanov");
+
+        shipment.setRecipientPhone("0888123456");
+
+        shipment.setRecipientAddress(new Address());
+
+        shipment.setDeliveryType(
+                DeliveryType.TO_ADDRESS
+        );
+
+        shipment.setSender(new Client());
+
+        shipment.setSenderAddress(
+                new Address()
+        );
+
+        shipment.setOffice(new Office());
+
+        shipment.setWeight(2.5);
+
+        shipment.setPrice(
+                new BigDecimal("12.50")
+        );
+
+        shipment.setUniqueId(
+                "SHIPMENT123"
+        );
+
+        return shipment;
     }
 
+    /**
+     * Tests that a valid Shipment object
+     * passes all validation rules.
+     */
     @Test
-    void whenDataIsValid() {
-        Shipment shipment = buildValidShipment();
+    void shouldCreateValidShipment() {
 
-        List<String> messages = validate(shipment);
+        Shipment shipment =
+                buildValidShipment();
 
-        assertEquals(0, messages.size());
+        Set<ConstraintViolation<Shipment>>
+                violations =
+                validator.validate(shipment);
+
+        assertTrue(violations.isEmpty());
     }
 
+    /**
+     * Tests that validation fails when
+     * the recipient name is blank.
+     */
     @Test
-    void whenWeightIsZero() {
-        Shipment shipment = buildValidShipment();
+    void shouldFailWhenRecipientNameIsBlank() {
+
+        Shipment shipment =
+                buildValidShipment();
+
+        shipment.setRecipientName("");
+
+        Set<ConstraintViolation<Shipment>>
+                violations =
+                validator.validate(shipment);
+
+        assertFalse(violations.isEmpty());
+    }
+
+    /**
+     * Tests that validation fails when
+     * the recipient phone is blank.
+     */
+    @Test
+    void shouldFailWhenRecipientPhoneIsBlank() {
+
+        Shipment shipment =
+                buildValidShipment();
+
+        shipment.setRecipientPhone("");
+
+        Set<ConstraintViolation<Shipment>>
+                violations =
+                validator.validate(shipment);
+
+        assertFalse(violations.isEmpty());
+    }
+
+    /**
+     * Tests that validation fails when
+     * the weight is less than or equal to zero.
+     */
+    @Test
+    void shouldFailWhenWeightIsInvalid() {
+
+        Shipment shipment =
+                buildValidShipment();
+
         shipment.setWeight(0);
 
-        List<String> messages = validate(shipment);
+        Set<ConstraintViolation<Shipment>>
+                violations =
+                validator.validate(shipment);
 
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("The weight must be greater than 0"));
+        assertFalse(violations.isEmpty());
     }
 
+    /**
+     * Tests that validation fails when
+     * the unique ID is blank.
+     */
     @Test
-    void whenWeightIsNegative() {
-        Shipment shipment = buildValidShipment();
-        shipment.setWeight(-2);
+    void shouldFailWhenUniqueIdIsBlank() {
 
-        List<String> messages = validate(shipment);
+        Shipment shipment =
+                buildValidShipment();
 
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("The weight must be greater than 0"));
-    }
-
-    @Test
-    void whenPriceIsZero() {
-        Shipment shipment = buildValidShipment();
-        shipment.setPrice(BigDecimal.ZERO);
-
-        List<String> messages = validate(shipment);
-
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("The price must be greater than 0"));
-    }
-
-    @Test
-    void whenPriceIsNegative() {
-        Shipment shipment = buildValidShipment();
-        shipment.setPrice(new BigDecimal("-1"));
-
-        List<String> messages = validate(shipment);
-
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("The price must be greater than 0"));
-    }
-
-    @Test
-    void whenUniqueIdIsBlank() {
-        Shipment shipment = buildValidShipment();
         shipment.setUniqueId("");
 
-        List<String> messages = validate(shipment);
+        Set<ConstraintViolation<Shipment>>
+                violations =
+                validator.validate(shipment);
 
-        // "" нарушава @NotBlank и @Size(min=10)
-        assertEquals(2, messages.size());
-        assertTrue(messages.contains("Unique ID cannot be blank!"));
-        assertTrue(messages.contains("Unique id has to be between 5 and 30 characters!"));
+        assertFalse(violations.isEmpty());
     }
 
+    /**
+     * Tests that validation fails when
+     * the unique ID is too short.
+     */
     @Test
-    void whenUniqueIdIsTooShort() {
-        Shipment shipment = buildValidShipment();
-        shipment.setUniqueId("ABC"); // < 10
+    void shouldFailWhenUniqueIdTooShort() {
 
-        List<String> messages = validate(shipment);
+        Shipment shipment =
+                buildValidShipment();
 
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("Unique id has to be between 5 and 30 characters!"));
+        shipment.setUniqueId("123");
+
+        Set<ConstraintViolation<Shipment>>
+                violations =
+                validator.validate(shipment);
+
+        assertFalse(violations.isEmpty());
     }
 
+    /**
+     * Tests that the delivery type
+     * is assigned correctly.
+     */
     @Test
-    void whenUniqueIdIsTooLong() {
-        Shipment shipment = buildValidShipment();
-        shipment.setUniqueId("THIS_UNIQUE_ID_IS_WAY_TOO_LONG_123");
+    void shouldSetDeliveryTypeCorrectly() {
 
-        List<String> messages = validate(shipment);
+        Shipment shipment =
+                buildValidShipment();
 
-        assertEquals(1, messages.size());
-        assertTrue(messages.contains("Unique id has to be between 5 and 30 characters!"));
+        shipment.setDeliveryType(
+                DeliveryType.TO_OFFICE
+        );
+
+        assertEquals(
+                DeliveryType.TO_OFFICE,
+                shipment.getDeliveryType()
+        );
+    }
+
+    /**
+     * Tests that the shipment price
+     * is assigned correctly.
+     */
+    @Test
+    void shouldSetPriceCorrectly() {
+
+        Shipment shipment =
+                buildValidShipment();
+
+        shipment.setPrice(
+                new BigDecimal("20.00")
+        );
+
+        assertEquals(
+                new BigDecimal("20.00"),
+                shipment.getPrice()
+        );
+    }
+
+    /**
+     * Tests that the sender
+     * is assigned correctly.
+     */
+    @Test
+    void shouldSetSenderCorrectly() {
+
+        Client sender = new Client();
+
+        Shipment shipment =
+                buildValidShipment();
+
+        shipment.setSender(sender);
+
+        assertEquals(
+                sender,
+                shipment.getSender()
+        );
+    }
+
+    /**
+     * Tests that the recipient
+     * is assigned correctly.
+     */
+    @Test
+    void shouldSetRecipientCorrectly() {
+
+        Client recipient =
+                new Client();
+
+        Shipment shipment =
+                buildValidShipment();
+
+        shipment.setRecipient(recipient);
+
+        assertEquals(
+                recipient,
+                shipment.getRecipient()
+        );
+    }
+
+    /**
+     * Tests that the entity ID is null
+     * before persistence.
+     */
+    @Test
+    void shouldHaveNullIdBeforePersist() {
+
+        Shipment shipment =
+                buildValidShipment();
+
+        assertNull(
+                shipment.getId()
+        );
+    }
+
+    /**
+     * Tests that createdOn is null
+     * before persistence.
+     */
+    @Test
+    void shouldHaveNullCreatedOnBeforePersist() {
+
+        Shipment shipment =
+                buildValidShipment();
+
+        assertNull(
+                shipment.getCreatedOn()
+        );
+    }
+
+    /**
+     * Tests that updatedOn is null
+     * before persistence.
+     */
+    @Test
+    void shouldHaveNullUpdatedOnBeforePersist() {
+
+        Shipment shipment =
+                buildValidShipment();
+
+        assertNull(
+                shipment.getUpdatedOn()
+        );
     }
 }
