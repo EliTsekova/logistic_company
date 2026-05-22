@@ -1,4 +1,5 @@
 package com.team14.logistic_company.services;
+
 import com.team14.logistic_company.dtos.EmployeeDto;
 import com.team14.logistic_company.entities.Employee;
 import com.team14.logistic_company.entities.Office;
@@ -17,6 +18,26 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service implementation responsible for employee management operations.
+ *
+ * <p>
+ * This service provides functionality for:
+ * </p>
+ * <ul>
+ *     <li>Retrieving all employees</li>
+ *     <li>Finding employees by id, user id, username, position type, or office</li>
+ *     <li>Creating new employee profiles</li>
+ *     <li>Updating employee information</li>
+ *     <li>Deleting employees</li>
+ *     <li>Converting Employee entities to DTO objects</li>
+ * </ul>
+ *
+ * <p>
+ * The service communicates with employee, user, and office repositories.
+ * It validates related user and office data before creating or updating employees.
+ * </p>
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -26,6 +47,11 @@ public class EmployeeService implements IEmployeeService {
     private final UserRepository userRepository;
     private final OfficeRepository officeRepository;
 
+    /**
+     * Retrieves all employees from the system.
+     *
+     * @return list of all employees as DTO objects
+     */
     @Override
     public List<EmployeeDto> findAll() {
         return employeeRepository.findAll()
@@ -34,6 +60,13 @@ public class EmployeeService implements IEmployeeService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Finds an employee by its identifier.
+     *
+     * @param id employee identifier
+     * @return employee DTO object
+     * @throws EmployeeNotFound if employee does not exist
+     */
     @Override
     public EmployeeDto findById(Integer id) {
         Employee employee = employeeRepository.findById(id)
@@ -41,6 +74,13 @@ public class EmployeeService implements IEmployeeService {
         return convertToDto(employee);
     }
 
+    /**
+     * Finds an employee profile by related user identifier.
+     *
+     * @param userId user identifier
+     * @return employee DTO object connected to the given user
+     * @throws EmployeeNotFound if employee for the given user does not exist
+     */
     @Override
     public EmployeeDto findByUserId(Integer userId) {
         Employee employee = employeeRepository.findByUserId(userId)
@@ -48,6 +88,12 @@ public class EmployeeService implements IEmployeeService {
         return convertToDto(employee);
     }
 
+    /**
+     * Retrieves all employees with a specific position type.
+     *
+     * @param positionType employee position type
+     * @return list of employees with the specified position type
+     */
     @Override
     public List<EmployeeDto> findByPositionType(PositionType positionType) {
         return employeeRepository.findByPositionType(positionType)
@@ -56,6 +102,12 @@ public class EmployeeService implements IEmployeeService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves all employees assigned to a specific office.
+     *
+     * @param officeId office identifier
+     * @return list of employees assigned to the specified office
+     */
     @Override
     public List<EmployeeDto> findByOfficeId(Integer officeId) {
         return employeeRepository.findByOfficeId(officeId)
@@ -64,9 +116,20 @@ public class EmployeeService implements IEmployeeService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Creates a new employee profile for an existing user.
+     *
+     * <p>
+     * If office id is provided, the employee is assigned to the selected office.
+     * </p>
+     *
+     * @param employeeDto DTO containing employee information
+     * @return created employee as DTO object
+     * @throws RuntimeException if user does not exist
+     * @throws OfficeNotFound if selected office does not exist
+     */
     @Override
     public EmployeeDto create(EmployeeDto employeeDto) {
-        // Намери User
         User user = userRepository.findById(employeeDto.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + employeeDto.getUserId()));
 
@@ -74,7 +137,6 @@ public class EmployeeService implements IEmployeeService {
         employee.setUser(user);
         employee.setPositionType(employeeDto.getPositionType());
 
-        // Ако има officeId, намери офиса
         if (employeeDto.getOfficeId() != null) {
             Office office = officeRepository.findById(employeeDto.getOfficeId())
                     .orElseThrow(() -> new OfficeNotFound(employeeDto.getOfficeId()));
@@ -85,6 +147,20 @@ public class EmployeeService implements IEmployeeService {
         return convertToDto(saved);
     }
 
+    /**
+     * Updates existing employee information.
+     *
+     * <p>
+     * Updates the employee position type and office assignment.
+     * If office id is null, the employee is removed from any office.
+     * </p>
+     *
+     * @param id employee identifier
+     * @param employeeDto DTO containing updated employee data
+     * @return updated employee as DTO object
+     * @throws EmployeeNotFound if employee does not exist
+     * @throws OfficeNotFound if selected office does not exist
+     */
     @Override
     public EmployeeDto update(Integer id, EmployeeDto employeeDto) {
         Employee employee = employeeRepository.findById(id)
@@ -92,7 +168,6 @@ public class EmployeeService implements IEmployeeService {
 
         employee.setPositionType(employeeDto.getPositionType());
 
-        // Обнови офиса ако има
         if (employeeDto.getOfficeId() != null) {
             Office office = officeRepository.findById(employeeDto.getOfficeId())
                     .orElseThrow(() -> new OfficeNotFound(employeeDto.getOfficeId()));
@@ -105,6 +180,12 @@ public class EmployeeService implements IEmployeeService {
         return convertToDto(updated);
     }
 
+    /**
+     * Deletes an employee from the system.
+     *
+     * @param id employee identifier
+     * @throws EmployeeNotFound if employee does not exist
+     */
     @Override
     public void delete(Integer id) {
         if (!employeeRepository.existsById(id)) {
@@ -113,7 +194,18 @@ public class EmployeeService implements IEmployeeService {
         employeeRepository.deleteById(id);
     }
 
-    // Converter methods
+    /**
+     * Converts Employee entity to EmployeeDto object.
+     *
+     * <p>
+     * The method also copies related user information,
+     * such as name, email and username. If the employee is assigned
+     * to an office, the office title is also copied.
+     * </p>
+     *
+     * @param employee employee entity
+     * @return converted DTO object containing employee, user and office data
+     */
     private EmployeeDto convertToDto(Employee employee) {
         EmployeeDto dto = new EmployeeDto();
         dto.setId(employee.getId());
@@ -123,7 +215,6 @@ public class EmployeeService implements IEmployeeService {
         dto.setCreatedOn(employee.getCreatedOn());
         dto.setUpdatedOn(employee.getUpdatedOn());
 
-        // User информация
         User user = employee.getUser();
         dto.setUserFirstName(user.getFirstName());
         dto.setUserLastName(user.getLastName());
@@ -131,11 +222,34 @@ public class EmployeeService implements IEmployeeService {
         dto.setUserEmail(user.getEmail());
         dto.setUserUsername(user.getUsername());
 
-        // Office информация
         if (employee.getOffice() != null) {
             dto.setOfficeTitle(employee.getOffice().getTitle());
         }
 
         return dto;
+    }
+
+    /**
+     * Finds an employee profile by username.
+     *
+     * <p>
+     * The method first finds the user by username and then searches
+     * for the employee profile connected to that user.
+     * </p>
+     *
+     * @param username username connected to the employee profile
+     * @return employee DTO object connected to the given username
+     * @throws RuntimeException if user does not exist
+     * @throws EmployeeNotFound if employee profile for the username does not exist
+     */
+    @Override
+    public EmployeeDto findByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
+
+        Employee employee = employeeRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new EmployeeNotFound("Employee not found for username: " + username));
+
+        return convertToDto(employee);
     }
 }
