@@ -1,3 +1,17 @@
+/**
+ * Service implementation responsible for user management operations.
+ *
+ * <p>
+ * This service handles core user functionality such as:
+ * registration, update, deletion, role filtering,
+ * and conversion between User entity and UserDto.
+ * </p>
+ *
+ * <p>
+ * It also enforces validation rules such as unique username and email,
+ * and securely encodes passwords using PasswordEncoder.
+ * </p>
+ */
 package com.team14.logistic_company.services;
 
 import com.team14.logistic_company.dtos.UserDto;
@@ -22,6 +36,12 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Finds a user by username.
+     *
+     * @param username username
+     * @return UserDto or null if not found
+     */
     @Override
     public UserDto getByUsername(String username) {
         return userRepository.findByUsername(username)
@@ -29,6 +49,13 @@ public class UserService implements IUserService {
                 .orElse(null);
     }
 
+    /**
+     * Finds a user by id.
+     *
+     * @param id user id
+     * @return UserDto
+     * @throws UserNotFound if user does not exist
+     */
     @Override
     public UserDto getById(Integer id) {
         User user = userRepository.findById(id)
@@ -36,6 +63,14 @@ public class UserService implements IUserService {
         return toDto(user);
     }
 
+    /**
+     * Creates a new user with validation and password encoding.
+     *
+     * @param userDto user data
+     * @return saved User entity
+     * @throws UsernameNotAvailable if username already exists
+     * @throws EmailNotAvailable if email already exists
+     */
     @Override
     public User create(UserDto userDto) {
         if (userRepository.existsByUsername(userDto.getUsername())) {
@@ -56,6 +91,12 @@ public class UserService implements IUserService {
         return userRepository.save(user);
     }
 
+    /**
+     * Returns users filtered by role.
+     *
+     * @param role user role
+     * @return list of UserDto
+     */
     @Override
     public List<UserDto> getUsersByRole(Role role) {
         return userRepository.findByRole(role).stream()
@@ -63,6 +104,13 @@ public class UserService implements IUserService {
                 .toList();
     }
 
+    /**
+     * Updates existing user data.
+     *
+     * @param updatedUser updated user DTO
+     * @return updated UserDto
+     * @throws IllegalArgumentException if id is missing
+     */
     @Override
     public UserDto update(UserDto updatedUser) {
         if (updatedUser == null || updatedUser.getId() == null) {
@@ -99,6 +147,12 @@ public class UserService implements IUserService {
         return toDto(userRepository.save(existing));
     }
 
+    /**
+     * Deletes a user by id.
+     *
+     * @param id user id
+     * @throws UserNotFound if user does not exist
+     */
     @Override
     public void delete(Integer id) {
         if (!userRepository.existsById(id)) {
@@ -107,6 +161,12 @@ public class UserService implements IUserService {
         userRepository.deleteById(id);
     }
 
+    /**
+     * Converts User entity to UserDto.
+     *
+     * @param user user entity
+     * @return UserDto
+     */
     private UserDto toDto(User user) {
         UserDto dto = new UserDto();
         dto.setId(user.getId());
