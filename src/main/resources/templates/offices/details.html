@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Детайли за офис</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+
+  <style>
+    body { font-family: 'Manrope', sans-serif; }
+  </style>
+</head>
+
+<body class="bg-[#f6f6f8] text-[#111318]">
+
+<div class="max-w-6xl mx-auto p-8">
+
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="text-3xl font-bold">Детайли за офис</h1>
+      <p class="text-[#616f89] mt-1">Служители и пратки към офиса</p>
+    </div>
+
+    <a href="/offices"
+       class="px-5 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 font-semibold">
+      Назад
+    </a>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-[#dbdfe6] p-8 shadow-sm mb-8">
+    <h2 class="text-xl font-bold mb-6">Информация за офис</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <p><b>ID:</b> <span th:text="${office.id}">1</span></p>
+      <p><b>Име:</b> <span th:text="${office.title}">Офис София</span></p>
+      <p class="md:col-span-2"><b>Адрес:</b> <span th:text="${addressText}">Адрес</span></p>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-[#dbdfe6] shadow-sm overflow-hidden mb-8">
+    <div class="p-6 border-b border-[#dbdfe6]">
+      <h2 class="text-xl font-bold">Служители в този офис</h2>
+    </div>
+
+    <table class="w-full">
+      <thead class="bg-gray-50 border-b border-[#dbdfe6]">
+      <tr>
+        <th class="text-left p-5 font-semibold">ID</th>
+        <th class="text-left p-5 font-semibold">Име</th>
+        <th class="text-left p-5 font-semibold">Email</th>
+        <th class="text-left p-5 font-semibold">Позиция</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr th:each="employee : ${employees}"
+          class="border-b border-[#f0f2f4] hover:bg-gray-50">
+        <td class="p-5" th:text="${employee.id}">1</td>
+        <td class="p-5" th:text="${employee.userFullName}">Иван Иванов</td>
+        <td class="p-5" th:text="${employee.userEmail}">email@test.com</td>
+        <td class="p-5" th:text="${employee.positionType}">COORDINATOR</td>
+      </tr>
+
+      <tr th:if="${#lists.isEmpty(employees)}">
+        <td colspan="4" class="text-center py-10 text-[#616f89]">
+          Няма служители в този офис.
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-[#dbdfe6] shadow-sm overflow-hidden">
+    <div class="p-6 border-b border-[#dbdfe6]">
+      <h2 class="text-xl font-bold">Пратки към този офис</h2>
+    </div>
+
+    <table class="w-full">
+      <thead class="bg-gray-50 border-b border-[#dbdfe6]">
+      <tr>
+        <th class="text-left p-5 font-semibold">ID</th>
+        <th class="text-left p-5 font-semibold">Номер</th>
+        <th class="text-left p-5 font-semibold">Тегло</th>
+        <th class="text-left p-5 font-semibold">Цена</th>
+        <th class="text-left p-5 font-semibold">Тип доставка</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr th:each="shipment : ${shipments}"
+          class="border-b border-[#f0f2f4] hover:bg-gray-50">
+        <td class="p-5" th:text="${shipment.id}">1</td>
+        <td class="p-5" th:text="${shipment.uniqueId}">SH-001</td>
+        <td class="p-5" th:text="${shipment.weight + ' кг'}">1 кг</td>
+        <td class="p-5" th:text="${shipment.price + ' лв.'}">10 лв.</td>
+        <td class="p-5" th:text="${shipment.deliveryType}">TO_OFFICE</td>
+      </tr>
+
+      <tr th:if="${#lists.isEmpty(shipments)}">
+        <td colspan="5" class="text-center py-10 text-[#616f89]">
+          Няма пратки към този офис.
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>

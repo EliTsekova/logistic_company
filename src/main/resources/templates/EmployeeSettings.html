@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html class="light" lang="bg">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Настройки на профила - Логистика Експрес</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "primary": "#135bec",
+                    "primary-dark": "#0e4bc5",
+                    "secondary": "#f1f5f9",
+                    "secondary-dark": "#1e293b",
+                    "background-light": "#f8fafc",
+                    "background-dark": "#101622",
+                    "success": "#10b981",
+                    "warning": "#f59e0b",
+                    "danger": "#ef4444",
+                },
+                fontFamily: {
+                    "display": ["Manrope", "sans-serif"]
+                },
+                borderRadius: {
+                    "DEFAULT": "0.375rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "1rem",
+                    "full": "9999px"
+                },
+                boxShadow: {
+                    'card': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+                    'card-hover': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                }
+            },
+        },
+    }
+  </script>
+  <style type="text/tailwindcss">
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+        background-image: radial-gradient(circle at 2px 2px, #e2e8f0 1px, transparent 0);
+        background-size: 40px 40px;
+    }
+    .dark body {
+        background-image: radial-gradient(circle at 2px 2px, #1e293b 1px, transparent 0);
+    }
+
+    /* Допълнителни стилове */
+    input:focus, button:focus {
+        outline: 2px solid #135bec;
+        outline-offset: 2px;
+    }
+
+    .btn-primary {
+        @apply px-6 py-2.5 bg-primary text-white rounded-lg font-bold hover:bg-primary-dark active:scale-[0.98] transition-all duration-200 shadow-lg shadow-primary/20;
+    }
+
+    .btn-secondary {
+        @apply px-6 py-2.5 border border-[#dbdfe6] dark:border-gray-700 rounded-lg text-[#616f89] dark:text-gray-400 font-bold hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200;
+    }
+
+    .form-input {
+        @apply w-full px-4 py-2.5 rounded-lg border border-[#dbdfe6] dark:border-gray-700 bg-white dark:bg-gray-800 text-[#111318] dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200;
+    }
+
+    .section-header {
+        @apply px-6 py-4 border-b border-[#dbdfe6] dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50;
+    }
+
+    .section-title {
+        @apply font-bold text-[#111318] dark:text-white flex items-center gap-2 text-lg;
+    }
+
+    .avatar-placeholder {
+        @apply size-32 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 border-4 border-white dark:border-gray-700 overflow-hidden flex items-center justify-center;
+    }
+
+    /* Анимации */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fadeIn {
+        animation: fadeIn 0.3s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111318] dark:text-white min-h-screen">
+<!-- Header -->
+<header class="bg-white dark:bg-gray-900 border-b border-[#dbdfe6] dark:border-gray-800 sticky top-0 z-50 shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="size-8 text-primary">
+        <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z"></path>
+        </svg>
+      </div>
+      <span class="text-[#111318] dark:text-white text-lg font-black tracking-tight">Логистика Експрес</span>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <!-- Тема бутон -->
+      <button id="themeToggle" class="p-2 text-[#616f89] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200" aria-label="Превключи тема">
+        <span class="material-symbols-outlined dark:hidden">dark_mode</span>
+        <span class="material-symbols-outlined hidden dark:inline">light_mode</span>
+      </button>
+
+      <!-- Нотификации -->
+      <div class="relative">
+        <button class="p-2 text-[#616f89] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200" aria-label="Известия">
+          <span class="material-symbols-outlined">notifications</span>
+        </button>
+        <span class="absolute top-1 right-1 size-2 bg-danger rounded-full"></span>
+      </div>
+
+      <!-- Профил -->
+      <div class="relative group">
+        <div class="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-white font-bold text-xs cursor-pointer">
+          АД
+        </div>
+        <!-- Dropdown меню -->
+        <div class="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-[#dbdfe6] dark:border-gray-800 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+          <div class="p-4 border-b border-[#dbdfe6] dark:border-gray-800">
+            <p class="font-bold text-[#111318] dark:text-white">Антон Димитров</p>
+            <p class="text-sm text-[#616f89] dark:text-gray-400">Мениджър Логистика</p>
+          </div>
+          <div class="p-2">
+            <a href="#" class="flex items-center gap-2 px-3 py-2 text-sm text-[#616f89] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors">
+              <span class="material-symbols-outlined text-lg">dashboard</span>
+              Табло
+            </a>
+            <a href="#" class="flex items-center gap-2 px-3 py-2 text-sm text-[#616f89] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors">
+              <span class="material-symbols-outlined text-lg">settings</span>
+              Настройки
+            </a>
+            <a href="#" class="flex items-center gap-2 px-3 py-2 text-sm text-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors">
+              <span class="material-symbols-outlined text-lg">logout</span>
+              Изход
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+  <!-- Заглавие -->
+  <div class="mb-8">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-black text-[#111318] dark:text-white mb-2">Настройки на профила</h1>
+        <p class="text-[#616f89] dark:text-gray-400">Управлявайте личните си данни и сигурността на акаунта си.</p>
+      </div>
+      <button onclick="window.history.back()" class="btn-secondary flex items-center gap-2">
+        <span class="material-symbols-outlined">arrow_back</span>
+        Назад
+      </button>
+    </div>
+  </div>
+
+  <!-- Аватар секция -->
+  <div class="bg-white dark:bg-gray-900 rounded-xl border border-[#dbdfe6] dark:border-gray-800 p-6 mb-8 shadow-card">
+    <div class="flex flex-col md:flex-row items-center gap-8">
+      <div class="relative group">
+        <div class="avatar-placeholder">
+          <span class="material-symbols-outlined text-5xl text-gray-400">person</span>
+        </div>
+        <button class="absolute bottom-0 right-0 size-10 bg-primary text-white rounded-full border-4 border-white dark:border-gray-900 flex items-center justify-center hover:bg-primary-dark transition-all duration-200 shadow-lg">
+          <span class="material-symbols-outlined text-lg">photo_camera</span>
+        </button>
+      </div>
+
+      <div class="text-center md:text-left flex-1">
+        <div>
+          <h3 class="text-2xl font-bold text-[#111318] dark:text-white">Антон Димитров</h3>
+          <p class="text-[#616f89] dark:text-gray-400 mb-2">Мениджър Логистика</p>
+          <div class="inline-flex items-center gap-1 px-3 py-1 bg-success/10 text-success rounded-full text-sm font-bold">
+            <span class="material-symbols-outlined text-base">verified</span>
+            Потвърден акаунт
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-3">
+          <button class="btn-primary flex items-center gap-2">
+            <span class="material-symbols-outlined">upload</span>
+            Качи нова снимка
+          </button>
+          <button class="btn-secondary flex items-center gap-2">
+            <span class="material-symbols-outlined">delete</span>
+            Премахни
+          </button>
+        </div>
+
+        <div class="mt-4 text-xs text-[#616f89] dark:text-gray-500">
+          <p>Препоръчителни размери: 400x400 пиксела</p>
+          <p>Поддържани формати: JPG, PNG, WEBP</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Форми -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Лични данни -->
+    <section class="bg-white dark:bg-gray-900 rounded-xl border border-[#dbdfe6] dark:border-gray-800 shadow-card overflow-hidden">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="material-symbols-outlined text-primary">person</span>
+          Лични данни
+        </h2>
+      </div>
+
+      <form id="personalDataForm" class="p-6 space-y-5">
+        <div>
+          <label class="block text-sm font-bold text-[#616f89] dark:text-gray-400 mb-2">
+            Трите имена
+            <span class="text-danger">*</span>
+          </label>
+          <input type="text"
+                 class="form-input"
+                 value="Антон Димитров"
+                 required>
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold text-[#616f89] dark:text-gray-400 mb-2">
+            Имейл адрес
+            <span class="text-danger">*</span>
+          </label>
+          <input type="email"
+                 class="form-input"
+                 value="a.dimitrov@logistics-express.bg"
+                 required>
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold text-[#616f89] dark:text-gray-400 mb-2">
+            Телефонен номер
+            <span class="text-danger">*</span>
+          </label>
+          <input type="tel"
+                 class="form-input"
+                 value="+359 888 123 456"
+                 required>
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold text-[#616f89] dark:text-gray-400 mb-2">
+            Длъжност
+          </label>
+          <input type="text"
+                 class="form-input"
+                 value="Мениджър Логистика">
+        </div>
+
+        <div class="pt-5 border-t border-[#dbdfe6] dark:border-gray-800">
+          <button type="submit" class="btn-primary w-full flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined">save</span>
+            Запази промените
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Смяна на парола -->
+    <section class="bg-white dark:bg-gray-900 rounded-xl border border-[#dbdfe6] dark:border-gray-800 shadow-card overflow-hidden">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="material-symbols-outlined text-primary">lock</span>
+          Смяна на парола
+        </h2>
+      </div>
+
+      <form id="passwordChangeForm" class="p-6 space-y-5">
+        <div class="p-4 bg-warning/10 border border-warning/20 rounded-lg">
+          <div class="flex items-start gap-2">
+            <span class="material-symbols-outlined text-warning">info</span>
+            <p class="text-sm text-[#616f89] dark:text-gray-400">
+              За да смените паролата, трябва да знаете текущата си парола.
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold text-[#616f89] dark:text-gray-400 mb-2">
+            Текуща парола
+            <span class="text-danger">*</span>
+          </label>
+          <div class="relative">
+            <input type="password"
+                   class="form-input pr-10"
+                   placeholder="••••••••"
+                   required
+                   id="currentPassword">
+            <button type="button"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-[#616f89] hover:text-primary"
+                    onclick="togglePassword('currentPassword')">
+              <span class="material-symbols-outlined">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold text-[#616f89] dark:text-gray-400 mb-2">
+            Нова парола
+            <span class="text-danger">*</span>
+          </label>
+          <div class="relative">
+            <input type="password"
+                   class="form-input pr-10"
+                   placeholder="••••••••"
+                   required
+                   id="newPassword">
+            <button type="button"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-[#616f89] hover:text-primary"
+                    onclick="togglePassword('newPassword')">
+              <span class="material-symbols-outlined">visibility</span>
+            </button>
+          </div>
+          <p class="mt-1 text-xs text-[#616f89] dark:text-gray-500">
+            Минимум 8 знака, включително главна буква и цифра
+          </p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold text-[#616f89] dark:text-gray-400 mb-2">
+            Потвърди новата парола
+            <span class="text-danger">*</span>
+          </label>
+          <div class="relative">
+            <input type="password"
+                   class="form-input pr-10"
+                   placeholder="••••••••"
+                   required
+                   id="confirmPassword">
+            <button type="button"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-[#616f89] hover:text-primary"
+                    onclick="togglePassword('confirmPassword')">
+              <span class="material-symbols-outlined">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="pt-5 border-t border-[#dbdfe6] dark:border-gray-800">
+          <button type="submit" class="w-full px-6 py-2.5 border border-primary text-primary hover:bg-primary hover:text-white rounded-lg font-bold transition-all duration-200 flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined">lock_reset</span>
+            Обнови паролата
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <!-- Допълнителни настройки -->
+  <section class="mt-8 bg-white dark:bg-gray-900 rounded-xl border border-[#dbdfe6] dark:border-gray-800 shadow-card overflow-hidden">
+    <div class="section-header">
+      <h2 class="section-title">
+        <span class="material-symbols-outlined text-primary">settings</span>
+        Допълнителни настройки
+      </h2>
+    </div>
+
+    <div class="p-6 space-y-4">
+      <div class="flex items-center justify-between py-3">
+        <div>
+          <h3 class="font-bold text-[#111318] dark:text-white">Двустепенно удостоверяване</h3>
+          <p class="text-sm text-[#616f89] dark:text-gray-400">Добавете допълнителен слой сигурност към акаунта си</p>
+        </div>
+        <button class="btn-secondary">Активирай</button>
+      </div>
+
+      <div class="flex items-center justify-between py-3">
+        <div>
+          <h3 class="font-bold text-[#111318] dark:text-white">Имейл известия</h3>
+          <p class="text-sm text-[#616f89] dark:text-gray-400">Получавайте известия за важни събития</p>
+        </div>
+        <div class="relative">
+          <input type="checkbox" id="emailNotifications" class="sr-only peer" checked>
+          <label for="emailNotifications"
+                 class="w-12 h-6 bg-gray-200 dark:bg-gray-700 rounded-full peer-checked:bg-primary cursor-pointer transition-colors duration-200 block">
+            <span class="dot absolute left-1 top-1 size-4 bg-white rounded-full transition-transform duration-200 peer-checked:translate-x-6"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between py-3">
+        <div>
+          <h3 class="font-bold text-[#111318] dark:text-white">Изтриване на акаунт</h3>
+          <p class="text-sm text-[#616f89] dark:text-gray-400">Перманентно изтриване на вашия акаунт и данни</p>
+        </div>
+        <button class="px-4 py-2 border border-danger text-danger hover:bg-danger hover:text-white rounded-lg font-bold transition-all duration-200">
+          Изтрий акаунт
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="mt-12 pt-8 border-t border-[#dbdfe6] dark:border-gray-800">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="text-sm text-[#616f89] dark:text-gray-500">
+        © 2023 Логистика Експрес. Всички права запазени.
+      </p>
+      <div class="flex items-center gap-6 text-sm text-[#616f89] dark:text-gray-500">
+        <a href="#" class="hover:text-primary transition-colors">Политика за поверителност</a>
+        <a href="#" class="hover:text-primary transition-colors">Условия за ползване</a>
+        <a href="#" class="hover:text-primary transition-colors">Поддръжка</a>
+      </div>
+    </div>
+  </footer>
+</main>
+
+<!-- JavaScript -->
+<script>
+  // Тема toggle
+  const themeToggle = document.getElementById('themeToggle');
+  const htmlElement = document.documentElement;
+
+  themeToggle.addEventListener('click', () => {
+      if (htmlElement.classList.contains('dark')) {
+          htmlElement.classList.remove('dark');
+          htmlElement.classList.add('light');
+          localStorage.setItem('theme', 'light');
+      } else {
+          htmlElement.classList.remove('light');
+          htmlElement.classList.add('dark');
+          localStorage.setItem('theme', 'dark');
+      }
+  });
+
+  // Зареждане на темата от localStorage
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  if (savedTheme === 'dark') {
+      htmlElement.classList.add('dark');
+      htmlElement.classList.remove('light');
+  } else {
+      htmlElement.classList.add('light');
+      htmlElement.classList.remove('dark');
+  }
+
+  // Показване/скриване на парола
+  function togglePassword(inputId) {
+      const input = document.getElementById(inputId);
+      const button = input.nextElementSibling;
+      const icon = button.querySelector('.material-symbols-outlined');
+
+      if (input.type === 'password') {
+          input.type = 'text';
+          icon.textContent = 'visibility_off';
+      } else {
+          input.type = 'password';
+          icon.textContent = 'visibility';
+      }
+  }
+
+  // Валидация на форми
+  document.getElementById('personalDataForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      showNotification('Данните са запазени успешно!', 'success');
+  });
+
+  document.getElementById('passwordChangeForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (newPassword !== confirmPassword) {
+          showNotification('Паролите не съвпадат!', 'error');
+          return;
+      }
+
+      if (newPassword.length < 8) {
+          showNotification('Паролата трябва да е поне 8 знака!', 'error');
+          return;
+      }
+
+      showNotification('Паролата е променена успешно!', 'success');
+      this.reset();
+  });
+
+  // Функция за показване на известия
+  function showNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-3 animate-fadeIn ${
+          type === 'success' ? 'bg-success text-white' :
+          type === 'error' ? 'bg-danger text-white' :
+          'bg-primary text-white'
+      }`;
+
+      notification.innerHTML = `
+          <span class="material-symbols-outlined">
+              ${type === 'success' ? 'check_circle' : type === 'error' ? 'error' : 'info'}
+          </span>
+          <span class="font-bold">${message}</span>
+      `;
+
+      document.body.appendChild(notification);
+
+      setTimeout(() => {
+          notification.remove();
+      }, 3000);
+  }
+
+  // Toggle switch функционалност
+  document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+          showNotification(`Настройката "${this.id}" е ${this.checked ? 'активирана' : 'деактивирана'}`, 'info');
+      });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html class="light"
+      lang="bg"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Регистрация - Логистика Експрес</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"
+        rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap"
+        rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    primary: "#135bec",
+                    "background-light": "#f6f6f8",
+                    "background-dark": "#101622",
+                },
+                fontFamily: {
+                    display: ["Manrope", "sans-serif"]
+                }
+            }
+        }
+    }
+  </script>
+
+  <style>
+    .material-symbols-outlined {
+        font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24;
+    }
+
+    body {
+        font-family: 'Manrope', sans-serif;
+
+        background-image:
+            radial-gradient(circle at 2px 2px,
+            rgba(19, 91, 236, 0.05) 1px,
+            transparent 0);
+
+        background-size: 32px 32px;
+    }
+  </style>
+</head>
+
+<body class="bg-background-light text-[#111318] min-h-screen flex items-center justify-center px-4 py-8">
+
+<div class="w-full max-w-[520px]">
+
+  <!-- LOGO -->
+  <div class="flex items-center justify-center gap-3 text-primary mb-8">
+
+    <div class="size-10">
+      <svg fill="currentColor"
+           viewBox="0 0 48 48"
+           xmlns="http://www.w3.org/2000/svg">
+
+        <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z"></path>
+      </svg>
+    </div>
+
+    <h1 class="text-2xl font-black tracking-tight">
+      Логистика Експрес
+    </h1>
+  </div>
+
+  <!-- CARD -->
+  <div class="bg-white rounded-2xl shadow-xl border border-[#dbdfe6] overflow-hidden">
+
+    <div class="p-8">
+
+      <!-- HEADER -->
+      <div class="mb-8">
+
+        <h2 class="text-3xl font-bold mb-2">
+          Създайте акаунт
+        </h2>
+
+        <p class="text-[#616f89]">
+          Регистрация на клиент в системата.
+        </p>
+      </div>
+
+      <!-- ERRORS -->
+      <div th:if="${#fields.hasErrors('*')}"
+           class="bg-red-100 text-red-700 px-4 py-3 rounded-xl mb-6">
+
+        <p class="font-semibold mb-2">
+          Има грешки във формата:
+        </p>
+
+        <ul class="list-disc list-inside text-sm">
+          <li th:each="err : ${#fields.errors('*')}"
+              th:text="${err}">
+          </li>
+        </ul>
+      </div>
+
+      <!-- FORM -->
+      <form th:action="@{/register}"
+            th:object="${registerForm}"
+            method="post"
+            class="space-y-5">
+
+        <!-- FIRST NAME -->
+        <div class="space-y-2">
+
+          <label class="text-sm font-semibold">
+            Име
+          </label>
+
+          <div class="relative">
+
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#616f89]">
+              person
+            </span>
+
+            <input type="text"
+                   th:field="*{firstName}"
+                   placeholder="Иван"
+                   class="w-full pl-11 pr-4 py-3 bg-[#f0f2f4] border-none rounded-xl focus:ring-2 focus:ring-primary">
+          </div>
+        </div>
+
+        <!-- LAST NAME -->
+        <div class="space-y-2">
+
+          <label class="text-sm font-semibold">
+            Фамилия
+          </label>
+
+          <div class="relative">
+
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#616f89]">
+              person
+            </span>
+
+            <input type="text"
+                   th:field="*{lastName}"
+                   placeholder="Иванов"
+                   class="w-full pl-11 pr-4 py-3 bg-[#f0f2f4] border-none rounded-xl focus:ring-2 focus:ring-primary">
+          </div>
+        </div>
+
+        <!-- USERNAME -->
+        <div class="space-y-2">
+
+          <label class="text-sm font-semibold">
+            Потребителско име
+          </label>
+
+          <div class="relative">
+
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#616f89]">
+              alternate_email
+            </span>
+
+            <input type="text"
+                   th:field="*{username}"
+                   placeholder="ivan.ivanov"
+                   class="w-full pl-11 pr-4 py-3 bg-[#f0f2f4] border-none rounded-xl focus:ring-2 focus:ring-primary">
+          </div>
+        </div>
+
+        <!-- EMAIL -->
+        <div class="space-y-2">
+
+          <label class="text-sm font-semibold">
+            Имейл адрес
+          </label>
+
+          <div class="relative">
+
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#616f89]">
+              mail
+            </span>
+
+            <input type="email"
+                   th:field="*{email}"
+                   placeholder="example@email.com"
+                   class="w-full pl-11 pr-4 py-3 bg-[#f0f2f4] border-none rounded-xl focus:ring-2 focus:ring-primary">
+          </div>
+        </div>
+
+        <!-- PHONE -->
+        <div class="space-y-2">
+
+          <label class="text-sm font-semibold">
+            Телефон
+          </label>
+
+          <div class="relative">
+
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#616f89]">
+              call
+            </span>
+
+            <input type="text"
+                   th:field="*{phoneNumber}"
+                   placeholder="0888123456"
+                   class="w-full pl-11 pr-4 py-3 bg-[#f0f2f4] border-none rounded-xl focus:ring-2 focus:ring-primary">
+          </div>
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="space-y-2">
+
+          <label class="text-sm font-semibold">
+            Парола
+          </label>
+
+          <div class="relative">
+
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#616f89]">
+              lock
+            </span>
+
+            <input type="password"
+                   th:field="*{password}"
+                   placeholder="••••••••"
+                   class="w-full pl-11 pr-4 py-3 bg-[#f0f2f4] border-none rounded-xl focus:ring-2 focus:ring-primary">
+          </div>
+        </div>
+
+        <!-- CONFIRM PASSWORD -->
+        <div class="space-y-2">
+
+          <label class="text-sm font-semibold">
+            Потвърдете паролата
+          </label>
+
+          <div class="relative">
+
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#616f89]">
+              lock
+            </span>
+
+            <input type="password"
+                   th:field="*{confirmPassword}"
+                   placeholder="••••••••"
+                   class="w-full pl-11 pr-4 py-3 bg-[#f0f2f4] border-none rounded-xl focus:ring-2 focus:ring-primary">
+          </div>
+        </div>
+
+        <!-- BUTTON -->
+        <button type="submit"
+                class="w-full py-4 bg-primary text-white rounded-xl font-bold text-lg hover:bg-blue-700 transition">
+
+          Регистрация
+        </button>
+      </form>
+
+      <!-- LOGIN -->
+      <div class="mt-8 pt-6 border-t border-[#dbdfe6] text-center">
+
+        <p class="text-[#616f89] text-sm">
+
+          Вече имате акаунт?
+
+          <a href="/login"
+             class="text-primary font-bold hover:underline ml-1">
+
+            Вход
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

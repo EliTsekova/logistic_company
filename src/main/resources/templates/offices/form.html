@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Офис</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"
+        rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap"
+        rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: "#135bec"
+                }
+            }
+        }
+    }
+  </script>
+
+  <style>
+    body {
+        font-family: 'Manrope', sans-serif;
+    }
+
+    .material-symbols-outlined {
+        font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24;
+    }
+  </style>
+</head>
+
+<body class="bg-[#f6f6f8] text-[#111318]">
+
+<div class="flex min-h-screen">
+
+  <!-- MAIN -->
+  <main class="flex-1 p-8">
+
+    <div class="max-w-3xl mx-auto">
+
+      <div class="mb-8">
+
+        <h1 class="text-3xl font-bold"
+            th:text="${isEdit} ? 'Редакция на офис' : 'Нов офис'">
+          Нов офис
+        </h1>
+
+        <p class="text-[#616f89] mt-1">
+          Управление на офисите
+        </p>
+      </div>
+
+      <form th:action="${isEdit} ? @{/offices/update/{id}(id=${office.id})} : @{/offices}"
+            th:object="${office}"
+            method="post"
+            class="bg-white rounded-2xl border border-[#dbdfe6] shadow-sm p-8 space-y-6">
+
+        <!-- TITLE -->
+        <div>
+
+          <label class="block text-sm font-semibold mb-2">
+            Име на офис
+          </label>
+
+          <input type="text"
+                 th:field="*{title}"
+                 class="w-full rounded-xl border-gray-300"
+                 required>
+        </div>
+
+        <!-- COUNTRY -->
+        <div>
+
+          <label class="block text-sm font-semibold mb-2">
+            Държава
+          </label>
+
+          <input type="text"
+                 name="country"
+                 th:value="${countryValue}"
+                 class="w-full rounded-xl border-gray-300"
+                 placeholder="България"
+                 required>
+        </div>
+
+        <!-- CITY -->
+        <div>
+
+          <label class="block text-sm font-semibold mb-2">
+            Град
+          </label>
+
+          <input type="text"
+                 name="city"
+                 th:value="${cityValue}"
+                 class="w-full rounded-xl border-gray-300"
+                 placeholder="София"
+                 required>
+        </div>
+
+        <!-- STREET -->
+        <div>
+
+          <label class="block text-sm font-semibold mb-2">
+            Улица
+          </label>
+
+          <input type="text"
+                 name="street"
+                 th:value="${streetValue}"
+                 class="w-full rounded-xl border-gray-300"
+                 placeholder="бул. България 45"
+                 required>
+        </div>
+
+        <!-- POSTAL CODE -->
+        <div>
+
+          <label class="block text-sm font-semibold mb-2">
+            Пощенски код
+          </label>
+
+          <input type="text"
+                 name="postalCode"
+                 th:value="${postalCodeValue}"
+                 class="w-full rounded-xl border-gray-300"
+                 placeholder="1000"
+                 required>
+        </div>
+
+        <!-- BUTTONS -->
+        <div class="flex justify-end gap-3 pt-6 border-t border-[#dbdfe6]">
+
+          <a href="/offices"
+             class="px-5 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 font-semibold">
+
+            Назад
+          </a>
+
+          <button type="submit"
+                  class="px-5 py-3 rounded-xl bg-primary hover:bg-blue-700 text-white font-semibold">
+
+                        <span th:text="${isEdit} ? 'Запази промените' : 'Запази офис'">
+                            Запази офис
+                        </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

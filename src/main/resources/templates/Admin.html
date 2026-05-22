@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html class="light" lang="bg" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Администрация - Логистика Плюс</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"
+        rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap"
+        rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "primary": "#135bec",
+                    "background-light": "#f6f6f8",
+                    "background-dark": "#101622"
+                },
+                fontFamily: {
+                    "display": ["Manrope", "sans-serif"]
+                }
+            }
+        }
+    }
+  </script>
+
+  <style>
+    body {
+        font-family: 'Manrope', sans-serif;
+    }
+
+    .material-symbols-outlined {
+        font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24;
+    }
+  </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-[#111318] dark:text-white font-display">
+
+<div class="flex min-h-screen">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar"
+         class="hidden w-64 bg-white border-r border-[#dbdfe6] flex-col h-screen sticky top-0 transition-all duration-300">
+
+    <div class="p-6 flex flex-col h-full">
+
+      <!-- LOGO -->
+      <div class="flex items-center gap-3 mb-8">
+
+        <div class="bg-primary/10 rounded-lg p-2">
+          <span class="material-symbols-outlined text-primary text-3xl">
+            admin_panel_settings
+          </span>
+        </div>
+
+        <div>
+          <h1 class="text-base font-bold leading-none">
+            Логистика Плюс
+          </h1>
+
+          <p class="text-[#616f89] text-xs">
+            Администрация
+          </p>
+        </div>
+      </div>
+
+      <!-- NAVIGATION -->
+      <nav class="flex flex-col gap-1 grow">
+
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary"
+           href="/Admin">
+
+          <span class="material-symbols-outlined">
+            dashboard
+          </span>
+
+          <span class="text-sm font-semibold">
+            Начало
+          </span>
+        </a>
+
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#616f89] hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+           href="/company">
+
+          <span class="material-symbols-outlined">
+            apartment
+          </span>
+
+          <span class="text-sm font-medium">
+            Компания
+          </span>
+        </a>
+
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#616f89] hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+           href="/employees">
+
+          <span class="material-symbols-outlined">
+            badge
+          </span>
+
+          <span class="text-sm font-medium">
+            Служители
+          </span>
+        </a>
+
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#616f89] hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+           href="/clients">
+
+          <span class="material-symbols-outlined">
+            group
+          </span>
+
+          <span class="text-sm font-medium">
+            Клиенти
+          </span>
+        </a>
+
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#616f89] hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+           href="/shipments">
+
+          <span class="material-symbols-outlined">
+            package_2
+          </span>
+
+          <span class="text-sm font-medium">
+            Пратки
+          </span>
+        </a>
+
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#616f89] hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+           href="/offices">
+
+          <span class="material-symbols-outlined">
+            storefront
+          </span>
+
+          <span class="text-sm font-medium">
+            Офиси
+          </span>
+        </a>
+      </nav>
+
+      <!-- LOGOUT -->
+      <form action="/logout"
+            method="post"
+            onsubmit="return confirmLogout()"
+            class="mt-auto pt-4 border-t border-[#dbdfe6] dark:border-gray-800">
+
+        <button class="w-full flex items-center justify-center gap-2 rounded-lg h-10 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors">
+
+          <span class="material-symbols-outlined text-sm">
+            logout
+          </span>
+
+          Изход
+        </button>
+      </form>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="flex-1 flex flex-col">
+
+    <!-- HEADER -->
+    <header class="flex items-center justify-between bg-white dark:bg-gray-900 border-b border-[#f0f2f4] dark:border-gray-800 px-8 py-4 sticky top-0 z-10">
+
+      <div class="flex items-center gap-4">
+
+        <!-- MENU BUTTON -->
+        <button type="button"
+                onclick="toggleSidebar()"
+                class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+
+          <span class="material-symbols-outlined text-primary text-2xl">
+            menu
+          </span>
+        </button>
+
+        <span class="material-symbols-outlined text-primary text-2xl">
+          admin_panel_settings
+        </span>
+
+        <h2 class="text-lg font-bold tracking-tight">
+          Административен панел
+        </h2>
+      </div>
+
+      <!-- USER -->
+      <div class="flex items-center gap-3">
+
+        <div class="text-right">
+          <p class="text-sm font-bold leading-none">
+            Admin
+          </p>
+
+          <p class="text-xs text-[#616f89]">
+            Системен администратор
+          </p>
+        </div>
+
+        <div class="size-10 rounded-full bg-primary/10 flex items-center justify-center">
+
+          <span class="material-symbols-outlined text-primary">
+            person
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <div class="p-8 max-w-[1280px] mx-auto w-full">
+
+      <!-- TITLE -->
+      <div class="mb-8">
+
+        <h1 class="text-3xl font-bold tracking-tight mb-2">
+          Добре дошъл в администрацията
+        </h1>
+
+        <p class="text-[#616f89]">
+          Управление на компания, служители, клиенти, пратки и офиси.
+        </p>
+      </div>
+
+      <!-- CARDS -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- COMPANY -->
+        <a href="/company"
+           class="bg-white dark:bg-gray-900 rounded-xl p-6 border border-[#dbdfe6] dark:border-gray-800 shadow-sm hover:shadow-md transition">
+
+          <div class="flex justify-between items-start mb-4">
+
+            <p class="text-[#616f89] text-sm font-medium">
+              Настройки
+            </p>
+
+            <div class="bg-primary/10 p-2 rounded-lg">
+
+              <span class="material-symbols-outlined text-primary">
+                apartment
+              </span>
+            </div>
+          </div>
+
+          <h3 class="text-xl font-bold mb-1">
+            Компания
+          </h3>
+
+          <p class="text-sm text-[#616f89]">
+            Преглед и редакция на данните за компанията.
+          </p>
+        </a>
+
+        <!-- EMPLOYEES -->
+        <a href="/employees"
+           class="bg-white dark:bg-gray-900 rounded-xl p-6 border border-[#dbdfe6] dark:border-gray-800 shadow-sm hover:shadow-md transition">
+
+          <div class="flex justify-between items-start mb-4">
+
+            <p class="text-[#616f89] text-sm font-medium">
+              Управление
+            </p>
+
+            <div class="bg-primary/10 p-2 rounded-lg">
+
+              <span class="material-symbols-outlined text-primary">
+                badge
+              </span>
+            </div>
+          </div>
+
+          <h3 class="text-xl font-bold mb-1">
+            Служители
+          </h3>
+
+          <p class="text-sm text-[#616f89]">
+            Преглед и управление на служители.
+          </p>
+        </a>
+
+        <!-- CLIENTS -->
+        <a href="/clients"
+           class="bg-white dark:bg-gray-900 rounded-xl p-6 border border-[#dbdfe6] dark:border-gray-800 shadow-sm hover:shadow-md transition">
+
+          <div class="flex justify-between items-start mb-4">
+
+            <p class="text-[#616f89] text-sm font-medium">
+              Управление
+            </p>
+
+            <div class="bg-green-100 p-2 rounded-lg text-green-600">
+
+              <span class="material-symbols-outlined">
+                group
+              </span>
+            </div>
+          </div>
+
+          <h3 class="text-xl font-bold mb-1">
+            Клиенти
+          </h3>
+
+          <p class="text-sm text-[#616f89]">
+            Управление на клиентите.
+          </p>
+        </a>
+
+        <!-- SHIPMENTS -->
+        <a href="/shipments"
+           class="bg-white dark:bg-gray-900 rounded-xl p-6 border border-[#dbdfe6] dark:border-gray-800 shadow-sm hover:shadow-md transition">
+
+          <div class="flex justify-between items-start mb-4">
+
+            <p class="text-[#616f89] text-sm font-medium">
+              Операции
+            </p>
+
+            <div class="bg-orange-100 p-2 rounded-lg text-orange-600">
+
+              <span class="material-symbols-outlined">
+                package_2
+              </span>
+            </div>
+          </div>
+
+          <h3 class="text-xl font-bold mb-1">
+            Пратки
+          </h3>
+
+          <p class="text-sm text-[#616f89]">
+            Управление и проследяване на пратки.
+          </p>
+        </a>
+
+        <!-- OFFICES -->
+        <a href="/offices"
+           class="bg-white dark:bg-gray-900 rounded-xl p-6 border border-[#dbdfe6] dark:border-gray-800 shadow-sm hover:shadow-md transition">
+
+          <div class="flex justify-between items-start mb-4">
+
+            <p class="text-[#616f89] text-sm font-medium">
+              Локации
+            </p>
+
+            <div class="bg-primary/10 p-2 rounded-lg">
+
+              <span class="material-symbols-outlined text-primary">
+                storefront
+              </span>
+            </div>
+          </div>
+
+          <h3 class="text-xl font-bold mb-1">
+            Офиси
+          </h3>
+
+          <p class="text-sm text-[#616f89]">
+            Управление на офисите.
+          </p>
+        </a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+
+    if (sidebar.classList.contains("hidden")) {
+        sidebar.classList.remove("hidden");
+        sidebar.classList.add("flex");
+    } else {
+        sidebar.classList.add("hidden");
+        sidebar.classList.remove("flex");
+    }
+}
+
+  function confirmLogout() {
+      return confirm("Сигурни ли сте, че искате да излезете от профила?");
+  }
+</script>
+
+</body>
+</html>

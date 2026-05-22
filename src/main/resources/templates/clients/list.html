@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>Клиенти</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: "#135bec"
+                }
+            }
+        }
+    }
+  </script>
+
+  <style>
+    body { font-family: 'Manrope', sans-serif; }
+
+    .material-symbols-outlined {
+        font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24;
+    }
+  </style>
+</head>
+
+<body class="bg-[#f6f6f8] text-[#111318]">
+
+<div class="flex min-h-screen">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar"
+         class="hidden w-64 bg-white border-r border-[#dbdfe6] flex-col h-screen sticky top-0 transition-all duration-300">
+
+    <div class="p-6 flex flex-col h-full">
+
+      <div class="flex items-center gap-3 mb-8">
+        <div class="bg-primary/10 rounded-lg p-2">
+          <span class="material-symbols-outlined text-primary text-3xl">admin_panel_settings</span>
+        </div>
+
+        <div>
+          <h1 class="text-base font-bold leading-none">Логистика Плюс</h1>
+          <p class="text-[#616f89] text-xs">Администрация</p>
+        </div>
+      </div>
+
+      <nav class="flex flex-col gap-1 grow">
+        <a href="/Admin" class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#616f89] hover:bg-gray-100">
+          <span class="material-symbols-outlined">dashboard</span>
+          <span class="text-sm font-medium">Начало</span>
+        </a>
+
+        <a href="/company" class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#616f89] hover:bg-gray-100">
+          <span class="material-symbols-outlined">apartment</span>
+          <span class="text-sm font-medium">Компания</span>
+        </a>
+
+        <a href="/employees" class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#616f89] hover:bg-gray-100">
+          <span class="material-symbols-outlined">badge</span>
+          <span class="text-sm font-medium">Служители</span>
+        </a>
+
+        <a href="/clients" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary">
+          <span class="material-symbols-outlined">group</span>
+          <span class="text-sm font-semibold">Клиенти</span>
+        </a>
+
+        <a href="/shipments" class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#616f89] hover:bg-gray-100">
+          <span class="material-symbols-outlined">package_2</span>
+          <span class="text-sm font-medium">Пратки</span>
+        </a>
+
+        <a href="/offices" class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#616f89] hover:bg-gray-100">
+          <span class="material-symbols-outlined">storefront</span>
+          <span class="text-sm font-medium">Офиси</span>
+        </a>
+      </nav>
+
+      <form action="/logout"
+            method="post"
+            onsubmit="return confirmLogout()"
+            class="mt-auto pt-4 border-t border-[#dbdfe6]">
+
+        <button class="w-full flex items-center justify-center gap-2 rounded-lg h-10 bg-primary text-white text-sm font-bold hover:bg-blue-700 transition">
+          <span class="material-symbols-outlined text-sm">logout</span>
+          Изход
+        </button>
+      </form>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="flex-1">
+
+    <!-- HEADER BAR -->
+    <header class="flex items-center justify-between bg-white border-b border-[#dbdfe6] px-8 py-4 sticky top-0 z-10">
+
+      <div class="flex items-center gap-4">
+
+        <button type="button"
+                onclick="toggleSidebar()"
+                class="p-2 rounded-lg hover:bg-gray-100 transition">
+
+          <span class="material-symbols-outlined text-primary text-2xl">
+            menu
+          </span>
+        </button>
+
+        <span class="material-symbols-outlined text-primary text-2xl">
+          group
+        </span>
+
+        <h2 class="text-lg font-bold tracking-tight">
+          Управление на клиенти
+        </h2>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="text-right">
+          <p class="text-sm font-bold leading-none">Admin</p>
+          <p class="text-xs text-[#616f89]">Системен администратор</p>
+        </div>
+
+        <div class="size-10 rounded-full bg-primary/10 flex items-center justify-center">
+          <span class="material-symbols-outlined text-primary">person</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="p-8">
+
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="text-3xl font-bold">Клиенти</h1>
+          <p class="text-[#616f89] mt-1">Преглед и управление на регистрираните клиенти</p>
+        </div>
+      </div>
+
+      <div th:if="${successMessage}" class="bg-green-100 text-green-700 px-4 py-3 rounded-xl mb-6">
+        <span th:text="${successMessage}"></span>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-[#dbdfe6]">
+        <table class="w-full">
+          <thead class="bg-gray-50 border-b border-[#dbdfe6]">
+          <tr>
+            <th class="text-left p-5 font-semibold">ID</th>
+            <th class="text-left p-5 font-semibold">Име</th>
+            <th class="text-left p-5 font-semibold">Username</th>
+            <th class="text-left p-5 font-semibold">Email</th>
+            <th class="text-left p-5 font-semibold">Телефон</th>
+            <th class="text-right p-5 font-semibold">Действия</th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr th:each="client : ${clients}"
+              class="border-b border-[#f0f2f4] hover:bg-gray-50 transition">
+
+            <td class="p-5" th:text="${client.id}">1</td>
+            <td class="p-5 font-medium" th:text="${client.userFullName}">Иван Иванов</td>
+            <td class="p-5" th:text="${client.userUsername}">ivan</td>
+            <td class="p-5" th:text="${client.userEmail}">ivan@test.com</td>
+            <td class="p-5" th:text="${client.phoneNumber}">0888123456</td>
+
+            <td class="p-5">
+              <div class="flex justify-end gap-2">
+                <a th:href="@{/clients/{id}(id=${client.id})}"
+                   class="bg-gray-100 hover:bg-gray-200 p-2 rounded-lg transition"
+                   title="Детайли">
+                  <span class="material-symbols-outlined text-[20px]">visibility</span>
+                </a>
+
+                <a th:href="@{/clients/edit/{id}(id=${client.id})}"
+                   class="bg-blue-100 hover:bg-blue-200 text-blue-700 p-2 rounded-lg transition"
+                   title="Редакция">
+                  <span class="material-symbols-outlined text-[20px]">edit</span>
+                </a>
+
+                <a th:href="@{/clients/delete/{id}(id=${client.id})}"
+                   onclick="return confirmDeleteClient()"
+                   class="bg-red-100 hover:bg-red-200 text-red-700 p-2 rounded-lg transition"
+                   title="Изтриване">
+                  <span class="material-symbols-outlined text-[20px]">delete</span>
+                </a>
+              </div>
+            </td>
+          </tr>
+
+          <tr th:if="${#lists.isEmpty(clients)}">
+            <td colspan="6" class="text-center py-16 text-[#616f89]">
+              Няма регистрирани клиенти.
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+
+    if (sidebar.classList.contains("hidden")) {
+        sidebar.classList.remove("hidden");
+        sidebar.classList.add("flex");
+    } else {
+        sidebar.classList.add("hidden");
+        sidebar.classList.remove("flex");
+    }
+}
+
+  function confirmLogout() {
+      return confirm("Сигурни ли сте, че искате да излезете от профила?");
+  }
+
+  function confirmDeleteClient() {
+      return confirm("Сигурни ли сте, че искате да изтриете този клиент?");
+  }
+</script>
+
+</body>
+</html>

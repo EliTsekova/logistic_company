@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html class="light" lang="bg">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Списък с клиенти - Логистика Експрес</title>
+
+    <!-- Външни ресурси -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind конфигурация -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-image: radial-gradient(circle at 2px 2px, #e2e8f0 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+        .dark body {
+            background-image: radial-gradient(circle at 2px 2px, #1e293b 1px, transparent 0);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111318] dark:text-white min-h-screen">
+
+<!-- Хедър -->
+<header class="bg-white dark:bg-gray-900 border-b border-[#dbdfe6] dark:border-gray-800 sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+        <!-- Лого -->
+        <div class="flex items-center gap-3 text-primary">
+            <div class="size-8">
+                <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z"></path>
+                </svg>
+            </div>
+            <span class="text-[#111318] dark:text-white text-lg font-black tracking-tight">Логистика Експрес</span>
+        </div>
+
+        <!-- Потребителски елементи -->
+        <div class="flex items-center gap-4">
+            <button class="p-2 text-[#616f89] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" aria-label="Известия">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <div class="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xs" aria-label="Акаунт на администратор">
+                АД
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Основно съдържание -->
+<main class="max-w-7xl mx-auto px-4 py-8">
+
+    <!-- Заглавие и бутон -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-[#111318] dark:text-white">Списък с клиенти</h1>
+            <p class="text-[#616f89] dark:text-gray-400">Управление на клиентската база данни на компанията</p>
+        </div>
+        <button class="inline-flex items-center justify-center gap-2 px-5 h-11 bg-primary text-white rounded-lg font-bold hover:bg-blue-700 active:scale-[0.98] transition-all shadow-lg shadow-primary/20 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" aria-label="Добави нов клиент">
+            <span class="material-symbols-outlined">person_add</span>
+            Добави нов клиент
+        </button>
+    </div>
+
+    <!-- Търсене -->
+    <div class="bg-white dark:bg-gray-900 rounded-xl border border-[#dbdfe6] dark:border-gray-800 p-4 mb-6 shadow-sm">
+        <div class="relative w-full max-w-md">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#616f89]" aria-hidden="true">
+                <span class="material-symbols-outlined text-[20px]">search</span>
+            </div>
+            <input class="block w-full pl-11 pr-4 h-11 bg-gray-50 dark:bg-gray-800 border border-[#dbdfe6] dark:border-gray-700 rounded-lg text-[#111318] dark:text-white placeholder:text-[#616f89] focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="Търсене по име или имейл..." type="search" aria-label="Търсене на клиенти">
+        </div>
+    </div>
+
+    <!-- Таблица с клиенти -->
+    <div class="bg-white dark:bg-gray-900 rounded-xl border border-[#dbdfe6] dark:border-gray-800 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse" aria-label="Списък с клиенти">
+                <thead>
+                <tr class="bg-gray-50 dark:bg-gray-800/50 border-b border-[#dbdfe6] dark:border-gray-800">
+                    <th scope="col" class="px-6 py-4 text-sm font-bold text-[#111318] dark:text-gray-300">Име на клиент</th>
+                    <th scope="col" class="px-6 py-4 text-sm font-bold text-[#111318] dark:text-gray-300">Имейл</th>
+                    <th scope="col" class="px-6 py-4 text-sm font-bold text-[#111318] dark:text-gray-300">Телефон</th>
+                    <th scope="col" class="px-6 py-4 text-sm font-bold text-[#111318] dark:text-gray-300">Общо пратки</th>
+                    <th scope="col" class="px-6 py-4 text-sm font-bold text-[#111318] dark:text-gray-300">Дата на регистрация</th>
+                    <th scope="col" class="px-6 py-4 text-sm font-bold text-[#111318] dark:text-gray-300 text-right">Действия</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-[#dbdfe6] dark:divide-gray-800">
+
+                <!-- Клиент 1 -->
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors">
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="size-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary font-bold" aria-hidden="true">ИП</div>
+                            <span class="font-bold text-[#111318] dark:text-white">Иван Петров</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-[#616f89] dark:text-gray-400 text-sm">
+                        <a class="hover:text-primary hover:underline" href="mailto:ivan.petrov@example.bg" aria-label="Имейл до Иван Петров">ivan.petrov@example.bg</a>
+                    </td>
+                    <td class="px-6 py-4 text-[#616f89] dark:text-gray-400 text-sm">
+                        <a class="hover:text-primary hover:underline" href="tel:+359888123456" aria-label="Обадете се на Иван Петров">+359 888 123 456</a>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full text-xs font-bold">24</span>
+                    </td>
+                    <td class="px-6 py-4 text-[#616f89] dark:text-gray-400 text-sm">12.05.2023</td>
+                    <td class="px-6 py-4 text-right">
+                        <button class="text-[#616f89] hover:text-primary transition-colors p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" aria-label="Допълнителни действия за Иван Петров">
+                            <span class="material-symbols-outlined">more_vert</span>
+                        </button>
+                    </td>
+                </tr>
+
+                <!-- Клиент 2 -->
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors">
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="size-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary font-bold" aria-hidden="true">МД</div>
+                            <span class="font-bold text-[#111318] dark:text-white">Мария Димитрова</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-[#616f89] dark:text-gray-400 text-sm">
+                        <a class="hover:text-primary hover:underline" href="mailto:m.dimitrova@mail.com" aria-label="Имейл до Мария Димитрова">m.dimitrova@mail.com</a>
+                    </td>
+                    <td class="px-6 py-4 text-[#616f89] dark:text-gray-400 text-sm">
+                        <a class="hover:text-primary hover:underline" href="tel:+359877654321" aria-label="Обадете се на Мария Димитрова">+359 877 654 321</a>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full text-xs font-bold">8</span>
+                    </td>
+                    <td class="px-6 py-4 text-[#616f89] dark:text-gray-400 text-sm">28.08.2023</td>
+                    <td class="px-6 py-4 text-right">
+                        <button class="text-[#616f89] hover:text-primary transition-colors p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" aria-label="Допълнителни действия за Мария Димитрова">
+                            <span class="material-symbols-outlined">more_vert</span>
+                        </button>
+                    </td>
+                </tr>
+
+                <!-- Клиент 3 -->
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors">
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="size-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary font-bold" aria-hidden="true">ГГ</div>
+                            <span class="font-bold text-[#111318] dark:text-white">Георги Георгиев</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-[#616f89] dark:text-gray-400 text-sm">
+                        <a class="hover:text-primary hover:underline" href="mailto:georgi.g@company.bg" aria-label="Имейл до Георги Георгиев">georgi.g@company.bg</a>
+                    </td>
+                    <td class="px-6 py-4 text-[#616f89] dark:text-gray-400 text-sm">
+                        <a class="hover:text-primary hover:underline" href="tel:+359899998877" aria-label="Обадете се на Георги Георгиев">+359 899 998 877</a>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full text-xs font-bold">115</span>
+                    </td>
+                    <td class="px-6 py-4 text-[#616f89] dark:text-gray-400 text-sm">15.01.2023</td>
+                    <td class="px-6 py-4 text-right">
+                        <button class="text-[#616f89] hover:text-primary transition-colors p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" aria-label="Допълнителни действия за Георги Георгиев">
+                            <span class="material-symbols-outlined">more_vert</span>
+                        </button>
+                    </td>
+                </tr>
+
+                <!-- Клиент 4 -->
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors">
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="size-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary font-bold" aria-hidden="true">ЕЛ</div>
+                            <span class="font-bold text-[#111318] dark:text-white">Елена Лазарова</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-[#616f89] dark:text-gray-400 text-sm">
+                        <a class="hover:text-primary hover:underline" href="mailto:elena.lazarova@test.bg" aria-label="Имейл до Елена Лазарова">elena.lazarova@test.bg</a>
+                    </td>
+                    <td class="px-6 py-4 text-[#616f89] dark:text-gray-400 text-sm">
+                        <a class="hover:text-primary hover:underline" href="tel:+359885554433" aria-label="Обадете се на Елена Лазарова">+359 885 554 433</a>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full text-xs font-bold">42</span>
+                    </td>
+                    <td class="px-6 py-4 text-[#616f89] dark:text-gray-400 text-sm">03.11.2023</td>
+                    <td class="px-6 py-4 text-right">
+                        <button class="text-[#616f89] hover:text-primary transition-colors p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" aria-label="Допълнителни действия за Елена Лазарова">
+                            <span class="material-symbols-outlined">more_vert</span>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Пагинация -->
+        <div class="px-6 py-4 bg-gray-50 dark:bg-gray-800/30 border-t border-[#dbdfe6] dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p class="text-sm text-[#616f89] dark:text-gray-400">
+                Показване на <span class="font-bold text-[#111318] dark:text-white">1</span> до <span class="font-bold text-[#111318] dark:text-white">4</span> от <span class="font-bold text-[#111318] dark:text-white">124</span> клиенти
+            </p>
+            <div class="flex gap-2" role="navigation" aria-label="Пагинация">
+                <button class="px-3 py-1 border border-[#dbdfe6] dark:border-gray-700 rounded-lg text-[#616f89] hover:bg-white dark:hover:bg-gray-800 transition-all disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" disabled aria-label="Предишна страница">
+                    <span class="material-symbols-outlined text-[20px] leading-none align-middle">chevron_left</span>
+                </button>
+                <button class="px-3 py-1 bg-primary text-white rounded-lg font-bold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" aria-label="Страница 1" aria-current="true">1</button>
+                <button class="px-3 py-1 border border-[#dbdfe6] dark:border-gray-700 rounded-lg text-[#616f89] hover:bg-white dark:hover:bg-gray-800 transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" aria-label="Страница 2">2</button>
+                <button class="px-3 py-1 border border-[#dbdfe6] dark:border-gray-700 rounded-lg text-[#616f89] hover:bg-white dark:hover:bg-gray-800 transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" aria-label="Страница 3">3</button>
+                <button class="px-3 py-1 border border-[#dbdfe6] dark:border-gray-700 rounded-lg text-[#616f89] hover:bg-white dark:hover:bg-gray-800 transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" aria-label="Следваща страница">
+                    <span class="material-symbols-outlined text-[20px] leading-none align-middle">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Футър -->
+    <footer class="mt-12 py-6 border-t border-[#dbdfe6] dark:border-gray-800 text-center">
+        <p class="text-xs text-[#616f89] dark:text-gray-500">© 2023 Логистика Експрес. Всички права запазени. Панел за администратори.</p>
+    </footer>
+</main>
+</body>
+</html>

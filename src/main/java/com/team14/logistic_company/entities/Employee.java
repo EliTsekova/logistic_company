@@ -9,33 +9,59 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 
+/**
+ * Entity representing an employee in the logistics company system.
+ *
+ * Employees can work as office employees or couriers
+ * and may be assigned to a specific office.
+ */
 @Entity
+@Getter
+@SuppressWarnings("unused")
 public class Employee {
-    @Getter
+
+    /**
+     * Primary key of the employee.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Getter
+    /**
+     * User account associated with the employee.
+     */
     @Setter
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Getter
+    /**
+     * Office assigned to the employee.
+     * Couriers may not have a fixed office.
+     */
     @Setter
     @ManyToOne
-    @JoinColumn(name = "office_id", nullable = false)
+    @JoinColumn(name = "office_id")
     private Office office;
 
+    /**
+     * Position type of the employee.
+     */
     @Setter
-    @Getter
     @Enumerated(EnumType.STRING)
+    @Column(name = "position_type", nullable = false)
     private PositionType positionType;
 
+    /**
+     * Timestamp when the employee record was created.
+     */
     @CreationTimestamp
     @Column(name = "created_on", nullable = false, updatable = false)
     private Instant createdOn;
+
+    /**
+     * Timestamp of the last employee update.
+     */
     @UpdateTimestamp
     @Column(name = "updated_on", nullable = false)
     private Instant updatedOn;

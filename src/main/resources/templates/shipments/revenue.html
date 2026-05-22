@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Приходи</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"
+        rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap"
+        rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: "#135bec"
+                }
+            }
+        }
+    }
+  </script>
+
+  <style>
+    body {
+        font-family: 'Manrope', sans-serif;
+    }
+
+    .material-symbols-outlined {
+        font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24;
+    }
+  </style>
+</head>
+
+<body class="bg-[#f6f6f8] text-[#111318]">
+
+<div class="max-w-5xl mx-auto p-8">
+
+  <!-- HEADER -->
+  <div class="flex items-center justify-between mb-8">
+
+    <div>
+      <h1 class="text-3xl font-bold">
+        Приходи
+      </h1>
+
+      <p class="text-[#616f89] mt-1">
+        Справка за приходите от пратки
+      </p>
+    </div>
+
+    <a href="/shipments"
+       class="px-5 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 font-semibold">
+
+      Назад
+    </a>
+  </div>
+
+  <!-- FILTER -->
+  <div class="bg-white rounded-2xl border border-[#dbdfe6] p-8 shadow-sm mb-8">
+
+    <form action="/shipments/revenue"
+          method="get"
+          class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+
+      <!-- FROM -->
+      <div>
+
+        <label class="block text-sm font-semibold mb-2">
+          От дата
+        </label>
+
+        <input type="date"
+               name="from"
+               th:value="${from}"
+               required
+               class="w-full rounded-xl border-gray-300">
+      </div>
+
+      <!-- TO -->
+      <div>
+
+        <label class="block text-sm font-semibold mb-2">
+          До дата
+        </label>
+
+        <input type="date"
+               name="to"
+               th:value="${to}"
+               required
+               class="w-full rounded-xl border-gray-300">
+      </div>
+
+      <!-- BUTTON -->
+      <div>
+
+        <button type="submit"
+                class="w-full h-12 rounded-xl bg-primary text-white font-semibold hover:bg-blue-700 transition">
+
+          Изчисли
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- RESULT -->
+  <div th:if="${revenue != null}"
+       class="bg-white rounded-2xl border border-[#dbdfe6] p-10 shadow-sm">
+
+    <div class="flex items-center justify-between">
+
+      <div>
+
+        <p class="text-sm text-gray-500 mb-2">
+          Общ приход за периода
+        </p>
+
+        <h2 class="text-5xl font-black text-primary"
+            th:text="${revenue + ' лв'}">
+
+          0 лв
+        </h2>
+      </div>
+
+      <div class="bg-primary/10 rounded-full p-6">
+
+                <span class="material-symbols-outlined text-primary text-5xl">
+                    payments
+                </span>
+      </div>
+    </div>
+
+    <div class="mt-8 text-sm text-gray-500">
+
+      Период:
+      <span th:text="${from}"></span>
+      -
+      <span th:text="${to}"></span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

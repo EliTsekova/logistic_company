@@ -25,18 +25,28 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	implementation 'org.modelmapper:modelmapper:3.1.1'
+
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	runtimeOnly 'com.mysql:mysql-connector-j'
+	testImplementation 'com.h2database:h2'
+	testImplementation 'org.mockito:mockito-core:4.11.0'
+	testImplementation 'org.mockito:mockito-junit-jupiter:4.11.0'
 }
+
 
 tasks.named('test') {
 	useJUnitPlatform()

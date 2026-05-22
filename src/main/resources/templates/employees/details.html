@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Детайли за служител</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"
+        rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap"
+        rel="stylesheet">
+
+  <style>
+    body {
+        font-family: 'Manrope', sans-serif;
+    }
+
+    .material-symbols-outlined {
+        font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24;
+    }
+  </style>
+</head>
+
+<body class="bg-[#f6f6f8] text-[#111318]">
+
+<div class="max-w-6xl mx-auto p-8">
+
+  <div class="mb-8 flex justify-between items-center">
+    <div>
+      <h1 class="text-3xl font-bold">Детайли за служител</h1>
+      <p class="text-gray-500 mt-1">Информация за служителя и неговите пратки</p>
+    </div>
+
+    <a href="/employees"
+       class="px-5 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 font-semibold transition">
+      Назад
+    </a>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-[#dbdfe6] p-8 shadow-sm mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <div>
+        <p class="text-sm text-gray-500 mb-1">ID</p>
+        <p class="font-semibold text-lg" th:text="${employee.id}">1</p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500 mb-1">Име</p>
+        <p class="font-semibold text-lg" th:text="${employee.userFullName}">
+          Иван Иванов
+        </p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500 mb-1">Потребителско име</p>
+        <p class="font-semibold" th:text="${employee.userUsername}">
+          ivan.ivanov
+        </p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500 mb-1">Email</p>
+        <p class="font-semibold" th:text="${employee.userEmail}">
+          email@test.com
+        </p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500 mb-1">Позиция</p>
+        <p class="font-semibold" th:text="${employee.positionType}">
+          COORDINATOR
+        </p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500 mb-1">Офис</p>
+        <p class="font-semibold" th:text="${employee.officeTitle}">
+          София Център
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <div>
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-2xl font-bold">Пратки на служителя</h2>
+
+      <span class="bg-primary/10 text-[#135bec] px-4 py-2 rounded-xl text-sm font-semibold"
+            th:text="${#lists.size(shipments) + ' пратки'}">
+        0 пратки
+      </span>
+    </div>
+
+    <div th:if="${#lists.isEmpty(shipments)}"
+         class="bg-white rounded-2xl border border-[#dbdfe6] p-10 text-center shadow-sm">
+
+      <span class="material-symbols-outlined text-6xl text-gray-300 mb-4">
+        inventory_2
+      </span>
+
+      <p class="text-gray-500 text-lg">
+        Няма регистрирани пратки за този служител.
+      </p>
+    </div>
+
+    <div th:if="${!#lists.isEmpty(shipments)}"
+         class="bg-white rounded-2xl border border-[#dbdfe6] overflow-hidden shadow-sm">
+
+      <table class="w-full">
+        <thead class="bg-gray-50 border-b border-[#dbdfe6]">
+        <tr>
+          <th class="text-left p-5 font-semibold">ID</th>
+          <th class="text-left p-5 font-semibold">Номер</th>
+          <th class="text-left p-5 font-semibold">Тегло</th>
+          <th class="text-left p-5 font-semibold">Цена</th>
+          <th class="text-left p-5 font-semibold">Статус</th>
+          <th class="text-left p-5 font-semibold">Тип доставка</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="shipment : ${shipments}"
+            class="border-b border-[#f0f2f4] hover:bg-gray-50 transition">
+
+          <td class="p-5 font-medium" th:text="${shipment.id}">
+            1
+          </td>
+
+          <td class="p-5" th:text="${shipment.uniqueId}">
+            SHP-123456
+          </td>
+
+          <td class="p-5" th:text="${shipment.weight + ' кг'}">
+            2.5 кг
+          </td>
+
+          <td class="p-5" th:text="${shipment.price + ' лв'}">
+            12.50 лв
+          </td>
+
+          <td class="p-5">
+            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-blue-100 text-blue-700"
+                  th:text="${shipment.currentStatus}">
+              SUBMITTED
+            </span>
+          </td>
+
+          <td class="p-5" th:text="${shipment.deliveryType}">
+            TO_OFFICE
+          </td>
+
+        </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

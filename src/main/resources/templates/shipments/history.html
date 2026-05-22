@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>История на пратка</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"
+        rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap"
+        rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: "#135bec"
+                }
+            }
+        }
+    }
+  </script>
+
+  <style>
+    body {
+        font-family: 'Manrope', sans-serif;
+    }
+
+    .material-symbols-outlined {
+        font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24;
+    }
+  </style>
+</head>
+
+<body class="bg-[#f6f6f8] text-[#111318]">
+
+<div class="max-w-6xl mx-auto p-8">
+
+  <!-- HEADER -->
+  <div class="flex items-center justify-between mb-8">
+
+    <div>
+      <h1 class="text-3xl font-bold">
+        История на пратка
+      </h1>
+
+      <p class="text-[#616f89] mt-1">
+        Проследяване на статусите на пратка:
+
+        <span class="font-semibold text-primary"
+              th:text="${uniqueId}">
+                    SHP-001
+                </span>
+      </p>
+    </div>
+
+    <!-- BACK BUTTON -->
+    <a th:href="${#authorization.expression('hasAuthority(''CLIENT'')') ? '/Client' :
+                     (#authorization.expression('hasAuthority(''EMPLOYEE'')') ? '/Employee' : '/shipments')}"
+       class="px-5 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 font-semibold transition">
+
+      Назад
+    </a>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div th:if="${#lists.isEmpty(history)}"
+       class="bg-white rounded-2xl border border-[#dbdfe6] p-10 text-center shadow-sm">
+
+    <div class="flex flex-col items-center">
+
+      <div class="bg-primary/10 rounded-full p-5 mb-4">
+
+                <span class="material-symbols-outlined text-primary text-4xl">
+                    history
+                </span>
+      </div>
+
+      <p class="text-gray-500 text-lg font-medium">
+        Няма налична история за тази пратка.
+      </p>
+    </div>
+  </div>
+
+  <!-- HISTORY LIST -->
+  <div th:if="${!#lists.isEmpty(history)}"
+       class="space-y-4">
+
+    <div th:each="item : ${history}"
+         class="bg-white rounded-2xl border border-[#dbdfe6] p-6 shadow-sm hover:shadow-md transition">
+
+      <div class="flex items-start justify-between gap-6">
+
+        <!-- LEFT -->
+        <div class="flex-1">
+
+          <!-- STATUS + DATE -->
+          <div class="flex flex-wrap items-center gap-3 mb-4">
+
+            <!-- STATUS COLORS -->
+
+            <span th:if="${item.status.name() == 'SUBMITTED'}"
+                  class="px-4 py-2 rounded-full bg-blue-100 text-blue-700 font-semibold text-sm">
+
+                            Изпратена
+                        </span>
+
+            <span th:if="${item.status.name() == 'IN_TRANSIT'}"
+                  class="px-4 py-2 rounded-full bg-orange-100 text-orange-700 font-semibold text-sm">
+
+                            В движение
+                        </span>
+
+            <span th:if="${item.status.name() == 'DELIVERED'}"
+                  class="px-4 py-2 rounded-full bg-green-100 text-green-700 font-semibold text-sm">
+
+                            Получена
+                        </span>
+
+            <span class="text-sm text-gray-500"
+                  th:text="${#temporals.format(item.createdOn, 'dd.MM.yyyy HH:mm')}">
+
+                            21.05.2026 14:22
+                        </span>
+          </div>
+
+          <!-- COMMENT -->
+          <div>
+
+            <p class="text-sm text-gray-500 mb-1">
+              Коментар
+            </p>
+
+            <p class="font-medium"
+               th:text="${item.comment != null && !item.comment.isEmpty() ? item.comment : 'Няма коментар'}">
+
+              Shipment registered
+            </p>
+          </div>
+        </div>
+
+        <!-- ICON -->
+        <div class="bg-primary/10 rounded-full p-3 shrink-0">
+
+                    <span class="material-symbols-outlined text-primary">
+                        local_shipping
+                    </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
