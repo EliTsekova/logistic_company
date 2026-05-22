@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html class="light" lang="bg" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Coordinator Panel</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"
+          rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap"
+          rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622"
+                    },
+                    fontFamily: {
+                        display: ["Manrope", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings:
+                    'FILL' 0,
+                    'wght' 400,
+                    'GRAD' 0,
+                    'opsz' 24;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-[#111318] dark:text-white font-display">
+
+<div class="flex min-h-screen">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-white dark:bg-gray-900 border-r border-[#dbdfe6] dark:border-gray-800 flex flex-col h-screen sticky top-0">
+
+        <div class="p-6 flex flex-col h-full">
+
+            <!-- LOGO -->
+            <div class="flex items-center gap-3 mb-8">
+
+                <div class="bg-primary/10 rounded-lg p-2">
+                    <span class="material-symbols-outlined text-primary text-3xl">
+                        support_agent
+                    </span>
+                </div>
+
+                <div>
+                    <h1 class="text-base font-bold leading-none">
+                        Логистика Плюс
+                    </h1>
+
+                    <p class="text-[#616f89] text-xs">
+                        Coordinator
+                    </p>
+                </div>
+            </div>
+
+            <!-- NAV -->
+            <nav class="flex flex-col gap-1 grow">
+
+                <a href="/Coordinator"
+                   class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary">
+
+                    <span class="material-symbols-outlined">
+                        dashboard
+                    </span>
+
+                    <span class="text-sm font-semibold">
+                        Табло
+                    </span>
+                </a>
+
+                <a href="/shipments"
+                   class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#616f89] hover:bg-gray-100 dark:hover:bg-gray-800">
+
+                    <span class="material-symbols-outlined">
+                        package_2
+                    </span>
+
+                    <span class="text-sm font-medium">
+                        Пратки
+                    </span>
+                </a>
+
+                <a href="/shipments/new"
+                   class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#616f89] hover:bg-gray-100 dark:hover:bg-gray-800">
+
+                    <span class="material-symbols-outlined">
+                        add_box
+                    </span>
+
+                    <span class="text-sm font-medium">
+                        Нова пратка
+                    </span>
+                </a>
+
+                <a href="/shipments/undelivered"
+                   class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#616f89] hover:bg-gray-100 dark:hover:bg-gray-800">
+
+                    <span class="material-symbols-outlined">
+                        local_shipping
+                    </span>
+
+                    <span class="text-sm font-medium">
+                        Неполучени
+                    </span>
+                </a>
+            </nav>
+
+            <!-- LOGOUT -->
+            <form action="/logout"
+                  method="post"
+                  onsubmit="return confirmLogout()"
+                  class="mt-auto pt-4 border-t border-[#dbdfe6] dark:border-gray-800">
+
+                <button class="w-full flex items-center justify-center gap-2 rounded-lg h-10 bg-primary text-white text-sm font-bold hover:bg-blue-700 transition">
+
+                    <span class="material-symbols-outlined text-sm">
+                        logout
+                    </span>
+
+                    Изход
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="flex-1 p-8">
+
+        <!-- HEADER -->
+        <div class="mb-8">
+
+            <h1 class="text-3xl font-bold tracking-tight mb-2">
+                Coordinator Dashboard
+            </h1>
+
+            <p class="text-[#616f89]">
+                Управление и проследяване на пратките
+            </p>
+
+            <!-- ACTION BUTTONS -->
+            <div class="mt-6 flex flex-wrap gap-4">
+
+                <!-- EDIT PROFILE -->
+                <a th:href="@{/employees/edit/{id}(id=${employeeId})}"
+                   class="flex items-center gap-2 bg-primary hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-semibold transition">
+
+                    <span class="material-symbols-outlined">
+                        manage_accounts
+                    </span>
+
+                    Редакция на профил
+                </a>
+
+                <!-- ALL SHIPMENTS -->
+                <a href="/shipments"
+                   class="flex items-center gap-2 bg-white dark:bg-gray-900 border border-[#dbdfe6] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 px-5 py-3 rounded-xl font-semibold transition">
+
+                    <span class="material-symbols-outlined text-primary">
+                        package_2
+                    </span>
+
+                    Всички пратки
+                </a>
+
+                <!-- NEW SHIPMENT -->
+                <a href="/shipments/new"
+                   class="flex items-center gap-2 bg-green-100 hover:bg-green-200 text-green-700 px-5 py-3 rounded-xl font-semibold transition">
+
+                    <span class="material-symbols-outlined">
+                        add_box
+                    </span>
+
+                    Нова пратка
+                </a>
+            </div>
+        </div>
+
+        <!-- STATS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+            <!-- TOTAL SHIPMENTS -->
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-[#dbdfe6] dark:border-gray-800 shadow-sm">
+
+                <div class="flex items-center justify-between mb-4">
+
+                    <div>
+                        <p class="text-[#616f89] text-sm font-medium">
+                            Всички пратки
+                        </p>
+
+                        <h3 class="text-3xl font-black mt-2"
+                            th:text="${totalShipments}">
+                            0
+                        </h3>
+                    </div>
+
+                    <div class="bg-primary/10 rounded-2xl p-4">
+
+                        <span class="material-symbols-outlined text-primary text-3xl">
+                            package_2
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UNDELIVERED -->
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-[#dbdfe6] dark:border-gray-800 shadow-sm">
+
+                <div class="flex items-center justify-between mb-4">
+
+                    <div>
+                        <p class="text-[#616f89] text-sm font-medium">
+                            Неполучени
+                        </p>
+
+                        <h3 class="text-3xl font-black mt-2"
+                            th:text="${undeliveredCount}">
+                            0
+                        </h3>
+                    </div>
+
+                    <div class="bg-orange-100 rounded-2xl p-4">
+
+                        <span class="material-symbols-outlined text-orange-600 text-3xl">
+                            local_shipping
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+</div>
+
+<script>
+    function confirmLogout() {
+        return confirm("Сигурни ли сте, че искате да излезете?");
+    }
+</script>
+
+</body>
+</html>

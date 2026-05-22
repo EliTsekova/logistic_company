@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html class="light" lang="bg" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Начална страница - LogisticsPro</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap"
+        rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    primary: "#135bec",
+                    "background-light": "#f6f6f8",
+                    "background-dark": "#101622"
+                },
+                fontFamily: {
+                    display: ["Manrope", "sans-serif"]
+                },
+                borderRadius: {
+                    DEFAULT: "0.25rem",
+                    lg: "0.5rem",
+                    xl: "0.75rem",
+                    full: "9999px"
+                }
+            }
+        }
+    }
+  </script>
+
+  <style>
+    body {
+        font-family: "Manrope", sans-serif;
+    }
+
+    .hero-gradient {
+        background: linear-gradient(
+                135deg,
+                rgba(19, 91, 236, 0.05) 0%,
+                rgba(255, 255, 255, 1) 100%
+        );
+    }
+
+    .dark .hero-gradient {
+        background: linear-gradient(
+                135deg,
+                rgba(19, 91, 236, 0.08) 0%,
+                rgba(16, 22, 34, 1) 100%
+        );
+    }
+  </style>
+</head>
+
+<body class="bg-white dark:bg-background-dark min-h-screen">
+
+<div class="layout-container flex flex-col">
+
+  <!-- HEADER -->
+  <header class="flex items-center justify-between border-b border-solid border-[#dbdfe6] dark:border-slate-700 bg-white/80 backdrop-blur-md dark:bg-background-dark/80 px-4 lg:px-10 py-4 sticky top-0 z-50">
+
+    <div class="flex items-center gap-8 lg:gap-10">
+
+      <div class="flex items-center gap-3 text-[#111318] dark:text-white">
+
+        <div class="text-primary">
+          <span class="material-symbols-outlined text-4xl block">
+            local_shipping
+          </span>
+        </div>
+
+        <h1 class="text-2xl font-bold leading-tight tracking-tight">
+          LogisticsPro
+        </h1>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-8">
+
+        <a class="text-[#111318] dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors"
+           href="#services">
+          Услуги
+        </a>
+
+        <a class="text-[#111318] dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors"
+           href="#pricing">
+          Цени
+        </a>
+
+        <a class="text-[#111318] dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors"
+           href="/Client/shipments">
+          Моите пратки
+        </a>
+      </nav>
+    </div>
+
+    <div class="flex items-center gap-4">
+
+      <div class="hidden md:flex items-center gap-3 border-r border-[#dbdfe6] dark:border-slate-700 pr-4">
+
+        <div class="text-right">
+          <p class="text-xs text-[#616f89] dark:text-slate-400">
+            Добре дошли,
+          </p>
+
+          <p class="text-sm font-bold text-[#111318] dark:text-white"
+             th:text="${clientName}">
+            Клиент
+          </p>
+        </div>
+
+        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+          <span class="material-symbols-outlined text-primary">
+            person
+          </span>
+        </div>
+      </div>
+
+      <a href="/Client/shipments"
+         class="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-lg border border-primary text-primary font-bold hover:bg-primary/5 transition-colors">
+
+        <span class="material-symbols-outlined text-xl">
+          inventory_2
+        </span>
+
+        Моите пратки
+      </a>
+
+      <form action="/logout" method="post">
+
+        <button type="submit"
+                class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-white font-bold hover:bg-blue-700 transition-colors">
+
+          <span class="material-symbols-outlined">
+            logout
+          </span>
+
+          Изход
+        </button>
+      </form>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- HERO -->
+    <section class="hero-gradient relative overflow-hidden py-12 lg:py-24">
+
+      <div class="max-w-[1200px] mx-auto px-4 lg:px-6 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+
+        <div class="z-10">
+
+          <h2 class="text-3xl lg:text-6xl font-black text-[#111318] dark:text-white leading-[1.1] mb-6">
+            Бързи и сигурни доставки до всяка точка
+          </h2>
+
+          <p class="text-lg lg:text-xl text-[#616f89] dark:text-slate-400 mb-8 lg:mb-10 max-w-lg">
+            Надеждност, на която можете да се доверите.
+            Проследявайте всички ваши пратки в реално време.
+          </p>
+
+          <div class="flex flex-wrap gap-4">
+
+            <a href="/Client/shipments"
+               class="bg-primary text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-primary/20">
+
+              Моите пратки
+            </a>
+
+            <a href="/shipments/my/expected"
+               class="bg-white dark:bg-slate-800 border border-[#dbdfe6] dark:border-slate-700 text-[#111318] dark:text-white px-8 py-4 rounded-xl font-bold hover:border-primary transition-all">
+
+              Очаквани доставки
+            </a>
+          </div>
+        </div>
+
+        <div class="relative hidden lg:block">
+
+          <div class="absolute -top-12 -right-12 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
+
+          <img alt="Логистичен център"
+               class="rounded-2xl shadow-2xl w-full object-cover h-[500px] relative z-10 border-8 border-white dark:border-slate-800"
+               src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoo0CoRnLSSJ6RG6GIuc5HNycbQ6XiQNCU5YfRmIIzeefMuD4Rhvas2RzsVehErFLUL5tXYRXhldc5JTY1tng5meSOjatmb2aRCxAxUxCqhmTn55tu1RIU5zEhEBr96KeC_hHgriR_7GHNhWJtgPmy7WT4xhR4KRlBc6U7LC7298d9hd8ohvvl4EZrKkJb2CftzIv-IZpC-6XH0MvtTHz__STr86oX-VNYAE95x0p5O3SLenr38gLhwkQ5b5vBfz52w6ACIPKtrGMZ">
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="py-16 lg:py-20 bg-background-light dark:bg-slate-900" id="services">
+
+      <div class="max-w-[1200px] mx-auto px-4 lg:px-6">
+
+        <div class="text-center mb-12 lg:mb-16">
+
+          <h2 class="text-3xl lg:text-4xl font-black text-[#111318] dark:text-white mb-4">
+            Нашите услуги
+          </h2>
+
+          <div class="h-1.5 w-20 bg-primary mx-auto rounded-full"></div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 lg:gap-8">
+
+          <article class="bg-white dark:bg-slate-800 p-6 lg:p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-slate-100 dark:border-slate-700">
+
+            <div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-6">
+              <span class="material-symbols-outlined text-3xl">
+                storefront
+              </span>
+            </div>
+
+            <h3 class="text-xl font-bold mb-4 text-[#111318] dark:text-white">
+              Доставка до офис
+            </h3>
+
+            <p class="text-slate-500 dark:text-slate-400">
+              Получете пратката си в удобен за вас офис.
+            </p>
+          </article>
+
+          <article class="bg-white dark:bg-slate-800 p-6 lg:p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-slate-100 dark:border-slate-700">
+
+            <div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-6">
+              <span class="material-symbols-outlined text-3xl">
+                home_pin
+              </span>
+            </div>
+
+            <h3 class="text-xl font-bold mb-4 text-[#111318] dark:text-white">
+              Доставка до адрес
+            </h3>
+
+            <p class="text-slate-500 dark:text-slate-400">
+              Доставка директно до вашата врата.
+            </p>
+          </article>
+
+          <article class="bg-white dark:bg-slate-800 p-6 lg:p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-slate-100 dark:border-slate-700">
+
+            <div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-6">
+              <span class="material-symbols-outlined text-3xl">
+                bolt
+              </span>
+            </div>
+
+            <h3 class="text-xl font-bold mb-4 text-[#111318] dark:text-white">
+              Експресни услуги
+            </h3>
+
+            <p class="text-slate-500 dark:text-slate-400">
+              Бърза доставка в рамките на 24 часа.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="py-16 lg:py-20 bg-white dark:bg-background-dark" id="pricing">
+
+      <div class="max-w-[1200px] mx-auto px-4 lg:px-6 flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
+
+        <div class="lg:w-1/2">
+
+          <h2 class="text-3xl lg:text-4xl font-black text-[#111318] dark:text-white mb-6">
+            Изчислете цената на вашата пратка веднага
+          </h2>
+
+          <p class="text-lg text-slate-500 dark:text-slate-400 mb-8">
+            Ние ценим прозрачността.
+            Използвайте нашия калкулатор,
+            за да получите точна оферта за доставка.
+          </p>
+
+          <div class="bg-primary/5 border border-primary/10 rounded-2xl p-5 mb-8">
+
+            <div class="flex items-start gap-3">
+
+              <div class="mt-1">
+                <span class="material-symbols-outlined text-primary">
+                  info
+                </span>
+              </div>
+
+              <div>
+
+                <h4 class="font-bold text-[#111318] dark:text-white mb-2">
+                  Как се формира цената?
+                </h4>
+
+                <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                  За определяне на цената на доставката
+                  основна роля играят теглото на пратката
+                  и дали тя ще бъде доставена
+                  до офис или до точен адрес.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <ul class="space-y-4">
+
+            <li class="flex items-center gap-3 text-slate-700 dark:text-slate-300 font-medium">
+              <span class="material-symbols-outlined text-primary">
+                check_circle
+              </span>
+
+              Без скрити такси
+            </li>
+
+            <li class="flex items-center gap-3 text-slate-700 dark:text-slate-300 font-medium">
+              <span class="material-symbols-outlined text-primary">
+                check_circle
+              </span>
+
+              Гъвкави опции за доставка
+            </li>
+          </ul>
+        </div>
+
+        <!-- CALCULATOR -->
+        <div class="lg:w-1/2 w-full">
+
+          <div class="bg-slate-50 dark:bg-slate-800 p-6 lg:p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-lg">
+
+            <h4 class="text-xl font-bold mb-6 text-slate-800 dark:text-white flex items-center gap-2">
+
+              <span class="material-symbols-outlined">
+                calculate
+              </span>
+
+              Калкулатор за цена
+            </h4>
+
+            <form class="space-y-4">
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <div>
+                  <label for="weight" class="block text-sm font-semibold mb-2">
+                    Тегло (кг)
+                  </label>
+
+                  <input id="weight"
+                         class="w-full rounded-lg border border-slate-200 dark:bg-slate-700 dark:border-slate-600 dark:text-white px-4 py-2.5"
+                         type="number"
+                         value="1"
+                         min="0.1"
+                         step="0.1">
+                </div>
+
+                <div>
+                  <label for="delivery-type" class="block text-sm font-semibold mb-2">
+                    Тип
+                  </label>
+
+                  <select id="delivery-type"
+                          class="w-full rounded-lg border border-slate-200 dark:bg-slate-700 dark:border-slate-600 dark:text-white px-4 py-2.5">
+
+                    <option value="TO_OFFICE">
+                      До офис
+                    </option>
+
+                    <option value="TO_ADDRESS">
+                      До адрес
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <button type="button"
+                      onclick="calculatePrice()"
+                      class="w-full bg-primary text-white py-4 rounded-xl font-bold text-lg hover:bg-primary/90 transition-all mt-4">
+
+                Изчисли цена
+              </button>
+
+              <div id="price-result"
+                   class="hidden mt-4 rounded-xl bg-green-50 border border-green-200 text-green-700 px-4 py-3 font-bold">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-white dark:bg-background-dark border-t border-slate-200 dark:border-slate-800 pt-10 pb-8">
+
+    <div class="max-w-[1200px] mx-auto px-4 lg:px-6">
+
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+
+        <div class="flex items-center gap-3 text-primary">
+
+          <span class="material-symbols-outlined text-3xl">
+            local_shipping
+          </span>
+
+          <span class="text-lg font-bold text-[#111318] dark:text-white">
+            LogisticsPro
+          </span>
+        </div>
+
+        <p class="text-sm text-slate-400">
+          © 2026 LogisticsPro. Всички права запазени.
+        </p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+  function calculatePrice() {
+      const weight = document.getElementById("weight").value;
+      const deliveryType = document.getElementById("delivery-type").value;
+      const resultBox = document.getElementById("price-result");
+
+      resultBox.className = "hidden mt-4 rounded-xl bg-green-50 border border-green-200 text-green-700 px-4 py-3 font-bold";
+
+      fetch(`/shipments/calculate-price?weight=${weight}&deliveryType=${deliveryType}`)
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error("Грешка при изчисляване.");
+              }
+
+              return response.text();
+          })
+          .then(price => {
+              resultBox.classList.remove("hidden");
+              resultBox.className = "mt-4 rounded-xl bg-green-50 border border-green-200 text-green-700 px-4 py-3 font-bold";
+              resultBox.textContent = `Цена за доставка: ${price} лв.`;
+          })
+          .catch(() => {
+              resultBox.classList.remove("hidden");
+              resultBox.className = "mt-4 rounded-xl bg-red-50 border border-red-200 text-red-700 px-4 py-3 font-bold";
+              resultBox.textContent = "Неуспешно изчисляване на цена.";
+          });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html class="light" lang="bg" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход в системата - Логистика Експрес</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"
+        rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap"
+        rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "primary": "#135bec",
+                    "background-light": "#f8fafc",
+                    "background-dark": "#101622",
+                },
+                fontFamily: {
+                    "display": ["Manrope", "sans-serif"]
+                },
+                borderRadius: {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+                },
+            },
+        },
+    }
+  </script>
+
+  <style>
+    .material-symbols-outlined {
+        font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24;
+    }
+
+    body {
+        font-family: 'Manrope', sans-serif;
+        background-image:
+                radial-gradient(circle at 2px 2px, #e2e8f0 1px, transparent 0);
+        background-size: 40px 40px;
+    }
+
+    .dark body {
+        background-image:
+                radial-gradient(circle at 2px 2px, #1e293b 1px, transparent 0);
+    }
+  </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111318] dark:text-white min-h-screen flex items-center justify-center p-4">
+
+<div class="w-full max-w-md">
+
+  <!-- LOGO -->
+  <div class="flex flex-col items-center mb-8">
+
+    <div class="flex items-center gap-3 text-primary mb-2">
+
+      <div class="size-12">
+
+        <svg fill="currentColor"
+             viewBox="0 0 48 48"
+             xmlns="http://www.w3.org/2000/svg"
+             aria-hidden="true">
+
+          <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z"></path>
+        </svg>
+      </div>
+
+      <h1 class="text-[#111318] dark:text-white text-2xl font-black leading-tight tracking-tight">
+        Логистика Експрес
+      </h1>
+    </div>
+
+    <p class="text-[#616f89] dark:text-gray-400 text-sm text-center">
+      Система за управление на пратки и логистика
+    </p>
+  </div>
+
+  <!-- CARD -->
+  <div class="bg-white dark:bg-gray-900 rounded-2xl border border-[#dbdfe6] dark:border-gray-800 shadow-xl overflow-hidden p-6 lg:p-8">
+
+    <!-- HEADER -->
+    <div class="mb-8">
+
+      <h2 class="text-2xl font-bold text-[#111318] dark:text-white">
+        Вход в системата
+      </h2>
+
+      <p class="text-[#616f89] dark:text-gray-400 mt-1">
+        Въведете вашите данни за достъп
+      </p>
+    </div>
+
+    <!-- ERROR -->
+    <div th:if="${param.error}"
+         class="mb-6 rounded-lg border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm">
+
+      Грешно потребителско име или парола.
+    </div>
+
+    <!-- LOGOUT -->
+    <div th:if="${param.logout}"
+         class="mb-6 rounded-lg border border-green-200 bg-green-50 text-green-700 px-4 py-3 text-sm">
+
+      Успешно излязохте от системата.
+    </div>
+
+    <!-- REGISTERED -->
+    <div th:if="${param.registered}"
+         class="mb-6 rounded-lg border border-green-200 bg-green-50 text-green-700 px-4 py-3 text-sm">
+
+      Регистрацията е успешна. Моля, влезте с акаунта си.
+    </div>
+
+    <!-- FORM -->
+    <form class="space-y-6"
+          id="login-form"
+          th:action="@{/login}"
+          method="post">
+
+      <!-- USERNAME -->
+      <div class="space-y-2">
+
+        <label for="username"
+               class="text-sm font-bold text-[#111318] dark:text-gray-300">
+
+          Потребителско име
+        </label>
+
+        <div class="relative">
+
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#616f89]"
+               aria-hidden="true">
+
+                        <span class="material-symbols-outlined text-[20px]">
+                            person
+                        </span>
+          </div>
+
+          <input id="username"
+                 class="block w-full pl-11 pr-4 h-12 bg-gray-50 dark:bg-gray-800 border border-[#dbdfe6] dark:border-gray-700 rounded-lg text-[#111318] dark:text-white placeholder:text-[#616f89] focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                 name="username"
+                 placeholder="ivan.ivanov"
+                 required
+                 type="text"
+                 autocomplete="username">
+        </div>
+      </div>
+
+      <!-- PASSWORD -->
+      <div class="space-y-2">
+
+        <div class="flex justify-between items-center">
+
+          <label for="password"
+                 class="text-sm font-bold text-[#111318] dark:text-gray-300">
+
+            Парола
+          </label>
+        </div>
+
+        <div class="relative">
+
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#616f89]"
+               aria-hidden="true">
+
+                        <span class="material-symbols-outlined text-[20px]">
+                            lock
+                        </span>
+          </div>
+
+          <input id="password"
+                 class="block w-full pl-11 pr-4 h-12 bg-gray-50 dark:bg-gray-800 border border-[#dbdfe6] dark:border-gray-700 rounded-lg text-[#111318] dark:text-white placeholder:text-[#616f89] focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                 name="password"
+                 placeholder="••••••••"
+                 required
+                 type="password"
+                 autocomplete="current-password">
+        </div>
+      </div>
+
+      <!-- REMEMBER ME -->
+      <div class="flex items-center">
+
+        <input id="remember-me"
+               class="h-4 w-4 text-primary focus:ring-primary border-gray-300 dark:border-gray-600 rounded cursor-pointer"
+               name="remember-me"
+               type="checkbox">
+
+        <label for="remember-me"
+               class="ml-2 block text-sm text-[#616f89] dark:text-gray-400 cursor-pointer">
+
+          Запомни ме на това устройство
+        </label>
+      </div>
+
+      <!-- BUTTON -->
+      <button class="w-full flex items-center justify-center gap-2 px-6 h-12 bg-primary text-white rounded-lg font-bold hover:bg-blue-700 active:scale-[0.98] transition-all shadow-lg shadow-primary/20 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              type="submit">
+
+        Вход
+
+        <span class="material-symbols-outlined text-[20px]"
+              aria-hidden="true">
+
+                    login
+                </span>
+      </button>
+    </form>
+
+    <!-- REGISTER LINK -->
+    <div class="mt-8 pt-6 border-t border-[#dbdfe6] dark:border-gray-800 text-center">
+
+      <p class="text-sm text-[#616f89] dark:text-gray-400">
+
+        Нямате акаунт?
+
+        <a class="text-primary font-bold hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
+           th:href="@{/register}"
+           aria-label="Регистрация на нов акаунт">
+
+          Регистрирайте се
+        </a>
+      </p>
+    </div>
+  </div>
+
+  <!-- FOOTER INFO -->
+  <div class="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 text-[#616f89] dark:text-gray-500">
+
+    <div class="flex items-center gap-1">
+
+            <span class="material-symbols-outlined text-[16px]"
+                  aria-hidden="true">
+
+                shield
+            </span>
+
+      <span class="text-[12px] font-medium uppercase tracking-wider">
+                Защитена връзка
+            </span>
+    </div>
+
+    <div class="flex items-center gap-1">
+
+            <span class="material-symbols-outlined text-[16px]"
+                  aria-hidden="true">
+
+                verified_user
+            </span>
+
+      <span class="text-[12px] font-medium uppercase tracking-wider">
+                256-битово криптиране
+            </span>
+    </div>
+  </div>
+
+  <div class="mt-12 text-center">
+    <p class="text-xs text-[#616f89] dark:text-gray-500">
+      © 2026 Логистика Експрес. Всички права запазени.
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

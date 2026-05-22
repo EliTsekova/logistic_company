@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Детайли за пратка</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"
+        rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap"
+        rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: "#135bec"
+                }
+            }
+        }
+    }
+  </script>
+
+  <style>
+    body {
+        font-family: 'Manrope', sans-serif;
+    }
+
+    .material-symbols-outlined {
+        font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24;
+    }
+  </style>
+</head>
+
+<body class="bg-[#f6f6f8] text-[#111318]">
+
+<div class="max-w-7xl mx-auto p-8">
+
+  <!-- HEADER -->
+  <div class="flex items-center justify-between mb-8">
+
+    <div>
+      <h1 class="text-3xl font-bold">
+        Детайли за пратка
+      </h1>
+
+      <p class="text-[#616f89] mt-1">
+        Подробна информация за избраната пратка
+      </p>
+    </div>
+
+    <div class="flex gap-3">
+
+      <!-- BACK -->
+      <a th:href="${#authorization.expression('hasAuthority(''CLIENT'')') ? '/Client' :
+                   (#authorization.expression('hasAuthority(''EMPLOYEE'')') ? '/Employee' : '/shipments')}"
+         class="px-5 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 font-semibold transition">
+
+        Назад
+      </a>
+
+      <!-- EDIT ONLY COORDINATOR -->
+      <a th:if="${isCoordinator}"
+         th:href="@{/shipments/{id}/edit(id=${shipment.id})}"
+         class="px-5 py-3 rounded-xl bg-blue-100 text-blue-700 hover:bg-blue-200 font-semibold transition">
+
+        Редакция
+      </a>
+
+      <!-- HISTORY -->
+      <a th:href="@{/shipments/{uniqueId}/history(uniqueId=${shipment.uniqueId})}"
+         class="px-5 py-3 rounded-xl bg-primary text-white hover:bg-blue-700 font-semibold transition">
+
+        История
+      </a>
+    </div>
+  </div>
+
+  <!-- STATUS CHANGE -->
+  <div sec:authorize="hasAnyAuthority('ADMIN','EMPLOYEE')"
+       class="bg-white rounded-2xl border border-[#dbdfe6] shadow-sm p-6 mb-8">
+
+    <form th:action="@{/shipments/{id}/status(id=${shipment.id})}"
+          method="post"
+          class="flex flex-col md:flex-row md:items-end gap-4">
+
+      <div class="flex-1">
+        <label class="block text-sm font-semibold mb-2">
+          Промяна на статус
+        </label>
+
+        <select name="status"
+                class="w-full rounded-xl border-gray-300">
+
+          <option value="SUBMITTED">
+            Изпратена
+          </option>
+
+          <option value="IN_TRANSIT">
+            В движение
+          </option>
+
+          <option value="DELIVERED">
+            Получена
+          </option>
+        </select>
+      </div>
+
+      <button type="submit"
+              class="px-5 py-3 rounded-xl bg-primary text-white hover:bg-blue-700 font-semibold transition">
+
+        Обнови статус
+      </button>
+    </form>
+  </div>
+
+  <!-- MAIN INFO -->
+  <div class="bg-white rounded-2xl border border-[#dbdfe6] shadow-sm overflow-hidden">
+
+    <div class="border-b border-[#dbdfe6] px-8 py-6">
+      <h2 class="text-xl font-bold">
+        Основна информация
+      </h2>
+    </div>
+
+    <div class="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+      <!-- ID -->
+      <div>
+        <p class="text-sm text-gray-500 mb-1">
+          ID
+        </p>
+
+        <p class="font-semibold text-lg"
+           th:text="${shipment.id}">
+          1
+        </p>
+      </div>
+
+      <!-- UNIQUE ID -->
+      <div>
+        <p class="text-sm text-gray-500 mb-1">
+          Номер на пратка
+        </p>
+
+        <p class="font-semibold text-lg text-primary"
+           th:text="${shipment.uniqueId}">
+          SHP-001
+        </p>
+      </div>
+
+      <!-- STATUS -->
+      <div>
+        <p class="text-sm text-gray-500 mb-2">
+          Текущ статус
+        </p>
+
+        <span class="inline-flex items-center px-4 py-2 rounded-xl bg-blue-100 text-blue-700 font-semibold"
+              th:text="${shipment.currentStatus}">
+          SUBMITTED
+        </span>
+      </div>
+
+      <!-- WEIGHT -->
+      <div>
+        <p class="text-sm text-gray-500 mb-1">
+          Тегло
+        </p>
+
+        <p class="font-semibold"
+           th:text="${shipment.weight + ' кг'}">
+          2 кг
+        </p>
+      </div>
+
+      <!-- PRICE -->
+      <div>
+        <p class="text-sm text-gray-500 mb-1">
+          Цена
+        </p>
+
+        <p class="font-semibold text-green-700"
+           th:text="${shipment.price + ' лв'}">
+          12 лв
+        </p>
+      </div>
+
+      <!-- DELIVERY TYPE -->
+      <div>
+        <p class="text-sm text-gray-500 mb-1">
+          Тип доставка
+        </p>
+
+        <p class="font-semibold"
+           th:text="${shipment.deliveryType}">
+          TO_OFFICE
+        </p>
+      </div>
+
+      <!-- EMPLOYEE -->
+      <div>
+        <p class="text-sm text-gray-500 mb-1">
+          Регистрирал служител
+        </p>
+
+        <p class="font-semibold"
+           th:text="${shipment.employeeName}">
+          Иван Петров
+        </p>
+      </div>
+
+      <!-- DELIVERYMAN -->
+      <div>
+        <p class="text-sm text-gray-500 mb-1">
+          Назначен куриер
+        </p>
+
+        <p class="font-semibold"
+           th:text="${shipment.deliverymanName != null ? shipment.deliverymanName : 'Няма назначен куриер'}">
+          Петър Петров
+        </p>
+      </div>
+
+      <!-- SENDER -->
+      <div>
+        <p class="text-sm text-gray-500 mb-1">
+          Подател
+        </p>
+
+        <p class="font-semibold"
+           th:text="${shipment.senderName}">
+          Георги Георгиев
+        </p>
+      </div>
+
+      <!-- RECIPIENT -->
+      <div>
+        <p class="text-sm text-gray-500 mb-1">
+          Получател
+        </p>
+
+        <p class="font-semibold"
+           th:text="${shipment.recipientName}">
+          Мария Иванова
+        </p>
+      </div>
+
+      <!-- RECIPIENT PHONE -->
+      <div>
+        <p class="text-sm text-gray-500 mb-1">
+          Телефон на получател
+        </p>
+
+        <p class="font-semibold"
+           th:text="${shipment.recipientPhone}">
+          0888123456
+        </p>
+      </div>
+
+      <!-- OFFICE -->
+      <div>
+        <p class="text-sm text-gray-500 mb-1">
+          Офис
+        </p>
+
+        <p class="font-semibold"
+           th:text="${shipment.officeTitle}">
+          София Център
+        </p>
+      </div>
+
+      <!-- CREATED -->
+      <div>
+        <p class="text-sm text-gray-500 mb-1">
+          Създадена на
+        </p>
+
+        <p class="font-semibold"
+           th:text="${#temporals.format(shipment.createdOn, 'dd.MM.yyyy HH:mm')}">
+          01.01.2026
+        </p>
+      </div>
+
+      <!-- UPDATED -->
+      <div>
+        <p class="text-sm text-gray-500 mb-1">
+          Последна промяна
+        </p>
+
+        <p class="font-semibold"
+           th:text="${#temporals.format(shipment.updatedOn, 'dd.MM.yyyy HH:mm')}">
+          01.01.2026
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADDRESSES -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+
+    <!-- SENDER ADDRESS -->
+    <div class="bg-white rounded-2xl border border-[#dbdfe6] shadow-sm">
+
+      <div class="border-b border-[#dbdfe6] px-6 py-4">
+        <h3 class="text-lg font-bold">
+          Адрес на подателя
+        </h3>
+      </div>
+
+      <div class="p-6">
+        <p class="font-semibold text-lg"
+           th:text="${shipment.senderAddressText}">
+          София, ул. България 1
+        </p>
+      </div>
+    </div>
+
+    <!-- RECIPIENT ADDRESS -->
+    <div class="bg-white rounded-2xl border border-[#dbdfe6] shadow-sm">
+
+      <div class="border-b border-[#dbdfe6] px-6 py-4">
+        <h3 class="text-lg font-bold">
+          Адрес на получателя
+        </h3>
+      </div>
+
+      <div class="p-6">
+        <p class="font-semibold text-lg"
+           th:text="${shipment.recipientAddressText}">
+          Доставка до офис
+        </p>
+
+        <p class="text-sm text-[#616f89] mt-2"
+           th:if="${shipment.deliveryType != null and shipment.deliveryType.name() == 'TO_OFFICE'}"
+           th:text="'Офис за получаване: ' + ${shipment.officeTitle}">
+          Офис за получаване: София Център
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

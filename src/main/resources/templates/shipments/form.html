@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Пратка</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet">
+
+  <style>
+    body { font-family: 'Manrope', sans-serif; }
+
+    .material-symbols-outlined {
+        font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24;
+    }
+  </style>
+</head>
+
+<body class="bg-[#f6f6f8] text-[#111318]">
+
+<div class="max-w-4xl mx-auto p-8">
+
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold"
+        th:text="${shipment.id == null ? 'Нова пратка' : 'Редакция на пратка'}">
+      Нова пратка
+    </h1>
+
+    <p class="text-[#616f89] mt-1">
+      Регистриране или редакция на пратка
+    </p>
+  </div>
+
+  <form th:action="${shipment.id == null} ? @{/shipments} : @{/shipments/{id}(id=${shipment.id})}"
+        th:object="${shipment}"
+        method="post"
+        class="bg-white rounded-2xl border border-[#dbdfe6] shadow-sm p-8 space-y-6">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- EMPLOYEE -->
+      <div>
+        <label class="block text-sm font-semibold mb-2">
+          Служител
+        </label>
+
+        <select th:field="*{employeeId}"
+                class="w-full rounded-xl border-gray-300"
+                required>
+
+          <option value="">Избери служител</option>
+
+          <option th:each="employee : ${employees}"
+                  th:value="${employee.id}"
+                  th:text="${employee.userFullName}">
+          </option>
+        </select>
+      </div>
+
+      <!-- DELIVERYMAN -->
+      <div>
+        <label class="block text-sm font-semibold mb-2">
+          Куриер
+        </label>
+
+        <select th:field="*{deliverymanId}"
+                class="w-full rounded-xl border-gray-300"
+                required>
+
+          <option value="">Избери куриер</option>
+
+          <option th:each="deliveryman : ${deliverymen}"
+                  th:value="${deliveryman.id}"
+                  th:text="${deliveryman.userFullName}">
+          </option>
+        </select>
+      </div>
+
+      <!-- DELIVERY TYPE -->
+      <div class="md:col-span-2">
+        <label class="block text-sm font-semibold mb-2">
+          Тип доставка
+        </label>
+
+        <select th:field="*{deliveryType}"
+                id="deliveryType"
+                class="w-full rounded-xl border-gray-300"
+                required>
+
+          <option value="">Избери тип доставка</option>
+
+          <option th:each="type : ${deliveryTypes}"
+                  th:value="${type}"
+                  th:text="${type}">
+          </option>
+        </select>
+      </div>
+
+      <!-- SENDER -->
+      <div class="md:col-span-2">
+        <label class="block text-sm font-semibold mb-2">
+          Подател
+        </label>
+
+        <select th:field="*{senderId}"
+                class="w-full rounded-xl border-gray-300"
+                required>
+
+          <option value="">Избери подател</option>
+
+          <option th:each="client : ${clients}"
+                  th:value="${client.id}"
+                  th:text="${client.userFullName}">
+          </option>
+        </select>
+      </div>
+
+      <!-- RECIPIENT TITLE -->
+      <div class="md:col-span-2 pt-4 border-t border-[#dbdfe6]">
+        <h2 class="text-lg font-bold">
+          Данни за получател
+        </h2>
+
+        <p class="text-sm text-[#616f89] mt-1">
+          Ако получателят е регистриран клиент, избери го от списъка. Данните ще се попълнят автоматично.
+        </p>
+      </div>
+
+      <!-- REGISTERED RECIPIENT -->
+      <div class="md:col-span-2">
+        <label class="block text-sm font-semibold mb-2">
+          Регистриран получател / клиент
+        </label>
+
+        <select th:field="*{recipientId}"
+                id="recipientSelect"
+                class="w-full rounded-xl border-gray-300">
+
+          <option value="">Получателят не е регистриран клиент</option>
+
+          <option th:each="client : ${clients}"
+                  th:value="${client.id}"
+                  th:text="${client.userFullName}"
+                  th:attr="data-name=${client.userFullName}, data-phone=${client.phoneNumber}">
+          </option>
+        </select>
+
+        <p class="text-xs text-[#616f89] mt-2">
+          Ако избереш клиент тук, той ще вижда пратката в своя профил.
+        </p>
+      </div>
+
+      <!-- RECIPIENT NAME -->
+      <div>
+        <label class="block text-sm font-semibold mb-2">
+          Име на получател
+        </label>
+
+        <input type="text"
+               th:field="*{recipientName}"
+               id="recipientName"
+               placeholder="Например: Иван Петров"
+               class="w-full rounded-xl border-gray-300"
+               required>
+      </div>
+
+      <!-- RECIPIENT PHONE -->
+      <div>
+        <label class="block text-sm font-semibold mb-2">
+          Телефон на получател
+        </label>
+
+        <input type="text"
+               th:field="*{recipientPhone}"
+               id="recipientPhone"
+               placeholder="Например: 0888123456"
+               class="w-full rounded-xl border-gray-300"
+               required>
+      </div>
+
+      <!-- SENDER ADDRESS TITLE -->
+      <div class="md:col-span-2 pt-4 border-t border-[#dbdfe6]">
+        <h2 class="text-lg font-bold">
+          Адрес на подател
+        </h2>
+      </div>
+
+      <!-- SENDER CITY -->
+      <div>
+        <label class="block text-sm font-semibold mb-2">
+          Град на подател
+        </label>
+
+        <select th:field="*{senderCityId}"
+                class="w-full rounded-xl border-gray-300"
+                required>
+
+          <option value="">Избери град</option>
+
+          <option th:each="city : ${cities}"
+                  th:value="${city.id}"
+                  th:text="${city.name}">
+          </option>
+        </select>
+      </div>
+
+      <!-- SENDER POSTAL CODE -->
+      <div>
+        <label class="block text-sm font-semibold mb-2">
+          Пощенски код на подател
+        </label>
+
+        <input type="text"
+               th:field="*{senderPostalCode}"
+               placeholder="Например: 1000"
+               class="w-full rounded-xl border-gray-300"
+               required>
+      </div>
+
+      <!-- SENDER STREET -->
+      <div class="md:col-span-2">
+        <label class="block text-sm font-semibold mb-2">
+          Улица/адрес на подател
+        </label>
+
+        <input type="text"
+               th:field="*{senderStreet}"
+               placeholder="Например: бул. България 15, вх. А, ап. 4"
+               class="w-full rounded-xl border-gray-300"
+               required>
+      </div>
+
+      <!-- RECIPIENT ADDRESS TITLE -->
+      <div class="md:col-span-2 pt-4 border-t border-[#dbdfe6]">
+        <h2 class="text-lg font-bold">
+          Адрес на получател
+        </h2>
+
+        <p class="text-sm text-[#616f89] mt-1">
+          Попълва се само при доставка до адрес. При доставка до офис може да остане празно.
+        </p>
+      </div>
+
+      <!-- RECIPIENT CITY -->
+      <div class="recipient-address-field">
+        <label class="block text-sm font-semibold mb-2">
+          Град на получател
+        </label>
+
+        <select th:field="*{recipientCityId}"
+                id="recipientCityId"
+                class="w-full rounded-xl border-gray-300">
+
+          <option value="">Избери град</option>
+
+          <option th:each="city : ${cities}"
+                  th:value="${city.id}"
+                  th:text="${city.name}">
+          </option>
+        </select>
+      </div>
+
+      <!-- RECIPIENT POSTAL CODE -->
+      <div class="recipient-address-field">
+        <label class="block text-sm font-semibold mb-2">
+          Пощенски код на получател
+        </label>
+
+        <input type="text"
+               th:field="*{recipientPostalCode}"
+               id="recipientPostalCode"
+               placeholder="Например: 4000"
+               class="w-full rounded-xl border-gray-300">
+      </div>
+
+      <!-- RECIPIENT STREET -->
+      <div class="md:col-span-2 recipient-address-field">
+        <label class="block text-sm font-semibold mb-2">
+          Улица/адрес на получател
+        </label>
+
+        <input type="text"
+               th:field="*{recipientStreet}"
+               id="recipientStreet"
+               placeholder="Например: ул. Иван Вазов 10, ет. 2"
+               class="w-full rounded-xl border-gray-300">
+      </div>
+
+      <!-- OFFICE -->
+      <div>
+        <label class="block text-sm font-semibold mb-2">
+          Офис
+        </label>
+
+        <select th:field="*{officeId}"
+                id="officeId"
+                class="w-full rounded-xl border-gray-300"
+                required>
+
+          <option value="">Избери офис</option>
+
+          <option th:each="office : ${offices}"
+                  th:value="${office.id}"
+                  th:text="${office.title}"
+                  th:attr="data-city=${office.cityId}">
+          </option>
+        </select>
+
+        <p class="text-xs text-[#616f89] mt-2">
+          При избран град на получател се показват само офисите в същия град.
+        </p>
+      </div>
+
+      <!-- WEIGHT -->
+      <div>
+        <label class="block text-sm font-semibold mb-2">
+          Тегло (кг)
+        </label>
+
+        <input type="number"
+               step="0.01"
+               min="0.01"
+               id="weight"
+               th:field="*{weight}"
+               placeholder="Например: 2.50"
+               class="w-full rounded-xl border-gray-300"
+               required>
+      </div>
+
+      <!-- PRICE -->
+      <div>
+        <label class="block text-sm font-semibold mb-2">
+          Изчислена цена
+        </label>
+
+        <div class="relative">
+          <input type="text"
+                 id="calculatedPrice"
+                 th:value="${shipment.price != null ? shipment.price + ' лв' : '0.00 лв'}"
+                 class="w-full rounded-xl border-gray-300 bg-gray-100 text-gray-700 font-semibold"
+                 readonly>
+
+          <span class="absolute right-4 top-1/2 -translate-y-1/2 text-green-600">
+            <span class="material-symbols-outlined">
+              payments
+            </span>
+          </span>
+        </div>
+
+        <p class="text-xs text-[#616f89] mt-2">
+          Цената се изчислява автоматично според теглото и типа доставка.
+        </p>
+      </div>
+
+      <!-- UNIQUE ID -->
+      <div class="md:col-span-2">
+        <label class="block text-sm font-semibold mb-2">
+          Уникален номер
+        </label>
+
+        <input type="text"
+               th:field="*{uniqueId}"
+               placeholder="Например: SHP-2026-001"
+               class="w-full rounded-xl border-gray-300"
+               required>
+      </div>
+    </div>
+
+    <div class="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+      <div class="flex items-start gap-3">
+        <span class="material-symbols-outlined text-primary mt-0.5">
+          info
+        </span>
+
+        <div>
+          <h4 class="font-bold text-[#111318] mb-1">
+            Формиране на цена
+          </h4>
+
+          <p class="text-sm text-[#616f89] leading-relaxed">
+            За определяне на цената на доставката основна роля играят теглото на пратката и дали тя ще бъде доставена до офис или до точен адрес.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-3 pt-6 border-t border-[#dbdfe6]">
+      <a href="/Employee"
+         class="px-5 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 font-semibold transition">
+        Назад
+      </a>
+
+      <button type="submit"
+              class="px-5 py-3 rounded-xl bg-[#135bec] hover:bg-blue-700 text-white font-semibold transition">
+        Запази
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const weightInput = document.getElementById('weight');
+  const deliveryTypeSelect = document.getElementById('deliveryType');
+  const priceField = document.getElementById('calculatedPrice');
+
+  const recipientAddressFields = document.querySelectorAll('.recipient-address-field');
+  const recipientCityId = document.getElementById('recipientCityId');
+  const recipientStreet = document.getElementById('recipientStreet');
+  const recipientPostalCode = document.getElementById('recipientPostalCode');
+  const officeSelect = document.getElementById('officeId');
+
+  const recipientSelect = document.getElementById('recipientSelect');
+  const recipientNameInput = document.getElementById('recipientName');
+  const recipientPhoneInput = document.getElementById('recipientPhone');
+
+  function calculatePrice() {
+      const weight = parseFloat(weightInput.value) || 0;
+      const deliveryType = deliveryTypeSelect.value;
+
+      let basePrice = 0;
+
+      if (deliveryType === 'TO_OFFICE') {
+          basePrice = 5;
+      }
+
+      if (deliveryType === 'TO_ADDRESS') {
+          basePrice = 10;
+      }
+
+      const total = basePrice + (weight * 2);
+
+      priceField.value = total.toFixed(2) + ' лв';
+  }
+
+  function handleRegisteredRecipient(clearManualFields) {
+      const selectedOption = recipientSelect.options[recipientSelect.selectedIndex];
+      const hasRegisteredRecipient = recipientSelect.value !== '';
+
+      if (hasRegisteredRecipient) {
+          recipientNameInput.value = selectedOption.getAttribute('data-name') || '';
+          recipientPhoneInput.value = selectedOption.getAttribute('data-phone') || '';
+
+          recipientNameInput.readOnly = true;
+          recipientPhoneInput.readOnly = true;
+
+          recipientNameInput.classList.add('bg-gray-100', 'text-gray-700');
+          recipientPhoneInput.classList.add('bg-gray-100', 'text-gray-700');
+      } else {
+          recipientNameInput.readOnly = false;
+          recipientPhoneInput.readOnly = false;
+
+          recipientNameInput.classList.remove('bg-gray-100', 'text-gray-700');
+          recipientPhoneInput.classList.remove('bg-gray-100', 'text-gray-700');
+
+          if (clearManualFields) {
+              recipientNameInput.value = '';
+              recipientPhoneInput.value = '';
+          }
+      }
+  }
+
+  function filterOfficesByCity() {
+      const selectedCityId = recipientCityId.value;
+
+      Array.from(officeSelect.options).forEach(option => {
+          if (option.value === '') {
+              option.hidden = false;
+              return;
+          }
+
+          const officeCityId = option.getAttribute('data-city');
+
+          option.hidden = selectedCityId && officeCityId !== selectedCityId;
+      });
+
+      if (officeSelect.selectedOptions.length > 0) {
+          const selectedOption = officeSelect.selectedOptions[0];
+
+          if (selectedOption.hidden) {
+              officeSelect.value = '';
+          }
+      }
+  }
+
+  function toggleRecipientAddressFields() {
+      const deliveryType = deliveryTypeSelect.value;
+      const isToAddress = deliveryType === 'TO_ADDRESS';
+
+      recipientAddressFields.forEach(field => {
+          field.style.display = isToAddress ? '' : 'none';
+      });
+
+      recipientCityId.required = isToAddress;
+      recipientStreet.required = isToAddress;
+      recipientPostalCode.required = isToAddress;
+
+      if (!isToAddress) {
+          recipientCityId.value = '';
+          recipientStreet.value = '';
+          recipientPostalCode.value = '';
+      }
+
+      filterOfficesByCity();
+  }
+
+  weightInput.addEventListener('input', calculatePrice);
+  deliveryTypeSelect.addEventListener('change', calculatePrice);
+  deliveryTypeSelect.addEventListener('change', toggleRecipientAddressFields);
+  recipientCityId.addEventListener('change', filterOfficesByCity);
+
+  recipientSelect.addEventListener('change', function () {
+      handleRegisteredRecipient(true);
+  });
+
+  calculatePrice();
+  toggleRecipientAddressFields();
+  filterOfficesByCity();
+  handleRegisteredRecipient(false);
+</script>
+
+</body>
+</html>
