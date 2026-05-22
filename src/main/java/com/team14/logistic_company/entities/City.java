@@ -1,41 +1,59 @@
 package com.team14.logistic_company.entities;
 
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.Setter;
 import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 
+/**
+ * Entity representing a city in the logistics company system.
+ *
+ * A city belongs to a country and is used in addresses,
+ * offices, and shipment locations.
+ */
 @Entity
 @Getter
 public class City {
-    @Getter
+
+    /**
+     * Primary key of the city.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    /**
+     * Name of the city.
+     */
     @Setter
-    @Getter
     @NotBlank(message = "The city name cannot be blank!")
-    @Size(min = 3, max = 20, message = "The city name has to be between 3 and 20 characters!")
+    @Size(min = 3, max = 20,
+            message = "The city name has to be between 3 and 20 characters!")
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    /**
+     * Country to which the city belongs.
+     */
     @Setter
     @ManyToOne
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
-    @Getter
+    /**
+     * Timestamp when the city was created.
+     */
     @CreationTimestamp
     @Column(name = "created_on", nullable = false, updatable = false)
     private Instant createdOn;
 
-    @Getter
+    /**
+     * Timestamp of the last city update.
+     */
     @UpdateTimestamp
     @Column(name = "updated_on", nullable = false)
     private Instant updatedOn;
